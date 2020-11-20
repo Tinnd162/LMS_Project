@@ -131,6 +131,8 @@
     <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
     <Compile Include="Areas\Admin\Controllers\MenuSideBarController.cs" />
     <Compile Include="Areas\Student\StudentAreaRegistration.cs" />
+    <Compile Include="Areas\Teacher\Controllers\HomeController.cs" />
+    <Compile Include="Areas\Teacher\Controllers\MenuSideBarController.cs" />
     <Compile Include="Areas\Teacher\TeacherAreaRegistration.cs" />
     <Compile Include="Common\CommonConstants.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -147,7 +149,6 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="favicon.ico" />
-    <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\bootstrap.js" />
@@ -158,6 +159,9 @@
     <Content Include="Areas\Admin\Views\Shared\_BlankAdminLayout.cshtml" />
     <Content Include="Areas\Admin\Views\Home\Index.cshtml" />
     <Content Include="Areas\Admin\Views\MenuSideBar\Index.cshtml" />
+    <Content Include="Areas\Teacher\Views\Shared\_BlankTeacherLayout.cshtml" />
+    <Content Include="Areas\Teacher\Views\Home\Index.cshtml" />
+    <Content Include="Areas\Teacher\Views\MenuSideBar\Index.cshtml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -188,19 +192,13 @@
     <Folder Include="Areas\Student\Controllers\" />
     <Folder Include="Areas\Student\Data\" />
     <Folder Include="Areas\Student\Views\Shared\" />
-    <Folder Include="Areas\Teacher\Controllers\" />
     <Folder Include="Areas\Teacher\Data\" />
-    <Folder Include="Areas\Teacher\Views\Shared\" />
     <Folder Include="Content\Admin\" />
     <Folder Include="Content\Common\" />
     <Folder Include="Content\Student\" />
     <Folder Include="Content\Teacher\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="fonts\glyphicons-halflings-regular.woff2" />
-    <Content Include="fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
-    <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Content\bootstrap.min.css.map" />
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap-theme.min.css.map" />

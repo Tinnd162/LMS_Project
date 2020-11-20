@@ -14,6 +14,8 @@ namespace DAL.DAO
         LMSProjectDBContext db = null;
 
         public RoleDAO() { db = new LMSProjectDBContext(); }
+
+
         public List<string> GetRoles(int user_id)
         {
             object[] sqlParams =
