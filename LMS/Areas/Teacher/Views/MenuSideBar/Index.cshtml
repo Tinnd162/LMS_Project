@@ -1,5 +1,34 @@
 ﻿
-<div id="meu-side-bar"></div>
-
+<div class="sidebar-header">
+    <img src="#" alt="HCMUTE" />
 </div>
+
+<ul class="list-unstyled components">
+    <p>Tên khóa học để ở đây</p>
+    <li>
+        <a href="#subjectSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Môn học</a>
+        <ul class="collapse list-unstyled" id="subjectSubmenu">
+            @{ Html.RenderAction("Subjects", "MenuSideBar", new { area = "Teacher" });}
+        </ul>
+    </li>
+    <li>
+        <a href="#asessmentSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Đánh giá</a>
+        <ul class="collapse list-unstyled" id="asessmentSubmenu">
+            @{ Html.RenderAction("SubjectAssessments", "MenuSideBar", new { area = "Teacher" });}
+        </ul>
+    </li>
+    <li>
+        <a href="#courseSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Khóa học</a>
+        <ul class="collapse list-unstyled" id="courseSubmenu">
+            @{ Html.RenderAction("Courses", "MenuSideBar", new { area = "Teacher" });}
+        </ul>
+    </li>
+    <li>
+        <a href="#">Thông tin cá nhân</a>
+    </li>
+    <li>
+        <a href="#">Đăng xuất</a>
+    </li>
+</ul>
+
 

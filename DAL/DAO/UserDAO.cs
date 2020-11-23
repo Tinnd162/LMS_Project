@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DAL.EF;
+using System.Data;
+using System.Data.SqlClient;
 
 namespace DAL.DAO
 {
@@ -26,5 +28,7 @@ namespace DAL.DAO
             return db.C_USER.SingleOrDefault(x => x.MAIL == mail);
 
         }
+
+        
     }
 }
