@@ -1,0 +1,93 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Teacher/Views/Shared/_BlankTeacherLayout.cshtml";
+}
+<script src="~/Themes/ckeditor/ckeditor.js"></script>
+
+
+<div class="card text-dark bg-light mr-4 mb-3 d-block">
+    <div class="card-header pb-1 pt-1">Đường dẫn > abc > xyz </div>
+    <div class="card-body">
+        <h5 class="card-title">Tên môn học </h5>
+        <p class="card-text">Mô tả plaplapla ...</p>
+        <div id="loadingAddTopic"></div>
+        <div class="d-inline-flex align-items-center p-2" id="divBtnAddTopic">
+            <button type="button" class="btn btn-info bg-light text-dark" id="btnAddTopic">
+                <i class="fas fa-plus" aria-hidden="true"></i>
+            </button>
+            <p class="mb-0 ml-1">Thêm chủ đề</p>
+        </div>
+    </div>
+</div>
+
+<!--------------------------------------Add topic------------------------------------------------------------------->
+
+<div class=" d-none card text-dark bg-light mr-4 mb-3"  id="cardAddTopic">
+    <div class="card-body pt-3">
+        <form action="/" method="post" class="p-3 w-auto">
+            <div class="form-group">
+                <label for="AddTopic_title">Tiêu đề</label>
+                <input type="text" id="AddTopic_title" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="fullDesTopic">Mô tả</label>
+                <div id="fullDesTopic"></div>
+                <script>CKEDITOR.replace("fullDesTopic");</script>
+            </div>
+
+            <!------------------------ Add documents-------------------------------------------------->
+
+            <div class="d-inline-flex align-items-center p-3" id="divBtnAddDoc">
+                <button type="button" class="btn btn-info bg-light text-dark pr-2 pl-2 pt-1 pb-1" id="AddTopic_btnAddDoc">
+                    <i class="fas fa-plus" aria-hidden="true"></i>
+                </button>
+                <p class="mb-0 ml-1">Thêm tài liệu</p>
+            </div>
+            <div class="form-group-sm pr-5 pl-5 pb-1 border d-none" style="background-color:#fdfdfd" id="frmAddDoc">
+                <label for="AddDoc_title" class="pt-2 m-0" style="font-size:1rem">Tiêu đề tài liệu</label>
+                <input type="text" id="AddDoc_title" class="form-control">
+                <label for="fullDesDoc" class="pt-2 m-0" style="font-size:1rem">Mô tả</label>
+                <div id="fullDesDoc"></div>
+                <script>CKEDITOR.replace("fullDesDoc");</script>
+                <label for="AddDoc_link" class="pt-2 m-0" style="font-size:1rem">Link</label>
+                <input type="text" id="AddDoc_Link" class="form-control">
+                <div class="d-flex justify-content-end p-3">
+                    <button id="btn-CloseDoc" class="btn btn-light mr-2" type="button">Đóng</button>
+                    <button id="btn-AddDoc" class="btn btn-primary" type="button">Thêm</button>
+                </div>
+            </div> </br>
+
+
+            <!--------------------------Add events/deadline---------------------------------------------------->
+
+            <div class="d-inline-flex align-items-center p-3" id="divBtnAddEvent">
+                <button type="button" class="btn btn-info bg-light text-dark pr-2 pl-2 pt-1 pb-1" id="AddTopic_btnAddEvent">
+                    <i class="fas fa-plus" aria-hidden="true"></i>
+                </button>
+                <p class="mb-0 ml-1">Thêm sự kiện</p>
+            </div>
+            <div class="form-group-sm pr-5 pl-5 pb-1 border d-none" style="background-color:#fdfdfd" id="frmAddEvent">
+                <label for="AddEvent_title" class="pt-2 m-0" style="font-size:1rem">Tiêu đề sự kiện</label>
+                <input type="text" id="AddEvent_title" class="form-control">
+                <label for="fullDesEvent" class="pt-2 m-0" style="font-size:1rem">Mô tả</label>
+                <div id="fullDesEvent"></div>
+                <script>CKEDITOR.replace("fullDesEvent");</script>
+                <label for="AddEvent_link" class="pt-2 m-0" style="font-size:1rem">Link</label>
+                <input type="text" id="AddEvent_Link" class="form-control">
+                <div class="d-flex justify-content-end p-3">
+                    <button id="btn-CloseEvent" class="btn btn-light mr-2" type="button">Đóng</button>
+                    <button id="btn-AddEvent" class="btn btn-primary" type="button">Thêm</button>
+                </div>
+            </div>
+
+
+            <div class="d-flex justify-content-end pr-5 pt-3">
+                <button id="btn-CloseAddTopic" class="btn btn-light mr-2" type="button">Đóng</button>
+                <button id="btn-AddTopic" class="btn btn-primary" type="button">Thêm</button>
+            </div>
+
+        </form>
+    </div>
+</div>
+

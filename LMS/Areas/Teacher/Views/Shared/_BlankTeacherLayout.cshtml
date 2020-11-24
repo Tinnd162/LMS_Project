@@ -8,7 +8,7 @@
 
     <title>LMS</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
-    <link rel="stylesheet" href="~/Content/Teacher/style.css " />
+    <link href="~/Content/Teacher/style.css" rel="stylesheet" />
     <script src="https://kit.fontawesome.com/9dbbecbb49.js" crossorigin="anonymous"></script>
 </head>
 
@@ -24,7 +24,7 @@
             <div id="page-content">
                 <!--navbar-->
                 <div>
-                    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                    <nav class="navbar navbar-light bg-light mb-4">
                         <div class="container-fluid">
 
                             <button type="button" class="btn btn-info" id="sidebarCollapse">
@@ -49,9 +49,7 @@
                         @RenderBody()
                     </div>
                     <!--right side bar-->
-                    <div id="rightbar">
-                        2134
-                    </div>
+                    <div id="rightbar">2134</div>
                 </div>
             </div>
         </div>
@@ -65,6 +63,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    
     <script type="text/javascript">
         $(document).ready(function () {
             $('#sidebarCollapse').on('click', function () {
@@ -72,6 +71,15 @@
             });
 
             activeLinkControls()
+
+            showCardAddTopic()
+            hideCardAddTopic()
+
+            showCardAddDoc()
+            hideCardAddDoc()
+
+            showCardAddEvent()
+            hideCardAddEvent()
         });
 
         function activeLinkControls() {
@@ -80,6 +88,53 @@
                 $(this).closest('li').addClass('active')
             })
         }
+
+        function showCardAddTopic() {
+            $('#btnAddTopic').click(function () {
+                $('#cardAddTopic').toggleClass('d-none')       
+                $('#divBtnAddTopic').toggleClass('d-inline-flex d-none ')
+                $('#loadingAddTopic').html('...');
+            });
+        }
+
+        function hideCardAddTopic() {
+            $('#btn-CloseAddTopic').click(function () {
+                $('#cardAddTopic').toggleClass('d-none')
+                $('#divBtnAddTopic').toggleClass('d-inline-flex d-none ')
+                $('#loadingAddTopic').html('');
+            });
+        }
+
+
+        function showCardAddDoc() {
+            $('#AddTopic_btnAddDoc').click(function () {
+                $('#frmAddDoc').removeClass('d-none')
+                $('#divBtnAddDoc').toggleClass('d-none d-inline-flex')
+            });
+        }
+
+        function hideCardAddDoc() {
+            $('#btn-CloseDoc').click(function () {
+                $('#frmAddDoc').toggleClass('d-none')
+                $('#divBtnAddDoc').toggleClass('d-inline-flex d-none ')
+            });
+        }
+
+        function showCardAddEvent() {
+            $('#AddTopic_btnAddEvent').click(function () {
+                $('#frmAddEvent').removeClass('d-none')
+                $('#divBtnAddEvent').toggleClass('d-none d-inline-flex')
+            });
+        }
+
+        function hideCardAddEvent() {
+            $('#btn-CloseEvent').click(function () {
+                $('#frmAddEvent').toggleClass('d-none')
+                $('#divBtnAddEvent').toggleClass('d-inline-flex d-none ')
+            });
+        }
+
+       
 
     </script>
 </body>
