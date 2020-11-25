@@ -15,8 +15,8 @@ namespace DAL.EF
             SUBMITs = new HashSet<SUBMIT>();
         }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public int ID { get; set; }
+        [StringLength(20)]
+        public string ID { get; set; }
 
         [StringLength(50)]
         public string TITLE { get; set; }
@@ -28,7 +28,8 @@ namespace DAL.EF
 
         public DateTime? DEADLINE { get; set; }
 
-        public int? TOPIC_ID { get; set; }
+        [StringLength(20)]
+        public string TOPIC_ID { get; set; }
 
         public virtual TOPIC TOPIC { get; set; }
 

@@ -15,8 +15,8 @@ namespace DAL.EF
             SUBJECTs = new HashSet<SUBJECT>();
         }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public int ID { get; set; }
+        [StringLength(20)]
+        public string ID { get; set; }
 
         [StringLength(50)]
         public string TILTE { get; set; }

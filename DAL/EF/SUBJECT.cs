@@ -17,8 +17,8 @@ namespace DAL.EF
             C_USER1 = new HashSet<C_USER>();
         }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public int ID { get; set; }
+        [StringLength(20)]
+        public string ID { get; set; }
 
         [StringLength(50)]
         public string NAME { get; set; }
@@ -26,7 +26,8 @@ namespace DAL.EF
         [StringLength(200)]
         public string DESCRIPTION { get; set; }
 
-        public int? COURSE_ID { get; set; }
+        [StringLength(20)]
+        public string COURSE_ID { get; set; }
 
         public virtual COURSE COURSE { get; set; }
 

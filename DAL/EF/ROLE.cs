@@ -15,8 +15,8 @@ namespace DAL.EF
             C_USER = new HashSet<C_USER>();
         }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public int ID { get; set; }
+        [StringLength(20)]
+        public string ID { get; set; }
 
         [Column("ROLE")]
         [StringLength(20)]

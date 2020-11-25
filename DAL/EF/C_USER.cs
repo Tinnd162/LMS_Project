@@ -18,8 +18,8 @@ namespace DAL.EF
             ROLEs = new HashSet<ROLE>();
         }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public int ID { get; set; }
+        [StringLength(20)]
+        public string ID { get; set; }
 
         [StringLength(20)]
         public string FIRST_NAME { get; set; }
@@ -44,9 +44,11 @@ namespace DAL.EF
 
         public DateTime? LASTVISITDATE { get; set; }
 
-        public int? CLASS_ID { get; set; }
+        [StringLength(20)]
+        public string CLASS_ID { get; set; }
 
-        public int? FACULTY_ID { get; set; }
+        [StringLength(20)]
+        public string FACULTY_ID { get; set; }
 
         public virtual CLASS CLASS { get; set; }
 

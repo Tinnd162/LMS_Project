@@ -9,17 +9,19 @@ namespace DAL.EF
     [Table("SUBMIT")]
     public partial class SUBMIT
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public int ID { get; set; }
+        [StringLength(20)]
+        public string ID { get; set; }
 
         [StringLength(200)]
         public string LINK { get; set; }
 
         public DateTime? TIME { get; set; }
 
-        public int? USER_ID { get; set; }
+        [StringLength(20)]
+        public string USER_ID { get; set; }
 
-        public int? EVENT_ID { get; set; }
+        [StringLength(20)]
+        public string EVENT_ID { get; set; }
 
         public virtual C_USER C_USER { get; set; }
 

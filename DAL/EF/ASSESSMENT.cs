@@ -10,8 +10,8 @@ namespace DAL.EF
     public partial class ASSESSMENT
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public int SUBMIT_ID { get; set; }
+        [StringLength(20)]
+        public string SUBMIT_ID { get; set; }
 
         public decimal? SCORE { get; set; }
 

@@ -50,7 +50,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DAO\CourseDAO.cs" />
     <Compile Include="DAO\RoleDAO.cs" />
+    <Compile Include="DAO\SubjectDAO.cs" />
     <Compile Include="DAO\UserDAO.cs" />
     <Compile Include="EF\ASSESSMENT.cs" />
     <Compile Include="EF\CLASS.cs" />

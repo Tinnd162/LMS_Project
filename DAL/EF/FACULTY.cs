@@ -16,8 +16,8 @@ namespace DAL.EF
             CLASSes = new HashSet<CLASS>();
         }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public int ID { get; set; }
+        [StringLength(20)]
+        public string ID { get; set; }
 
         [StringLength(50)]
         public string NAME { get; set; }

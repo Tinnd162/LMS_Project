@@ -30,17 +30,17 @@ namespace LMS.Areas.Teacher.Controllers
         }
 
         [ChildActionOnly]
-        public ActionResult Subjects(int course_id = 4)
+        public ActionResult Subjects(string course_id = "JZDN2020112521542821")
         {
             //**************************Test*******************************************
             User user = new User();
-            user.id = 2;
+            user.id = "JZDN2020112521542805";
             user.name = "A";
             Session.Add(CommonConstants.USER_SESSION, user);
             //******************Test**************************************************
 
             CommonFunc comf = new CommonFunc();
-            int user_id = comf.GetIdUserBySession();
+            string user_id = comf.GetIdUserBySession();
 
             SubjectDAO subjectDAO = new SubjectDAO();
             var listSubject = subjectDAO.GetSubjectByTeacherAndCourse(user_id, course_id);
@@ -49,7 +49,7 @@ namespace LMS.Areas.Teacher.Controllers
 
          
         [ChildActionOnly]
-        public ActionResult SubjectAssessments(int user_id = 2, int course_id = 4)
+        public ActionResult SubjectAssessments(string user_id = "JZDN2020112521542805", string course_id = "JZDN2020112521542821")
         {
             SubjectDAO subjectDAO = new SubjectDAO();
             var listSubject = subjectDAO.GetSubjectByTeacherAndCourse(user_id, course_id);
