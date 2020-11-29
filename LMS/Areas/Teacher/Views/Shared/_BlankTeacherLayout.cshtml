@@ -77,6 +77,11 @@
 
             showCardAddDoc()
             hideCardAddDoc()
+            addDoc()
+            removeDocChild()
+            editDocChild()
+            closeFormEditDocChild()
+            editDocChildContent()
 
             showCardAddEvent()
             hideCardAddEvent()
@@ -108,7 +113,7 @@
 
         function showCardAddDoc() {
             $('#AddTopic_btnAddDoc').click(function () {
-                $('#frmAddDoc').removeClass('d-none')
+                $('#frmAddDoc').toggleClass('d-none')
                 $('#divBtnAddDoc').toggleClass('d-none d-inline-flex')
             });
         }
@@ -119,6 +124,128 @@
                 $('#divBtnAddDoc').toggleClass('d-inline-flex d-none ')
             });
         }
+
+
+
+        function addDoc() {
+
+            $('#btn-AddDoc').click(function () {
+
+                $('#frmAddDoc div.text-danger').remove()
+
+                if ($('#AddDoc_title').val() == '' && $('#AddDoc_link').val() == '') {
+                    $('<div class="text-danger">* Phải nhập tiêu đề</div>').insertAfter('#AddDoc_title')
+                    $('<div class="text-danger">* Phải thêm link tài liệu</div>').insertAfter('#AddDoc_link')
+                    return false;
+                }
+                else if ($('#AddDoc_title').val() == '') {
+                    $('<div class="text-danger">* Phải nhập tiêu đề</div>').insertAfter('#AddDoc_title')
+                    return false;
+                }
+                else if ($('#AddDoc_link').val() == '') {
+                    $('<div class="text-danger">* Phải thêm link tài liệu</div>').insertAfter('#AddDoc_link')
+                    return false;
+                }
+                else {
+                    var valDesCKE = CKEDITOR.instances.fullDesDoc.getData();
+                    var htmlItemDoc = '<div class="itemDoc">'
+                            + '<div class="itemDocContent">'
+                                + '<div class="card-body pt-0 pb-1 pl-0 pr-0 ml-5 mr-4 border  border-primary border-right-0 border-left-0 border-top-0">'
+                                    + '<div class="d-flex">'
+                                    + '<h5 class=" mb-1 pt-3 text-primary d-inline-flex"><a href="' + $('#AddDoc_link').val() + '" target="_blank">' + $('#AddDoc_title').val() + '</a></h5>'
+                                    + '<div class="ml-auto mt-2" >'
+                                    + '<button type="button" class="btn_EditDoc btn btn-light text-success">Sửa</button> | <button type="button" class="btn_RemoveDoc btn btn-light text-danger">Xóa</button>'
+                                    + '</div >'
+                                + '</div >'
+                                + valDesCKE
+                                + '</div>'    
+                            +'</div>'
+                        + '</div>';
+
+
+                    $('#listDoc').append(htmlItemDoc)
+                    $('#AddDoc_title').val('')
+                    CKEDITOR.instances.fullDesDoc.setData('');
+                    $('#AddDoc_link').val('')
+                    $('#frmAddDoc').toggleClass('d-none')
+                    $('#divBtnAddDoc').toggleClass('d-none d-inline-flex')
+                }
+            });
+        }
+
+        function removeDocChild() {
+            $('#listDoc').on('click', '.itemDoc .btn_RemoveDoc', function () {
+                $(this).parents('.itemDoc').remove();
+            });
+        }
+
+        function editDocChild() {
+
+            $('#listDoc').on('click', '.itemDoc .btn_EditDoc', function () {
+                var item = $(this).parents('.itemDoc .itemDocContent')
+                item.toggleClass('d-none')
+                var linkItem = item.children('div.card-body').children('div.d-flex').children('h5').children('a').attr('href');
+                var titleItem = item.children('div.card-body').children('div.d-flex').children('h5').children('a').text();
+                var desItem = item.children('div.card-body').children('p').text();
+               
+            var editDocHtml = '<div class="formEdit_itemDoc form-group pl-5 pr-5 pb-2 mb-0 mt-2" style="background:#FAEBD7">'
+                + '<label class="pt-2 m-0">Tiêu đề</label>'
+                + '<input type="text" class="editDocTitle form-control" value="' + titleItem + '">'
+                + '<label class="pt-2 m-0">Mô tả</label>'
+                + '<input type="text" class="editDocDes form-control" value="' + desItem + '">'
+                + '<label class="pt-2 m-0">Link</label>'
+                + '<input type="text" class="editDocLink form-control" value="'+ linkItem +'">'
+                + '<div class="d-flex justify-content-end p-3">'
+                + '<button type="button" class="btn_close_EditDoc btn btn-outline-dark mr-2">Đóng</button>'
+                + '<button type="button" class="btn_ComfirmEditDoc btn btn-outline-warning">Sửa</button></div>'
+                + '</div>';
+
+            
+                $(this).parents('.itemDoc').append(editDocHtml)
+            });
+        }
+
+        function closeFormEditDocChild() {
+            $('#listDoc').on('click', '.itemDoc .formEdit_itemDoc .btn_close_EditDoc', function () {
+                $(this).parents('.itemDoc').children('.itemDocContent').toggleClass('d-none')
+                $(this).parents('.itemDoc .formEdit_itemDoc').remove();
+               
+            });
+        }
+
+        function editDocChildContent() {
+
+            $('#listDoc').on('click', '.itemDoc .formEdit_itemDoc .btn_ComfirmEditDoc', function () {
+
+                var item = $(this).parents('.itemDoc .formEdit_itemDoc')
+                if (item.children('.editDocLink').val() == '' && item.children('.editDocTitle').val() == '') {
+                    $('<div class="text-danger">* Không để trống</div>').insertAfter(item.children('.editDocTitle'))
+                    $('<div class="text-danger">* Không để trống</div>').insertAfter(item.children('.editDocLink'))
+                    return false;
+                }
+                else if (item.children('.editDocTitle').val() == '') {
+                    $('<div class="text-danger">* Không để trống</div>').insertAfter(item.children('.editDocTitle'))
+                    return false;
+                }
+                else if (item.children('.editDocLink').val() == '') {
+                    $('<div class="text-danger">* Không để trống</div>').insertAfter(item.children('.editDocLink'))
+                    return false;
+                }
+                else {
+                    var itemContent = $(this).parents('.itemDoc').children('.itemDocContent')
+                  
+                    itemContent.children('div.card-body').children('div.d-flex').children('h5').children('a').attr('href', item.children('.editDocLink').val())
+                    itemContent.children('div.card-body').children('div.d-flex').children('h5').children('a').text(item.children('.editDocTitle').val())
+                    itemContent.children('div.card-body').children('p').text(item.children('.editDocDes').val())
+
+                    item.remove()
+                    itemContent.toggleClass('d-none')
+                }
+            });
+        }
+
+
+
 
         function showCardAddEvent() {
             $('#AddTopic_btnAddEvent').click(function () {
