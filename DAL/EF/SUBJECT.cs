@@ -14,7 +14,7 @@ namespace DAL.EF
         {
             TOPICs = new HashSet<TOPIC>();
             C_USER = new HashSet<C_USER>();
-            C_USER1 = new HashSet<C_USER>();
+            C_USER1 = new HashSet<C_USER>(); //teacher
         }
 
         [StringLength(20)]
