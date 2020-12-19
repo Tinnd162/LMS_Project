@@ -26,9 +26,6 @@ namespace DAL.DAO
         public C_USER GetUser(string mail)
         {
             return db.C_USER.SingleOrDefault(x => x.MAIL == mail);
-
         }
-
-        
     }
 }

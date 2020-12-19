@@ -25,5 +25,9 @@ namespace DAL.DAO
             var roles = db.Database.SqlQuery<string>("sp_GET_ROLES @user_id", sqlParams).ToList();
             return roles;
         }
+        public List<ROLE> getrole()
+        {
+            return db.ROLEs.ToList();
+        }
     }
 }

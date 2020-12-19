@@ -1,0 +1,61 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_BlankAdminLayout.cshtml";
+}
+
+@section scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.5.2/bootbox.min.js" integrity="sha512-RdSPYh1WA6BF0RhpisYJVYkOyTzK4HwofJ3Q7ivt/jkpW6Vc8AurL1R+4AUcvn9IwEKAPm/fk7qFZW3OuiUDeg==" crossorigin="anonymous"></script>
+    <script src="~/Scripts/Admin/mustache.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twbs-pagination/1.4.2/jquery.twbsPagination.min.js" integrity="sha512-frFP3ZxLshB4CErXkPVEXnd5ingvYYtYhE5qllGdZmcOlRKNEPbufyupfdSTNmoF5ICaQNO6SenXzOZvoGkiIA==" crossorigin="anonymous"></script>
+    <script src="~/Scripts/Admin/studentController.js"></script>
+}
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Thông tin học phần</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <div class="d-flex justify-content-end mr-3">
+                <div class="dataTables_filter"><label>Tìm kiếm:<input type="search" class="form-control form-control-sm" placeholder="Nhập thông tin tìm kiếm" aria-controls="dataTable" id="txtSearch"></label></div>
+            </div>
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Khoa</th>
+                        <th>Lớp</th>
+                        <th>Chuyên ngành</th>
+                        <th>Họ và tên</th>
+                        <th>Số điện thoại</th>
+                        <th>Email</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="tblData-student">
+                </tbody>
+            </table>
+            <div id="pagination" class="pagination"></div>
+            <script id="data-student" type="x-tmpl-mustache">
+                <tr>
+                    <input type="hidden" value="{{IDFACULTY}}"/>
+                    <td>{{NAMEFACULTY}}</td>
+                    <input type="hidden" value="{{IDCLASS}}"/>
+                    <td>{{NAMECLASS}}</td>
+                    <td>{{MAJORCLASS}}</td>
+                    <input type="hidden" value="{{ID}}"/>
+                    <td>{{FIRST_NAME}}</td>
+                    <td>{{PHONE_NO}}</td>
+                    <td>{{MAIL}}</td>
+                    <td>
+                        <button class="btn btn-primary btn-edit-student" data-id="{{ID}}" data-fac="{{IDFACULTY}}"><i class="fa fa-edit"></i></button>
+                        <button class="btn btn-danger btn-delete-student" data-id="{{ID}}"><i class="fa fa-trash-alt"></i></button>
+                        <button class="btn btn-info btn-info-student" data-id="{{ID}}"><i class="fa fa-info"></i></button>
+                    </td>
+                </tr>
+            </script>
+        </div>
+    </div>
+</div>
+
+@RenderPage("popup_update_detail_student.cshtml")
+@RenderPage("popup_infostudent.cshtml")
