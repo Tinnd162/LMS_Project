@@ -56,5 +56,73 @@ namespace DAL.DAO
             }
         }
 
+
+        public List<EVENT> GetEventsOfSubject(string id_sub)
+        {
+            List<EVENT> listEvent = new List<EVENT>();
+
+            SUBJECT sub = db.SUBJECTs.First(x => x.ID == id_sub);
+            List<TOPIC> topics = sub.TOPICs.ToList();
+
+            foreach(TOPIC topic in topics)
+            {
+                listEvent.AddRange(
+                    topic.EVENTs.Select(ev => new EVENT
+                    {
+                        ID = ev.ID,
+                        TITLE = ev.TITLE,
+                        STARTDATE = ev.STARTDATE,
+                        DEADLINE = ev.DEADLINE,
+                        TOPIC_ID = ev.TOPIC_ID,
+                        SUBMITs = ev.SUBMITs.Select(s => new SUBMIT
+                        {
+                            ID = s.ID,
+                            USER_ID = s.USER_ID,
+                           ASSESSMENT = new ASSESSMENT
+                           {
+                               SCORE = ((s.ASSESSMENT == null) ? null : s.ASSESSMENT.SCORE),
+                              COMMENT = ((s.ASSESSMENT == null) ? null : s.ASSESSMENT.COMMENT )
+                           }
+                        }).ToList()
+                    }).ToList());
+            }
+            return listEvent;
+        }
+
+        public EVENT GetEventByID(string event_id)
+        {
+            EVENT ev =  db.EVENTs.First(x => x.ID == event_id);
+            return new EVENT
+            {
+                ID = ev.ID,
+                TITLE = ev.TITLE,
+                DESCRIPTION = ev.DESCRIPTION,
+                STARTDATE = ev.STARTDATE,
+                DEADLINE = ev.DEADLINE,
+                TOPIC = new TOPIC
+                {
+                    ID = ev.TOPIC.ID,
+                    TITLE = ev.TOPIC.TITLE,
+                    DESCRIPTION = ev.TOPIC.DESCRIPTION,
+                    SUB_ID = ev.TOPIC.SUB_ID,
+                    SUBJECT = new SUBJECT
+                    {
+                        NAME= ev.TOPIC.SUBJECT.NAME,
+                        DESCRIPTION = ev.TOPIC.SUBJECT.DESCRIPTION
+                    }
+                },
+                SUBMITs = ev.SUBMITs.Select(s => new SUBMIT 
+                {
+                    ID = s.ID,
+                    USER_ID = s.USER_ID,
+                    ASSESSMENT = new ASSESSMENT 
+                    { 
+                        SCORE = ((s.ASSESSMENT == null) ?null : s.ASSESSMENT.SCORE ) ,
+                        COMMENT = ((s.ASSESSMENT == null) ?  null : s.ASSESSMENT.COMMENT)
+                    }
+                }).ToList()
+            };
+        }
+
     }
 }

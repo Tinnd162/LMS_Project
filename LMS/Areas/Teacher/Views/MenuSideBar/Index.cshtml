@@ -1,10 +1,11 @@
-﻿
+﻿@model DAL.EF.COURSE
+
 <div class="sidebar-header">
-    <img src="#" alt="HCMUTE" />
+    <img src="~/Content/Common/utex.png" alt="HCMUTE" width="100px" class="ml-4"/>
 </div>
 
 <ul class="list-unstyled components">
-    <p>Tên khóa học để ở đây</p>
+    <p>@Model.TILTE </p>
     <li>
         <a href="#subjectSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Môn học</a>
         <ul class="collapse list-unstyled" id="subjectSubmenu">
@@ -24,7 +25,7 @@
         </ul>
     </li>
     <li>
-        <a href="#">Thông tin cá nhân</a>
+        <a href="/Profile/Index">Thông tin cá nhân</a>
     </li>
     <li>
         <a href="#">Đăng xuất</a>

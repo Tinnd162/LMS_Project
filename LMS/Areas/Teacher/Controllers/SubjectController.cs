@@ -17,56 +17,18 @@ namespace LMS.Areas.Teacher.Controllers
         // GET: Teacher/Subject
         public ActionResult Index(string id)
         {
-
-            return View();
+            SubjectDAO subDao = new SubjectDAO();
+            
+            return View(subDao.GetSubByID(id));
         }
 
        [HttpPost]
         public ActionResult PostTopic(TOPIC topic)
         {
-           //TOPIC topicEntity = new TOPIC();
-            //topicEntity.ID = topic.ID;
-            //topicEntity.TITLE = topic.Title;
-            //topicEntity.DESCRIPTION = topic.Description;
-            //topicEntity.SUB_ID = topic.SubjectID;
-
             TopicDAO topicDao = new TopicDAO();
 
             if (topicDao.InsertTopic(topic))
             {
-                //if(topic.DOCUMENTs != null)
-                //{
-                //    DocumentDAO docDao = new DocumentDAO();
-                //    foreach (Document doc in topic.Documents)
-                //    {
-                //        DOCUMENT docEntity = new DOCUMENT();
-                //        docEntity.ID = doc.ID;
-                //        docEntity.TITLE = doc.Title;
-                //        docEntity.DESCRIPTION = doc.Description;
-                //        docEntity.LINK = doc.Link;
-                //        docEntity.TYPE = null;
-                //        docEntity.TOPIC_ID = topic.ID;
-
-                //        docDao.InsertDocument(docEntity);
-                //    }
-                //}
-                
-                //if(topic.Events != null)
-                //{
-                //    EventDAO eventDao = new EventDAO();
-                //    foreach (Event ev in topic.Events)
-                //    {
-                //        EVENT eventEntity = new EVENT();
-                //        eventEntity.ID = ev.ID;
-                //        eventEntity.TITLE = ev.Title;
-                //        eventEntity.DESCRIPTION = ev.Description;
-                //        eventEntity.STARTDATE = Convert.ToDateTime(ev.StartDate);
-                //        eventEntity.DEADLINE = Convert.ToDateTime(ev.D);
-                //        eventEntity.TOPIC_ID = topic.ID;
-
-                //        eventDao.InsertEvent(eventEntity);
-                //    }
-                //}
                 return Json(new { success = true });
             }
 
@@ -143,18 +105,24 @@ namespace LMS.Areas.Teacher.Controllers
 
 
 
-
         [HttpGet]
-        public JsonResult GetTopic(string userId, string courseId, string subjectId)
+        public JsonResult GetTopic(string subjectId)//string userId, string courseId, string subjectId)
         {
-            TopicDAO topicDao = new TopicDAO();
-            List<TOPIC> topicEntities = new List<TOPIC>();
-          
-            topicEntities = topicDao.GetAllTopicOfTeacherSub(userId, courseId, subjectId);           
+            CommonFunc cFunc = new CommonFunc();
+            if(cFunc.GetSession() != null)
+            {
 
-            JavaScriptSerializer serializer = new JavaScriptSerializer();
-            string json = serializer.Serialize(topicEntities);
-            return Json(new { data = json }, JsonRequestBehavior.AllowGet);
+                TopicDAO topicDao = new TopicDAO();
+                List<TOPIC> topicEntities = new List<TOPIC>();
+
+                topicEntities = topicDao.GetAllTopicOfTeacherSub(cFunc.GetIdUserBySession(), cFunc.GetIdCourseBySession(), subjectId);
+
+                JavaScriptSerializer serializer = new JavaScriptSerializer();
+                string json = serializer.Serialize(topicEntities);
+                return Json(new { data = json, status = true }, JsonRequestBehavior.AllowGet);
+            }
+            return Json(new { data = "/Home/Error", status = false });
+
         }
         
         

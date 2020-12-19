@@ -149,17 +149,24 @@ function PostAndRenderTopic() {
 }
 
 
-function LoadListTopic() {
+function LoadListTopic(subID) {
     $.ajax({
         url: '/Teacher/Subject/GetTopic',
         type: 'GET',
         dataType: 'json',
-        data : { userId: "JZDN2020112521542805", courseId: "JZDN2020112521542821", SubjectId: "JZDN2020112521542813" },
+        data: { SubjectId: subID },//userId: "JZDN2020112521542805", courseId: "JZDN2020112521542821", SubjectId: "JZDN2020112521542813"},
         async : true,
-        success: function (data) {
-
-            renderDataObjectIntoTopicTemplate(JSON.parse(data.data))
+        success: function (response) {
+            if (response.status) {
+                renderDataObjectIntoTopicTemplate(JSON.parse(response.data))
+                return;
+            }
+            else {
+                window.location.href = response.data;
+                return;
+            }
         }
+
     })
 }
 

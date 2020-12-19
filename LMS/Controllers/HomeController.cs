@@ -9,6 +9,7 @@ using DAL.DAO;
 using System.Security.Cryptography;
 using System.Text;
 
+
 namespace LMS.Controllers
 {
     public class HomeController : Controller
@@ -28,24 +29,32 @@ namespace LMS.Controllers
             if (res)
             {
                 var user = userDao.GetUser(email);
-                var userModel = new User();
-                userModel.id = user.ID;
-                userModel.name = user.FIRST_NAME;
-
                 var roleDao = new RoleDAO();
                 var listRole = roleDao.GetRoles(user.ID);
 
-                Session.Add(CommonConstants.USER_SESSION, user);
-                Session.Add(CommonConstants.ROLE_SESSION, listRole);
+                CommonFunc cFunc = new CommonFunc();
+                cFunc.SetSession(user.ID, "JZDN2020112521542822");
+                //if (cFunc.isExistCookie(user.ID))
+                //{
+                //    return Content(cFunc.GetPathByCookie(user.ID));
+                //}
+                //else
+                //{
+                    if (listRole.Where(r => r.ROLE1 == "ADMIN").FirstOrDefault() != null)
+                        return Content("/Admin/Home/Index/" + user.ID);
+                    else if (listRole.Where(r => r.ROLE1 == "TEACHER").FirstOrDefault() != null)
+                        return Content("/Teacher/Home/Index/" + user.ID);
+                    else if (listRole.Where(r => r.ROLE1 == "STUDENT").FirstOrDefault() != null)
+                        return Content("/Student/Home/Index/" + user.ID);
+                //}
 
-                if(listRole.Contains("ADMIN"))
-                    return Content("/Admin/Home/Index/" + user.ID);
-                else if(listRole.Contains("TEACHER"))
-                    return Content("/Teacher/Home/Index/" + user.ID);
-                else if (listRole.Contains("STUDENT"))
-                    return Content("/Student/Home/Index/" + user.ID);
             }
             return Content("false");
+        }
+
+        public ActionResult Error()
+        {
+            return View();
         }
 
         public string GetMD5(string str)

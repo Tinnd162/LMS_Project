@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿
+
+<!DOCTYPE html>
 <html>
 
 <head>
@@ -38,8 +40,8 @@
                             <div>
                                 <ul class="nav navbar-nav ml-auto">
                                     <li>
-                                        <a class="nav-link" href="#" style="display:flex; flex-direction: row" id="zoomOut">
-                                            <span class="mr-2">Tên ở đây ...</span>
+                                        <a class="nav-link" href="/Profile/Index" style="display:flex; flex-direction: row" id="zoomOut">
+                                            <span class="mr-2">@Session["UserName"]</span>
                                             <i class="fas fa-user-circle fa-2x"></i>
                                         </a>
                                     </li>
@@ -54,7 +56,10 @@
                         @RenderBody()
                     </div>
                     <!--right side bar-->
-                    <div id="rightbar">2134</div>
+                    <div id="rightbar">
+                        <div id="clock"></div>
+                    </div>
+                    
                 </div>
             </div>
         </div>
@@ -84,6 +89,7 @@
                 $('#sidebar').toggleClass('active');
             });
 
+            clock()
             activeLinkControls()
 
             showCardAddTopic()
@@ -138,10 +144,27 @@
                 $('#sidebar ul li').removeClass('active')
                 $(this).closest('li').addClass('active')
             })
+        } 
+
+        function clock() {
+            clockUpdate()
+            setInterval(clockUpdate,1000)
         }
-
-
-
+        function clockUpdate() {
+            let date = new Date()
+            let h = addZero(Hour24th(date.getHours()))
+            let m = addZero(date.getMinutes())
+            let s = addZero(date.getSeconds())
+            $("#clock").text('Clock: '+ h + ':' + m + ':'+s)
+        }
+        function addZero(x) {
+            if (x < 10) return x = '0' + x;
+            else return x
+        }
+        function Hour24th(x) {
+            if (x >= 24) return x = x - 24
+            else return x
+        }
     </script>
 </body>
 

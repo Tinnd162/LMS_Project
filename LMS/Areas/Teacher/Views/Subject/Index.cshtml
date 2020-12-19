@@ -1,4 +1,4 @@
-﻿
+﻿@model DAL.EF.SUBJECT
 @{
     ViewBag.Title = "Index";
     Layout = "~/Areas/Teacher/Views/Shared/_BlankTeacherLayout.cshtml";
@@ -10,11 +10,11 @@
 
 
 
-<div class="card text-dark bg-light mr-4 mb-3 d-block">
+<div class="id_sub card text-dark bg-light mr-4 mb-3 d-block" data-id="@Model.ID">
     <div class="card-header pb-1 pt-1">Đường dẫn > abc > xyz </div>
     <div class="card-body">
-        <h5 class="card-title">Tên môn học </h5>
-        <p class="card-text">Mô tả plaplapla ...</p>
+        <h5 class="card-title">@Model.NAME</h5>
+        <p class="card-text">@Model.DESCRIPTION</p>
         <div id="loadingAddTopic"></div>
         <div class="d-inline-flex align-items-center p-2" id="divBtnAddTopic">
             <button type="button" class="btn btn-info bg-light text-dark" id="btnAddTopic">
@@ -81,17 +81,18 @@
 <script src="~/Scripts/Teacher/topic.js"></script>
 
 <script type="text/javascript">
-    LoadListTopic()
+    LoadListTopic($('div.id_sub').data('id'))
 </script>
 
 
 <!--//////////////////////////////Template/////////////////////////////////////////////////////////////////////s-->
 <script id="data-template-topic-item" type="x-tmpl-mustache">
     <div class="card  mr-4 mb-3">
-        <div class="card-body pt-1 position-relative" data-id="{{IdTopic}}">
+        <div class="card-body pt-1 position-relative" data-id="{{IdTopic}}" id="{{IdTopic}}">
+        
             <div class="position-absolute" style="right:0px; top:0px"><button type="button" class="btn btn-light text-danger" name="removeTopic">x</button></div>
             <form action="/" method="post" class="p-3 w-auto">
-                <h5 class="card-title"> {{TitleTopic}} </h5>
+                <h5 class="card-title mb-0"> {{TitleTopic}} </h5>
                 <p class="card-text">{{DesTopic}}</p>
 
                 <div class="divBtnAddDoc d-inline-flex align-items-center pl-3">
@@ -102,8 +103,6 @@
                 </div>
                 <div name="frmAddDoc"></div>
                 <div name="listDoc"></div>
-
-
 
                 <div class="d-inline-flex align-items-center pl-3 divBtnAddEvent">
                     <button type="button" class="btn btn-info bg-light text-dark pr-2 pl-2 pt-1 pb-1 AddTopic_btnAddEvent">
@@ -129,7 +128,7 @@
             <div class="ml-auto mt-2 position-absolute " style="right:0px; top:0px">
                 <button type="button" class="btn_EditDoc btn btn-light text-success">Sửa</button> | <button type="button" class="btn_RemoveDoc btn btn-light text-danger">Xóa</button>
             </div>
-            <h5 class="mb-1 pt-3 text-primary d-block">{{TitleDoc}}</h5>
+            <h5 class="mb-1 text-primary d-block">{{TitleDoc}}</h5>
             <a href="{{LinkDoc}} "><p class="text-primary m-0" style="width:300px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{LinkDoc}}</p> </a>
             <p style="word-break:break-word">{{DesDoc}}</p>
         </div>
@@ -143,9 +142,9 @@
         <div class="itemEventContent card-body pt-0 pb-1 pl-0 pr-0 ml-5 mr-4 border  border-primary border-right-0 border-left-0 border-top-0 position-relative d-flex flex-column">
             <div class="ml-auto mt-2 position-absolute" style="right:0px; top:0px">
                 <button type="button" class="btn_EditEvent btn btn-light text-success">Sửa</button> | <button type="button" class="btn_RemoveEvent btn btn-light text-danger">Xóa</button>'
-            </div>'
-            <h5 class="text-dark">{{TitleEvent}}</h5>
-            <p>{{DesEvent}}</p>
+            </div>
+            <h5 class="text-primary">{{TitleEvent}}</h5>
+            <p class="mb-0">{{DesEvent}}</p>
             <div class="date d-flex flex-row"><p name="startDate">Bắt đầu : <span>{{StartDate}}</span></p><p class="ml-3" name="finishDate"> Kết thúc: <span>{{FinishDate}}</span></p></div>
         </div>
     </div>

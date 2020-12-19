@@ -17,5 +17,9 @@ namespace DAL.DAO
         {
             return db.COURSEs.ToList();
         }
+        public COURSE GetCourseByID(string id)
+        {
+            return db.COURSEs.First(x => id == x.ID);
+        }
     }
 }

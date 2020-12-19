@@ -7,9 +7,7 @@ namespace LMS.Common
 {
     public class CommonConstants
     {
-        public static string USER_SESSION = "USER_SESSION";
-        public static string ROLE_SESSION = "ROLE_SESSION";
-       
-        public static string COURSE_SESSION = "COURSE_SESSION";
+        public static string SESSION = "SESSION";
+        public static string COOKIE = "COOKIE";
     }
 }

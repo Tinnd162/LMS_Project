@@ -75,6 +75,10 @@ namespace DAL.DAO
                 return false;
             }
         }
+        public TOPIC GetTopicById(string id)
+        {
+            return db.TOPICs.First(x => x.ID == id);
+        }
 
     }
 }

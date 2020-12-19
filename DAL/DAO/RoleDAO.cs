@@ -16,14 +16,9 @@ namespace DAL.DAO
         public RoleDAO() { db = new LMSProjectDBContext(); }
 
 
-        public List<string> GetRoles(string user_id)
+        public List<ROLE> GetRoles(string user_id)
         {
-            object[] sqlParams =
-            {
-                new SqlParameter("@user_id", user_id)
-            };
-            var roles = db.Database.SqlQuery<string>("sp_GET_ROLES @user_id", sqlParams).ToList();
-            return roles;
+            return db.ROLEs.Where(r => (r.C_USER.Where(u => u.ID == user_id).FirstOrDefault() != null) == true).ToList();
         }
     }
 }

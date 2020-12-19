@@ -58,7 +58,7 @@ namespace DAL.EF
 
             modelBuilder.Entity<ASSESSMENT>()
                 .Property(e => e.SCORE)
-                .HasPrecision(4, 2);
+                .HasPrecision(5, 2);
 
             modelBuilder.Entity<CLASS>()
                 .Property(e => e.ID)

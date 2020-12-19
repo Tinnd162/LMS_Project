@@ -1,7 +1,7 @@
 ﻿
 
 function showCardAddDocInCardAddTopic() {
-    renderFrmAddDoc(0, '#cardAddTopic')
+    renderFrmAddDoc('0', '#cardAddTopic')
 }
 
 
