@@ -9,11 +9,16 @@
     <title>LMS</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
     <link href="~/Content/Teacher/style.css" rel="stylesheet" />
+    <link href="~/Content/jquery.datetimepicker.css" rel="stylesheet" />
     <script src="https://kit.fontawesome.com/9dbbecbb49.js" crossorigin="anonymous"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="~/Scripts/jquery.datetimepicker.full.js"></script>
 </head>
 
 <body>
-    <div >
+    <div>
         <div class="wrapper">
             <!-- Sidebar  -->
             <nav id="sidebar">
@@ -58,14 +63,23 @@
             Chỗ này để footer
         </div>
     </div>
-   
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    
+
+    <script src="~/Scripts/mustache.min.js"></script>
+
+    <!--////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+    <script src="~/Scripts/Teacher/document.js"></script>
+    <script src="~/Scripts/Teacher/event.js"></script>
+    <script src="~/Scripts/Teacher/topic.js"></script>
+    <script src="~/Scripts/common.js"></script>
+    <!--////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+
     <script type="text/javascript">
+
         $(document).ready(function () {
+
             $('#sidebarCollapse').on('click', function () {
                 $('#sidebar').toggleClass('active');
             });
@@ -74,13 +88,50 @@
 
             showCardAddTopic()
             hideCardAddTopic()
+            removeTopic()
 
-            showCardAddDoc()
-            hideCardAddDoc()
+            //////////////////////////////
 
+            PostAndRenderTopic()
+
+            ///////////////document//////////////////////////////
+
+            showCardAddDocInCardAddTopic()
+            hideCardAddDocInCardAddTopic()
+            addDocInCardAddTopic()
+            removeDocChildInCardAddtopic()
+            editDocChildInCardAddtopic()
+            closeFormEditDocChildInCardAddtopic()
+            editDocChildContentInCardAddTopic()
+
+            ///////////////////////////////////////////////
+            hideCardAddDocInCardTopicAdded()
+            addDocInCardTopicAdded()
+            removeDocChildInTopicAdded()
+            editDocChildInTopicAdded()
+            closeFormEditDocChildInTopicAdded()
+            editDocChildContentInTopicAdded()
+
+
+            ///////////event//////////////////////////////////////
             showCardAddEvent()
-            hideCardAddEvent()
+            hideCardAddEventInCardAddTopic()
+            addEventInCardAddTopic()
+            removeEventChildInCardAddtopic()
+            editEventChild()
+            closeFormEditEventChildInCardAddtopic()
+            editEventChildContentInCardAddTopic()
+            editEventChildInCardAddtopic()
+            /////////////////////////////////////////////////
+
+            hideCardAddEventInCardTopicAdded()
+            addEventInTopicAdded()
+            removeEventChildInTopicAdded()
+            editEventChildInTopicAdded()
+            closeFormEditEventChildInTopicAdded()
+            editEventChildContentInTopicAdded()
         });
+
 
         function activeLinkControls() {
             $("#sidebar ul li a").click(function () {
@@ -89,52 +140,7 @@
             })
         }
 
-        function showCardAddTopic() {
-            $('#btnAddTopic').click(function () {
-                $('#cardAddTopic').toggleClass('d-none')       
-                $('#divBtnAddTopic').toggleClass('d-inline-flex d-none ')
-                $('#loadingAddTopic').html('...');
-            });
-        }
 
-        function hideCardAddTopic() {
-            $('#btn-CloseAddTopic').click(function () {
-                $('#cardAddTopic').toggleClass('d-none')
-                $('#divBtnAddTopic').toggleClass('d-inline-flex d-none ')
-                $('#loadingAddTopic').html('');
-            });
-        }
-
-
-        function showCardAddDoc() {
-            $('#AddTopic_btnAddDoc').click(function () {
-                $('#frmAddDoc').removeClass('d-none')
-                $('#divBtnAddDoc').toggleClass('d-none d-inline-flex')
-            });
-        }
-
-        function hideCardAddDoc() {
-            $('#btn-CloseDoc').click(function () {
-                $('#frmAddDoc').toggleClass('d-none')
-                $('#divBtnAddDoc').toggleClass('d-inline-flex d-none ')
-            });
-        }
-
-        function showCardAddEvent() {
-            $('#AddTopic_btnAddEvent').click(function () {
-                $('#frmAddEvent').removeClass('d-none')
-                $('#divBtnAddEvent').toggleClass('d-none d-inline-flex')
-            });
-        }
-
-        function hideCardAddEvent() {
-            $('#btn-CloseEvent').click(function () {
-                $('#frmAddEvent').toggleClass('d-none')
-                $('#divBtnAddEvent').toggleClass('d-inline-flex d-none ')
-            });
-        }
-
-       
 
     </script>
 </body>

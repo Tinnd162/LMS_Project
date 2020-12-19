@@ -19,18 +19,8 @@ namespace LMS.Common
             return user.id;
         }
 
-        public string RandomID(int size=4)
-        {
-            Random rd = new Random();
-            var builder = new StringBuilder();
-            for (int i = 0; i < size; i++)
-            {
-                var rdchar = (char)rd.Next('A', 'A' + 26);
-                builder.Append(rdchar);
-            }
-            builder.Append(DateTime.Now.ToString("yyyyMMddHHmmssff"));
-            return builder.ToString();
-        }
+       
+
 
     }
 }
