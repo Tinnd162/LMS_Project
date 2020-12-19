@@ -20,5 +20,9 @@ namespace DAL.DAO
         {
             return db.ROLEs.Where(r => (r.C_USER.Where(u => u.ID == user_id).FirstOrDefault() != null) == true).ToList();
         }
+        public List<ROLE> getrole()
+        {
+            return db.ROLEs.ToList();
+        }
     }
 }
