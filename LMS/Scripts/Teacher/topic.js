@@ -97,7 +97,7 @@ function PostAndRenderTopic() {
         topic.ID = generateID('topic')
         topic.TITLE = $('#AddTopic_title').val();
         topic.DESCRIPTION = CKEDITOR.instances.fullDesTopic.getData().slice(3, -4);
-        topic.SUB_ID = getParamOfUrlSubject();
+        topic.COURSE_ID = getParamOfUrlSubject();
         //alert(JSON.stringify(topic))
         topic.DOCUMENTs = [];
 
@@ -149,12 +149,12 @@ function PostAndRenderTopic() {
 }
 
 
-function LoadListTopic(subID) {
+function LoadListTopic(courseID) {
     $.ajax({
         url: '/Teacher/Subject/GetTopic',
         type: 'GET',
         dataType: 'json',
-        data: { SubjectId: subID },//userId: "JZDN2020112521542805", courseId: "JZDN2020112521542821", SubjectId: "JZDN2020112521542813"},
+        data: { courseId: courseID },//userId: "JZDN2020112521542805", courseId: "JZDN2020112521542821", SubjectId: "JZDN2020112521542813"},
         async : true,
         success: function (response) {
             if (response.status) {

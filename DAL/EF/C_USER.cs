@@ -13,8 +13,8 @@ namespace DAL.EF
         public C_USER()
         {
             SUBMITs = new HashSet<SUBMIT>();
-            SUBJECTs = new HashSet<SUBJECT>();
-            SUBJECTs1 = new HashSet<SUBJECT>();
+            TEACHES = new HashSet<TEACH>();
+            COURSEs = new HashSet<COURSE>();
             ROLEs = new HashSet<ROLE>();
         }
 
@@ -30,7 +30,8 @@ namespace DAL.EF
         [StringLength(20)]
         public string MIDDLE_NAME { get; set; }
 
-        public int? PHONE_NO { get; set; }
+        [StringLength(20)]
+        public string PHONE_NO { get; set; }
 
         public bool? SEX { get; set; }
 
@@ -58,10 +59,10 @@ namespace DAL.EF
         public virtual ICollection<SUBMIT> SUBMITs { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SUBJECT> SUBJECTs { get; set; }
+        public virtual ICollection<TEACH> TEACHES { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SUBJECT> SUBJECTs1 { get; set; }
+        public virtual ICollection<COURSE> COURSEs { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ROLE> ROLEs { get; set; }

@@ -4,8 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DAL.EF;
-using DAL.ViewModel;
-using PagedList;
+
 
 namespace DAL.DAO
 {
@@ -77,7 +76,7 @@ namespace DAL.DAO
             db.SaveChanges();
             return true;
         }
-        public List<C_USER> getsubbyID(string ID)
+        public List<C_USER> GetCourseByIDStudent(string ID)
         {
             List<C_USER> teacher = db.C_USER.Where(x => x.ID == ID).ToList();
             return teacher.Select(a => new C_USER
@@ -86,7 +85,7 @@ namespace DAL.DAO
                 FIRST_NAME = a.FIRST_NAME,
                 MIDDLE_NAME = a.MIDDLE_NAME,
                 LAST_NAME = a.LAST_NAME,
-                SUBJECTs = a.SUBJECTs.Select(b => new SUBJECT { ID = b.ID, NAME = b.NAME, COURSE = new COURSE { ID = b.COURSE.ID, TILTE = b.COURSE.TILTE } }).ToList()
+                COURSEs = a.COURSEs.Select(b => new COURSE { ID = b.ID, NAME = b.NAME, SEMESTER = new SEMESTER { ID = b.SEMESTER.ID, TITLE = b.SEMESTER.TITLE } }).ToList()
             }).ToList();
         }
     }

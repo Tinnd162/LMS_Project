@@ -1,11 +1,11 @@
-﻿@model DAL.EF.COURSE
+﻿@model DAL.EF.SEMESTER
 
 <div class="sidebar-header">
     <img src="~/Content/Common/utex.png" alt="HCMUTE" width="100px" class="ml-4"/>
 </div>
 
 <ul class="list-unstyled components">
-    <p>@Model.TILTE </p>
+    <p>@Model.TITLE </p>
     <li>
         <a href="#subjectSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Môn học</a>
         <ul class="collapse list-unstyled" id="subjectSubmenu">
@@ -21,7 +21,7 @@
     <li>
         <a href="#courseSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Khóa học</a>
         <ul class="collapse list-unstyled" id="courseSubmenu">
-            @{ Html.RenderAction("Courses", "MenuSideBar", new { area = "Teacher" });}
+            @{ Html.RenderAction("Semester", "MenuSideBar", new { area = "Teacher" });}
         </ul>
     </li>
     <li>

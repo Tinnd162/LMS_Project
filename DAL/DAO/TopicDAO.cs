@@ -20,22 +20,21 @@ namespace DAL.DAO
             return true;
         }
 
-        public List<TOPIC> GetAllTopicOfTeacherSub(string userId, string courseId, string subjectId)
+        public List<TOPIC> GetAllTopicOfTeacherCourse(string userId, string semId, string courseId)
         {
             //var topicsInSubTeachedByTeacher = db.C_USER.Where(x => x.ID == userId)
             //                    .Select(x => x.SUBJECTs1.Where(s => s.COURSE_ID == courseId && s.ID == subjectId)
             //                                            .Select(s => s.TOPICs)).ToList();
 
-            C_USER teacher = db.C_USER.Where(u => u.ID == userId).First();          
-            SUBJECT subjects = teacher.SUBJECTs1.Where(s => s.COURSE_ID == courseId && s.ID == subjectId).First();
-            List<TOPIC> topics = subjects.TOPICs.Select(
-                    t => new TOPIC
-                    {
-                        ID = t.ID,
-                        TITLE = t.TITLE,
-                        DESCRIPTION = t.DESCRIPTION,
-                        SUB_ID = t.SUB_ID,
-                        DOCUMENTs = t.DOCUMENTs
+            C_USER teacher = db.C_USER.Where(u => u.ID == userId).First();
+           TEACH teach = teacher.TEACHES.Where(t => t.COURSE.ID == courseId).Select(t => new TEACH { COURSE = t.COURSE}).First();
+            List<TOPIC> topics = teach.COURSE.TOPICs.Select(t => new TOPIC
+                {
+                    ID = t.ID,
+                    TITLE = t.TITLE,
+                    DESCRIPTION = t.DESCRIPTION,
+                    COURSE_ID = t.COURSE_ID,
+                    DOCUMENTs = t.DOCUMENTs
                                     .Select(d => new DOCUMENT
                                     {
                                         ID = d.ID,
@@ -45,7 +44,7 @@ namespace DAL.DAO
                                     })
                                     .ToList(),
 
-                        EVENTs = t.EVENTs
+                    EVENTs = t.EVENTs
                                     .Select(e => new EVENT
                                     {
                                         ID = e.ID,
@@ -55,8 +54,8 @@ namespace DAL.DAO
                                         DEADLINE = e.DEADLINE
                                     })
                                     .ToList()
-                    }
-                ).ToList();          
+                }).ToList();
+            
             return topics;
 
         }

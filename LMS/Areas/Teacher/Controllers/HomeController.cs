@@ -12,7 +12,7 @@ namespace LMS.Areas.Teacher.Controllers
     public class HomeController : Controller
     {
         // GET: Teacher/Home
-        public ActionResult Index(string course_id) //= "JZDN2020112521542821")
+        public ActionResult Index(string semester_id) //= "JZDN2020112521542821")
         {
 
             CommonFunc cFunc = new CommonFunc();
@@ -21,17 +21,17 @@ namespace LMS.Areas.Teacher.Controllers
                 string user_id = cFunc.GetIdUserBySession();
                 if (cFunc.checkRole(user_id, "TEACHER"))
                 {
-                    if (course_id == null)
+                    if (semester_id == null)
                     {
-                        course_id = cFunc.GetIdCourseBySession();
+                        semester_id = cFunc.GetIdCourseBySession();
                     }
-                    SubjectDAO subDao = new SubjectDAO();
-                    List<SUBJECT> listSub = subDao.GetSubjectByTeacherAndCourse(user_id, course_id);
+                    CourseDAO courseDao = new CourseDAO();
+                    List<COURSE> listCourse = courseDao.GetCourseByTeacherAndSemester(user_id, semester_id);
 
                     //********************************************
                    // cFunc.SetCookie(user_id, "/Teacher/Home/Index");
 
-                    return View(listSub);
+                    return View(listCourse);
                 }
             }  
             return RedirectToAction("Error", "Home", new { area = ""});  

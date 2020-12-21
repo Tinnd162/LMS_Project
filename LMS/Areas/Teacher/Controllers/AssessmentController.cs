@@ -17,24 +17,24 @@ namespace LMS.Areas.Teacher.Controllers
         {
             List<EVENT> listEvent = new List<EVENT>();
             EventDAO eventDao = new EventDAO();
-            listEvent = eventDao.GetEventsOfSubject(id);
+            listEvent = eventDao.GetEventsOfCourse(id);
             return View(listEvent);
         }
 
 
-        public ActionResult Detail(string eventID, string subID)
+        public ActionResult Detail(string eventID, string courseID)
         {
      
            
             EventDAO eDao = new EventDAO();
             EVENT ev = eDao.GetEventByID(eventID);
 
-            SubjectDAO subDao = new SubjectDAO();
-            SUBJECT sub = subDao.GetSubByID(subID);
+            CourseDAO courseDao = new CourseDAO();
+            COURSE course = courseDao.GetCourseByID(courseID);
 
             AssessmentDetailView detail = new AssessmentDetailView();
             detail.eVent = ev;
-            detail.subject = sub;
+            detail.course = course;
            
             return View(detail);
         }

@@ -26,14 +26,14 @@ namespace DAL.EF
         public string DESCRIPTION { get; set; }
 
         [StringLength(20)]
-        public string SUB_ID { get; set; }
+        public string COURSE_ID { get; set; }
+
+        public virtual COURSE COURSE { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DOCUMENT> DOCUMENTs { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<EVENT> EVENTs { get; set; }
-
-        public virtual SUBJECT SUBJECT { get; set; }
     }
 }

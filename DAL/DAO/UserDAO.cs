@@ -59,17 +59,20 @@ namespace DAL.DAO
                 }).ToList(),
 
                 //learns
-                SUBJECTs = ((user.SUBJECTs != null) ? user.SUBJECTs.Select(s => new SUBJECT
+                COURSEs = ((user.COURSEs != null) ? user.COURSEs.Select(s => new COURSE
                 {
                     ID = s.ID,
                     NAME = s.NAME
                 }).ToList() : null),
 
                 //teaches
-                SUBJECTs1 = ((user.SUBJECTs1 != null) ? user.SUBJECTs1.Select(s => new SUBJECT
+                TEACHES = ((user.TEACHES != null) ? user.TEACHES.Select(s => new TEACH
                 {
-                    ID = s.ID,
-                    NAME = s.NAME
+                    COURSE = new COURSE
+                    {
+                        ID = s.COURSE_ID,
+                        NAME = s.COURSE.NAME
+                    }
                 }).ToList() : null)
             };
         }

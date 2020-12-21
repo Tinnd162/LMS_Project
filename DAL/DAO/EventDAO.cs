@@ -57,11 +57,11 @@ namespace DAL.DAO
         }
 
 
-        public List<EVENT> GetEventsOfSubject(string id_sub)
+        public List<EVENT> GetEventsOfCourse(string id_sub)
         {
             List<EVENT> listEvent = new List<EVENT>();
 
-            SUBJECT sub = db.SUBJECTs.First(x => x.ID == id_sub);
+            COURSE sub = db.COURSEs.First(x => x.ID == id_sub);
             List<TOPIC> topics = sub.TOPICs.ToList();
 
             foreach(TOPIC topic in topics)
@@ -104,11 +104,11 @@ namespace DAL.DAO
                     ID = ev.TOPIC.ID,
                     TITLE = ev.TOPIC.TITLE,
                     DESCRIPTION = ev.TOPIC.DESCRIPTION,
-                    SUB_ID = ev.TOPIC.SUB_ID,
-                    SUBJECT = new SUBJECT
+                    COURSE_ID = ev.TOPIC.COURSE_ID,
+                    COURSE = new COURSE
                     {
-                        NAME= ev.TOPIC.SUBJECT.NAME,
-                        DESCRIPTION = ev.TOPIC.SUBJECT.DESCRIPTION
+                        NAME= ev.TOPIC.COURSE.NAME,
+                        DESCRIPTION = ev.TOPIC.COURSE.DESCRIPTION
                     }
                 },
                 SUBMITs = ev.SUBMITs.Select(s => new SUBMIT 

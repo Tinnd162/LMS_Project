@@ -7,7 +7,7 @@ namespace LMS.Areas.Teacher.Data
 {
     public class AssessmentDetailView
     {
-        public SUBJECT subject { get; set; }
+        public COURSE course { get; set; }
         public EVENT eVent{ get; set; }
     }
 }

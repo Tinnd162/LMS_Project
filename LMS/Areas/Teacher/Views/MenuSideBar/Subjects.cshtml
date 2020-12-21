@@ -1,8 +1,8 @@
-﻿@model List<DAL.EF.SUBJECT>
+﻿@model List<DAL.EF.COURSE>
 
-@foreach(var sub in Model)
+@foreach(var course in Model)
 {
     <li>
-        <a href="~/Teacher/Subject/Index/@sub.ID">@sub.NAME</a>
+        <a href="~/Teacher/Subject/Index/@course.ID">@course.NAME</a>
     </li>
 }

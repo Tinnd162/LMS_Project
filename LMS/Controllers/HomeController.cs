@@ -33,7 +33,7 @@ namespace LMS.Controllers
                 var listRole = roleDao.GetRoles(user.ID);
 
                 CommonFunc cFunc = new CommonFunc();
-                cFunc.SetSession(user.ID, "JZDN2020112521542822");
+                cFunc.SetSession(user.ID, "20211");
                 //if (cFunc.isExistCookie(user.ID))
                 //{
                 //    return Content(cFunc.GetPathByCookie(user.ID));

@@ -14,6 +14,7 @@ namespace DAL.EF
         {
             C_USER = new HashSet<C_USER>();
             CLASSes = new HashSet<CLASS>();
+            SUBJECTs = new HashSet<SUBJECT>();
         }
 
         [StringLength(20)]
@@ -27,5 +28,8 @@ namespace DAL.EF
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CLASS> CLASSes { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<SUBJECT> SUBJECTs { get; set; }
     }
 }

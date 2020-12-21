@@ -17,9 +17,9 @@ namespace LMS.Areas.Teacher.Controllers
         // GET: Teacher/Subject
         public ActionResult Index(string id)
         {
-            SubjectDAO subDao = new SubjectDAO();
+            CourseDAO courseDao = new CourseDAO();
             
-            return View(subDao.GetSubByID(id));
+            return View(courseDao.GetCourseByID(id));
         }
 
        [HttpPost]
@@ -106,7 +106,7 @@ namespace LMS.Areas.Teacher.Controllers
 
 
         [HttpGet]
-        public JsonResult GetTopic(string subjectId)//string userId, string courseId, string subjectId)
+        public JsonResult GetTopic(string courseId)//string userId, string courseId, string subjectId)
         {
             CommonFunc cFunc = new CommonFunc();
             if(cFunc.GetSession() != null)
@@ -115,7 +115,7 @@ namespace LMS.Areas.Teacher.Controllers
                 TopicDAO topicDao = new TopicDAO();
                 List<TOPIC> topicEntities = new List<TOPIC>();
 
-                topicEntities = topicDao.GetAllTopicOfTeacherSub(cFunc.GetIdUserBySession(), cFunc.GetIdCourseBySession(), subjectId);
+                topicEntities = topicDao.GetAllTopicOfTeacherCourse(cFunc.GetIdUserBySession(), cFunc.GetIdSemesterBySession(), courseId);
 
                 JavaScriptSerializer serializer = new JavaScriptSerializer();
                 string json = serializer.Serialize(topicEntities);

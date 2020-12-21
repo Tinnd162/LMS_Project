@@ -7,7 +7,7 @@ Layout = "~/Areas/Teacher/Views/Shared/_BlankTeacherLayout.cshtml";
 
 
 <div class="mr-4">
-    <h3 class="panel-title">@Model.subject.NAME</h3>
+    <h3 class="panel-title">@Model.course.NAME</h3>
     <h5 class="text-primary">@Model.eVent.TITLE</h5>
     <table class="table table-striped">
         <thead>
@@ -20,7 +20,7 @@ Layout = "~/Areas/Teacher/Views/Shared/_BlankTeacherLayout.cshtml";
         </thead>
         <tbody>
            
-            @foreach (var student in Model.subject.C_USER)
+            @foreach (var student in Model.course.C_USER)
             {
                 <tr>
                     <td>@student.LAST_NAME @student.MIDDLE_NAME @student.FIRST_NAME</td>
