@@ -43,6 +43,12 @@ namespace DAL.DAO
                     FIRST_NAME = u.FIRST_NAME,
                     LAST_NAME = u.LAST_NAME,
                     MIDDLE_NAME = u.MIDDLE_NAME
+                }).ToList(),
+                TOPICs = s.TOPICs.Select(t => new TOPIC
+                {
+                    ID = t.ID,
+                    TITLE = t.TITLE,
+                    DESCRIPTION = t.DESCRIPTION
                 }).ToList()
             };
         }
@@ -163,5 +169,8 @@ namespace DAL.DAO
                 return false;
             }
         }
+
+
+        
     }
 }

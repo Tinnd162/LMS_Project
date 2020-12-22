@@ -23,7 +23,7 @@ namespace LMS.Controllers
         {
             string email = f["email"].ToString();
             string password = f["password"].ToString();
-         
+
             UserDAO userDao = new UserDAO();
             var res = userDao.Login(email, GetMD5(password));
             if (res)
@@ -40,12 +40,12 @@ namespace LMS.Controllers
                 //}
                 //else
                 //{
-                    if (listRole.Where(r => r.ROLE1 == "ADMIN").FirstOrDefault() != null)
-                        return Content("/Admin/Home/Index/" + user.ID);
-                    else if (listRole.Where(r => r.ROLE1 == "TEACHER").FirstOrDefault() != null)
-                        return Content("/Teacher/Home/Index/" + user.ID);
-                    else if (listRole.Where(r => r.ROLE1 == "STUDENT").FirstOrDefault() != null)
-                        return Content("/Student/Home/Index/" + user.ID);
+                if (listRole.Where(r => r.ROLE1 == "ADMIN").FirstOrDefault() != null)
+                    return Content("/Admin/Home/Index/" + user.ID);
+                else if (listRole.Where(r => r.ROLE1 == "TEACHER").FirstOrDefault() != null)
+                    return Content("/Teacher/Home/Index/" + user.ID);
+                else if (listRole.Where(r => r.ROLE1 == "STUDENT").FirstOrDefault() != null)
+                    return Content("/Student/Home/Index/" + user.ID);
                 //}
 
             }
@@ -75,5 +75,11 @@ namespace LMS.Controllers
             return sbHash.ToString();
         }
 
+        [ChildActionOnly]
+        public ActionResult Footer()
+        {
+            return View();
+        }
     }
+
 }

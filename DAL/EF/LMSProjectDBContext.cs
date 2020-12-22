@@ -1,10 +1,10 @@
+using System;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Data.Entity;
+using System.Linq;
+
 namespace DAL.EF
 {
-    using System;
-    using System.Data.Entity;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using System.Linq;
-
     public partial class LMSProjectDBContext : DbContext
     {
         public LMSProjectDBContext()
@@ -20,14 +20,20 @@ namespace DAL.EF
         public virtual DbSet<EVENT> EVENTs { get; set; }
         public virtual DbSet<FACULTY> FACULTies { get; set; }
         public virtual DbSet<ROLE> ROLEs { get; set; }
+        public virtual DbSet<SEMESTER> SEMESTERs { get; set; }
         public virtual DbSet<SUBJECT> SUBJECTs { get; set; }
         public virtual DbSet<SUBMIT> SUBMITs { get; set; }
+        public virtual DbSet<TEACH> TEACHES { get; set; }
         public virtual DbSet<TOPIC> TOPICs { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<C_USER>()
                 .Property(e => e.ID)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<C_USER>()
+                .Property(e => e.PHONE_NO)
                 .IsUnicode(false);
 
             modelBuilder.Entity<C_USER>()
@@ -48,6 +54,12 @@ namespace DAL.EF
 
             modelBuilder.Entity<C_USER>()
                 .HasMany(e => e.SUBMITs)
+                .WithOptional(e => e.C_USER)
+                .HasForeignKey(e => e.USER_ID)
+                .WillCascadeOnDelete();
+
+            modelBuilder.Entity<C_USER>()
+                .HasMany(e => e.TEACHES)
                 .WithOptional(e => e.C_USER)
                 .HasForeignKey(e => e.USER_ID)
                 .WillCascadeOnDelete();
@@ -78,10 +90,28 @@ namespace DAL.EF
                 .IsUnicode(false);
 
             modelBuilder.Entity<COURSE>()
-                .HasMany(e => e.SUBJECTs)
+                .Property(e => e.SEMESTER_ID)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<COURSE>()
+                .Property(e => e.SUBJECT_ID)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<COURSE>()
+                .HasOptional(e => e.TEACH)
+                .WithRequired(e => e.COURSE)
+                .WillCascadeOnDelete();
+
+            modelBuilder.Entity<COURSE>()
+                .HasMany(e => e.TOPICs)
                 .WithOptional(e => e.COURSE)
                 .HasForeignKey(e => e.COURSE_ID)
                 .WillCascadeOnDelete();
+
+            modelBuilder.Entity<COURSE>()
+                .HasMany(e => e.C_USER)
+                .WithMany(e => e.COURSEs)
+                .Map(m => m.ToTable("LEARNS").MapRightKey("USER_ID"));
 
             modelBuilder.Entity<DOCUMENT>()
                 .Property(e => e.ID)
@@ -127,6 +157,11 @@ namespace DAL.EF
                 .WithOptional(e => e.FACULTY)
                 .HasForeignKey(e => e.ID_FACULTY);
 
+            modelBuilder.Entity<FACULTY>()
+                .HasMany(e => e.SUBJECTs)
+                .WithOptional(e => e.FACULTY)
+                .HasForeignKey(e => e.FACULTY_ID);
+
             modelBuilder.Entity<ROLE>()
                 .Property(e => e.ID)
                 .IsUnicode(false);
@@ -140,29 +175,28 @@ namespace DAL.EF
                 .WithMany(e => e.ROLEs)
                 .Map(m => m.ToTable("USER_ROLE").MapRightKey("USER_ID"));
 
+            modelBuilder.Entity<SEMESTER>()
+                .Property(e => e.ID)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<SEMESTER>()
+                .HasMany(e => e.COURSEs)
+                .WithOptional(e => e.SEMESTER)
+                .HasForeignKey(e => e.SEMESTER_ID);
+
             modelBuilder.Entity<SUBJECT>()
                 .Property(e => e.ID)
                 .IsUnicode(false);
 
             modelBuilder.Entity<SUBJECT>()
-                .Property(e => e.COURSE_ID)
+                .Property(e => e.FACULTY_ID)
                 .IsUnicode(false);
 
             modelBuilder.Entity<SUBJECT>()
-                .HasMany(e => e.TOPICs)
+                .HasMany(e => e.COURSEs)
                 .WithOptional(e => e.SUBJECT)
-                .HasForeignKey(e => e.SUB_ID)
+                .HasForeignKey(e => e.SUBJECT_ID)
                 .WillCascadeOnDelete();
-
-            modelBuilder.Entity<SUBJECT>()
-                .HasMany(e => e.C_USER)
-                .WithMany(e => e.SUBJECTs)
-                .Map(m => m.ToTable("LEARNS").MapLeftKey("SUB_ID").MapRightKey("USER_ID"));
-
-            modelBuilder.Entity<SUBJECT>()
-                .HasMany(e => e.C_USER1)
-                .WithMany(e => e.SUBJECTs1)
-                .Map(m => m.ToTable("TEACHES").MapLeftKey("SUB_ID").MapRightKey("USER_ID"));
 
             modelBuilder.Entity<SUBMIT>()
                 .Property(e => e.ID)
@@ -185,12 +219,20 @@ namespace DAL.EF
                 .WithRequired(e => e.SUBMIT)
                 .WillCascadeOnDelete();
 
+            modelBuilder.Entity<TEACH>()
+                .Property(e => e.USER_ID)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<TEACH>()
+                .Property(e => e.COURSE_ID)
+                .IsUnicode(false);
+
             modelBuilder.Entity<TOPIC>()
                 .Property(e => e.ID)
                 .IsUnicode(false);
 
             modelBuilder.Entity<TOPIC>()
-                .Property(e => e.SUB_ID)
+                .Property(e => e.COURSE_ID)
                 .IsUnicode(false);
 
             modelBuilder.Entity<TOPIC>()
