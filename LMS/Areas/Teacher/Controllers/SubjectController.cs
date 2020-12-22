@@ -17,8 +17,12 @@ namespace LMS.Areas.Teacher.Controllers
         // GET: Teacher/Subject
         public ActionResult Index(string id)
         {
-            CourseDAO courseDao = new CourseDAO();
-            
+            CommonFunc cFunc = new CommonFunc();
+            if (cFunc.CheckSectionInvalid() == false || cFunc.checkRole("TEACHER") == false)
+                return RedirectToAction("Error", "Home", new { area = "" });
+
+
+            CourseDAO courseDao = new CourseDAO();   
             return View(courseDao.GetCourseByID(id));
         }
 

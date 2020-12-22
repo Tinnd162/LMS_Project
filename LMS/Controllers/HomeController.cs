@@ -34,12 +34,9 @@ namespace LMS.Controllers
 
                 CommonFunc cFunc = new CommonFunc();
                 cFunc.SetSession(user.ID, "20211");
-                //if (cFunc.isExistCookie(user.ID))
-                //{
-                //    return Content(cFunc.GetPathByCookie(user.ID));
-                //}
-                //else
-                //{
+                cFunc.SetCookie();
+
+
                 if (listRole.Where(r => r.ROLE1 == "ADMIN").FirstOrDefault() != null)
                     return Content("/Admin/Home/Index/" + user.ID);
                 else if (listRole.Where(r => r.ROLE1 == "TEACHER").FirstOrDefault() != null)

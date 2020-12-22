@@ -28,8 +28,50 @@
         <a href="/Profile/Index">Thông tin cá nhân</a>
     </li>
     <li>
-        <a href="#">Đăng xuất</a>
+        <a id="logout">Đăng xuất</a>
     </li>
 </ul>
 
+<div class="modal d-none position-fixed" id="modal" style="background-color: rgba(0, 0, 0, .5);">
+    <div class="modal-content m-auto d-flex" style="width:35%; top:150px">
+        <div class="p-4 d-flex align-items-center flex-column">
+            <div><h5 class="text-dark mb-5 mt-3">Bạn muốn thoát ? </h5></div>
+            <div class="d-flex flex-row">
+                <button class="btn btn-light mr-3" id="logoutBtnNo">Không</button>
+                <button class="btn btn-primary" id="logoutBtnOk">Thoát</button>
+            </div>
+        </div>
+    </div>
+</div>
 
+<script type="text/javascript">
+    $(document).ready(
+        ModalToggleLogout()
+    )
+
+    function ModalToggleLogout() {
+        $('#logout').click(function () {
+            $('#modal').toggleClass('d-none d-block');
+        });
+
+        $(window).on('click', function (e) {
+            if ($(e.target).is('#modal')) {
+                $('#modal').toggleClass('d-none d-block');
+            }
+
+            $('#logoutBtnNo').on('click', function () {
+                $('#modal').toggleClass('d-none d-block');
+            })
+
+            $('#logoutBtnOk').on('click', function () {
+                 @{Session.Clear();}
+                window.location.href = '/Home/Index'
+
+            })
+        });
+    }
+
+
+
+
+</script>
