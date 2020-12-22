@@ -1,26 +1,30 @@
-﻿var teacherController = {
+﻿var teacherconfig = {
+	pageSize: 5,
+	pageIndex: 1,
+}
+var teacherController = {
 	init: function () {
-		teacherController.getteacher();
+		teacherController.GetTeacher();
 		teacherController.registerEvent();
-		teacherController.getfacultyID_NAME();
+		teacherController.GetFacultyID_NAME();
 	},
 	registerEvent: function () {
-		$(document).stop().on('click', '.btn-delete-teacher', function () {
+		$(document).stop().on('click', '.btn-delete-Teacher', function () {
 			var id = $(this).data('id');
 			bootbox.confirm("Bạn có chắc chắn muốn xóa?", function (result) {
 				if (result) {
-					teacherController.delete(id);
+					teacherController.Delete(id);
 				}
 			})
 		})
-		$(document).stop().on('click', '.btn-edit-teacher', function () {
+		$(document).stop().on('click', '.btn-edit-Teacher', function () {
 			var id = $(this).data('id');
-			$('#update-teacher-info').modal('show');
-			teacherController.detail(id);
+			$('#InfoUpdateTeacher').modal('show');
+			teacherController.Detail(id);
 		})
-		$(document).stop().on('click', '#btnSave-infoteacher', function () {
+		$(document).stop().on('click', '#btnSave-InfoTeacher', function () {
 			if ($('#frmSaveDataTeacher').valid()) {
-				teacherController.save();
+				teacherController.Save();
 			}
 		})
 		$(document).stop().on('click', '#facultyname', function (e) {
@@ -28,22 +32,21 @@
 			var id = optionSelected.data("idOption");
 			$('#IDfacl').val(id);
 		})
-		$(document).stop().on('click', '.btn-info-teacher', function () {
+		$(document).stop().on('click', '.btn-info-Teacher', function () {
 			var id = $(this).data('id');
-			$('#infoteacher').modal('show');
-			teacherController.getsubbyID(id);
+			$('#InfoTeacher').modal('show');
+			teacherController.GetCoursebyID(id);
 		})
-		$(document).stop().on('click', '.btn-delete-subject', function () {
-			var idsub = $(this).data('id');
-			var idcourse = $(this).data('course');
+		$(document).stop().on('click', '.btn-delete-Course', function () {
+			var idcourse = $(this).data('id');
 			bootbox.confirm("Bạn có chắc chắn muốn xóa?", function (result) {
 				if (result) {
-					teacherController.deletesubbyID(idsub, idcourse);
+					teacherController.DeleteCoursebyID(idcourse);
                 }
             })
         })
 	},
-	save: function () {
+	Save: function () {
 		var id = $('#ID').val();
 		var first = $('#first_name').val();
 		var last = $('#last_name').val();
@@ -55,7 +58,7 @@
 		var password = $('#password').val();
 		var lastvisited = $('#lastvisited').val();
 		var facultyid = $('#IDfacl').val();
-		var infoteacher = {
+		var InfoTeacher = {
 			ID: id,
 			FIRST_NAME: first,
 			LAST_NAME: last,
@@ -69,15 +72,15 @@
 			FACULTY_ID: facultyid,
 		}
 		$.ajax({
-			url: '/Admin/Teacher/save',
-			data: infoteacher,
+			url: '/Admin/Teacher/Save',
+			data: InfoTeacher,
 			type: 'POST',
 			dataType: 'json',
 			success: function (response) {
 				if (response.status == true) {
-					bootbox.alert("Save success", function () {
+					bootbox.alert("Sửa thành công!", function () {
 						$('#frmSaveDataTeacher').modal('hide');
-						teacherController.getteacher(true);
+						teacherController.GetTeacher(true);
 					})
 				} else {
 					bootbox.log(response.message);
@@ -88,16 +91,20 @@
 			}
 		})
 	},
-	getteacher: function () {
+	GetTeacher: function () {
 		$.ajax({
-			url: '/Admin/Teacher/getteacher',
+			url: '/Admin/Teacher/GetTeacher',
 			type: 'GET',
 			dataType: 'json',
+			data: {
+				page: teacherconfig.pageIndex,
+				pageSize: teacherconfig.pageSize
+			},
 			success: function (response) {
 				if (response.status) {
 					var data = response.data;
 					var html = '';
-					var template = $('#data-teacher').html();
+					var template = $('#data-Teacher').html();
 					$.each(data, function (i, item) {
 						html += Mustache.render(template, {
 							IDNAMEFACULTY: item.FACULTY.ID,
@@ -108,14 +115,42 @@
 							MAIL: item.MAIL,
 						});
 						$('#tblData-Teacher').html(html);
+						teacherController.paging(response.total, function () {
+							teacherController.GetTeacher();
+						});
+						teacherController.registerEvent();
 					});
 				}
 			}
 		})
 	},
-	delete: function (id) {
+	paging: function (totalRow, callback) {
+		var totalPage = Math.ceil(totalRow / teacherconfig.pageSize);
+
+		////Unbind pagination if it existed or click change pagesize
+		//if ($('#pagination a').length === 0 || changePageSize === true) {
+		//    $('#pagination').empty();
+		//    $('#pagination').removeData("twbs-pagination");
+		//    $('#pagination').unbind("page");
+		//}
+
+		$('#pagination').twbsPagination({
+			totalPages: totalPage,
+			first: "Đầu",
+			next: "Tiếp",
+			last: "Cuối",
+			prev: "Trước",
+			visiblePages: 10,
+			onPageClick: function (event, page) {
+				teacherController.GetTeacher();
+				teacherconfig.pageIndex = page;
+				setTimeout(callback, 200);
+			}
+		});
+	},
+	Delete: function (id) {
 		$.ajax({
-			url: '/Admin/Teacher/delete',
+			url: '/Admin/Teacher/Delete',
 			data: {
 				id: id
 			},
@@ -124,15 +159,15 @@
 			success: function (response) {
 				if (response.status == true) {
 					bootbox.alert("Xóa thành công", function () {
-						teacherController.getteacher(true);
+						teacherController.GetTeacher(true);
 					})
 				}
 			}
 		});
 	},
-	detail: function (id) {
+	Detail: function (id) {
 		$.ajax({
-			url: '/Admin/Teacher/detail',
+			url: '/Admin/Teacher/Detail',
 			data: {
 				idnameteacher: id,
 			},
@@ -165,9 +200,9 @@
 			'/' + (date.getDate() > 9 ? date.getDate() : ('0' + date.getDate())) +
 			' ' + date.toLocaleTimeString('vi');
 	},
-	getfacultyID_NAME: function () {
+	GetFacultyID_NAME: function () {
 		$.ajax({
-			url: '/Admin/Teacher/getfacultyID_NAME',
+			url: '/Admin/Teacher/GetFacultyID_NAME',
 			type: 'GET',
 			dataType: 'json',
 			success: function (response) {
@@ -181,9 +216,9 @@
 			}
 		})
 	},
-	getsubbyID: function (id) {
+	GetCoursebyID: function (id) {
 		$.ajax({
-			url: '/Admin/Teacher/getsubbyID',
+			url: '/Admin/Teacher/GetCoursebyID',
 			data: {idteacher:id},
 			type: 'POST',
 			datatype: 'json',
@@ -191,26 +226,25 @@
 				if (response.status == true) {
 					var data = response.data;
 					var html = '';
-					var template = $('#data-infosubject').html();
-					var teacher = $('#nameteacher').val(data[0].LAST_NAME + ' ' + data[0].MIDDLE_NAME + ' ' + data[0].FIRST_NAME);
-					$.each(data[0].SUBJECTs1, function (i, item) {
+					var template = $('#data-InfoCourse').html();
+					var teacher = $('#NameTeacher').val(data[0].LAST_NAME + ' ' + data[0].MIDDLE_NAME + ' ' + data[0].FIRST_NAME);
+					$.each(data[0].TEACHES, function (i, item) {
 						html += Mustache.render(template, {
-							IDSUB: item.IDSUB,
-							NAMESUB: item.NAMESUB,
 							IDCOURSE: item.COURSE.ID,
-							COURSE: item.COURSE.TILTE,
+							NAMECOURSE: item.COURSE.NAME,
+							IDSEMESTER: item.COURSE.SEMESTER.ID,
+							SEMESTER: item.COURSE.SEMESTER.TILTE,
 						});
 					});
-					$('#tblData-subject').html(html);
+					$('#tblData-Course').html(html);
                 }
             }
         })
 	},
-	deletesubbyID: function (idsub, idcourse) {
+	DeleteCoursebyID: function (idcourse) {
 		$.ajax({
-			url: '/Admin/Teacher/deletesubbyID',
+			url: '/Admin/Teacher/DeleteCoursebyID',
 			data: {
-				idsub: idsub,
 				idcourse: idcourse
 			},
 			type: 'POST',
@@ -218,7 +252,7 @@
 			success: function (response) {
 				if (response.status == true) {
 					bootbox.alert("Xóa thành công", function () {
-						$('#infoteacher').modal('hide');
+						$('#InfoTeacher').modal('hide');
 					})
                 }
             }

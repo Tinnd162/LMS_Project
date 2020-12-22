@@ -15,7 +15,7 @@ namespace LMS.Areas.Admin.Controllers
         {
             return View();
         }
-        public JsonResult getstudent()
+        public JsonResult GetStudent(int page, int pageSize)
         {
             var model = new InfoStudentDAO().getstudent().Select(x => new
             {
@@ -37,13 +37,16 @@ namespace LMS.Areas.Admin.Controllers
                     MAJOR = x.CLASS.MAJOR
                 }
             });
+            var subjects = model.Skip((page - 1) * pageSize).Take(pageSize);
+            int totalRow = model.Count();
             return Json(new
             {
-                data = model,
+                total = totalRow,
+                data = subjects,
                 status = true
             }, JsonRequestBehavior.AllowGet);
         }
-        public JsonResult delete(string id)
+        public JsonResult Delete(string id)
         {
             var info = new InfoStudentDAO().deletestudent(id);
             return Json(new
@@ -51,7 +54,7 @@ namespace LMS.Areas.Admin.Controllers
                 status = true
             });
         }
-        public JsonResult detail(string idstudent)
+        public JsonResult Detail(string idstudent)
         {
             var model = new InfoStudentDAO().detailstudent(idstudent).Select(x => new
             {
@@ -66,7 +69,7 @@ namespace LMS.Areas.Admin.Controllers
                 PASSWORD = x.PASSWORD,
                 LASTVISITDATE = x.LASTVISITDATE,
                 FACULTY = new { ID = x.FACULTY.ID, NAMEFACULTY = x.FACULTY.NAME },
-                CLASS= new {ID=x.CLASS.ID, NAMECLASS=x.CLASS.NAME, MAJOR=x.CLASS.MAJOR}
+                CLASS = new { ID = x.CLASS.ID, NAMECLASS = x.CLASS.NAME, MAJOR = x.CLASS.MAJOR }
             }).ToList();
             return Json(new
             {
@@ -74,15 +77,15 @@ namespace LMS.Areas.Admin.Controllers
                 status = true
             });
         }
-        public JsonResult getclassinfaculty(string id="1")
+        public JsonResult GetClassInFaculty(string id)
         {
             var model = new FacultyDAO().getclassinfaculty(id).Select(x => new
             {
                 CLASSes = x.CLASSes.Select(a => new { IDCLASS = a.ID, NAMECLASS = a.NAME, MAJORCLASS = a.MAJOR })
             });
-            return Json(new { data = model },JsonRequestBehavior.AllowGet);
+            return Json(new { data = model }, JsonRequestBehavior.AllowGet);
         }
-        public JsonResult save(C_USER infostudent)
+        public JsonResult Save(C_USER infostudent)
         {
             bool status = false;
             string message = string.Empty;
@@ -105,21 +108,32 @@ namespace LMS.Areas.Admin.Controllers
                 message = message
             });
         }
-        public JsonResult getsubbyID(string idstudent)
+        public JsonResult GetcoursebyID(string idstudent = "U00006")
         {
-            var sub = new InfoStudentDAO().getsubbyID(idstudent).Select(x => new
+            var sub = new InfoStudentDAO().getcoursebyID(idstudent).Select(x => new
             {
                 ID = x.ID,
                 FIRST_NAME = x.FIRST_NAME,
                 MIDDLE_NAME = x.MIDDLE_NAME,
                 LAST_NAME = x.LAST_NAME,
-                SUBJECTs = x.SUBJECTs.Select(y => new { IDSUB = y.ID, NAMESUB = y.NAME, COURSE = new COURSE { ID = y.COURSE.ID, TILTE = y.COURSE.TILTE } })
+                COURSE = x.COURSEs.Select(y => new
+                {
+                    IDCOURSE = y.ID,
+                    NAMECOURSE = y.NAME,
+                    DESCRIPTION = y.DESCRIPTION,
+                    SUBJECT_ID = y.SUBJECT_ID,
+                    SEMESTER = new SEMESTER
+                    {
+                        ID = y.SEMESTER.ID,
+                        TITLE = y.SEMESTER.TITLE,
+                    }
+                })
             });
             return Json(new
             {
                 data = sub,
                 status = true
-            });
+            }, JsonRequestBehavior.AllowGet);
         }
     }
 }

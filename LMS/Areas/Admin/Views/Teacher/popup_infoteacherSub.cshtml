@@ -1,4 +1,4 @@
-﻿<div class="modal fade" id="infoteacher">
+﻿<div class="modal fade" id="InfoTeacher">
     <div class="modal-dialog" style="max-width: 80%">
         <div class="modal-content">
             <div class="modal-header">
@@ -12,9 +12,9 @@
                     <div class="card-body">
                         <div class="table-responsive">
                             <div class="form-group row" style="margin-left:0; margin-right:0">
-                                <label for="nameteacher" class="col-md-2 col-form-label">Giảng viên:</label>
+                                <label for="NameTeacher" class="col-md-2 col-form-label">Giảng viên:</label>
                                 <div class="col-md-4">
-                                    <input type="text" readonly class="form-control-plaintext" id="nameteacher" value="" style="padding:5px">
+                                    <input type="text" readonly class="form-control-plaintext" id="NameTeacher" value="" style="padding:5px">
                                 </div>
                             </div>
                             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
@@ -25,18 +25,18 @@
                                         <th></th>
                                     </tr>
                                 </thead>
-                                <tbody id="tblData-subject">
+                                <tbody id="tblData-Course">
                                 </tbody>
                             </table>
                             <div id="pagination" class="pagination"></div>
-                            <script id="data-infosubject" type="x-tmpl-mustache">
+                            <script id="data-InfoCourse" type="x-tmpl-mustache">
                                 <tr>
-                                    <input type="hidden" value="{{IDSUB}}"/>
-                                    <td>{{NAMESUB}}</td>
                                     <input type="hidden" value="{{IDCOURSE}}"/>
-                                    <td>{{COURSE}}</td>
+                                    <td>{{NAMECOURSE}}</td>
+                                    <input type="hidden" value="{{IDSEMESTER}}"/>
+                                    <td>{{SEMESTER}}</td>
                                     <td>
-                                        <button class="btn btn-danger btn-delete-subject" data-id="{{IDSUB}}" data-course="{{IDCOURSE}}"><i class="fa fa-trash-alt"></i></button>
+                                        <button class="btn btn-danger btn-delete-Course" data-id="{{IDCOURSE}}"><i class="fa fa-trash-alt"></i></button>
                                     </td>
                                 </tr>
                             </script>
