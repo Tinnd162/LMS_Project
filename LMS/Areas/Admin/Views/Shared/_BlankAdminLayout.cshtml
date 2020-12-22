@@ -60,7 +60,7 @@
                        aria-expanded="true"
                        aria-controls="collapseTwo">
                         <i class="fas fa-fw fa-cog"></i>
-                        <span>Khóa học</span>
+                        <span>Học kỳ</span>
                     </a>
                     <div id="collapseTwo"
                          class="collapse"
@@ -68,8 +68,8 @@
                          data-parent="#accordionSidebar">
                         <div class="bg-white py-2 collapse-inner rounded">
                             <h6 class="collapse-header">Components:</h6>
-                            <a class="collapse-item" href="~/Admin/Courses/Index">Tìm kiếm khóa học</a>
-                            <a class="collapse-item" href="#">Tạo khóa học</a>
+                            <a class="collapse-item" href="~/Admin/Semester/Index">Tìm kiếm học kỳ</a>
+                            <a class="collapse-item" href="#">Tạo học kỳ</a>
                         </div>
                     </div>
                 </li>
@@ -126,8 +126,22 @@
                          data-parent="#accordionSidebar">
                         <div class="bg-white py-2 collapse-inner rounded">
                             <h6 class="collapse-header">Components:</h6>
-                            <a class="collapse-item" href="~/Admin/Subjects/Index">Tìm kiếm lớp học phần</a>
+                            <a class="collapse-item" href="~/Admin/Course/Index">Tìm kiếm lớp học phần</a>
                             <a class="collapse-item" href="#">Tạo lớp học phần mới</a>
+                        </div>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
+                       aria-expanded="true" aria-controls="collapsePages">
+                        <i class="fas fa-fw fa-folder"></i>
+                        <span>Môn học</span>
+                    </a>
+                    <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            <h6 class="collapse-header">Components:</h6>
+                            <a class="collapse-item" href="~/Admin/Subjects/Index">Tìm kiếm môn học</a>
+                            <a class="collapse-item" href="#">Tạo môn học</a>
                         </div>
                     </div>
                 </li>
@@ -212,8 +226,8 @@
                                aria-haspopup="true"
                                aria-expanded="false">
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
-                                <img class="img-profile rounded-circle"
-                                     src="img/undraw_profile.svg" />
+                                @*<img class="img-profile rounded-circle"
+                                     src="img/undraw_profile.svg" />*@
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -294,6 +308,15 @@
             </div>
         </div>
     </div>
+
+    <script>
+
+        var sidebarToggle = function () {
+            $("#accordionSidebar").toggleClass("toggled")
+        }
+        $("#sidebarToggle").on("click", sidebarToggle)
+        $("#sidebarToggleTop").on("click", sidebarToggle)
+    </script>
 
     @RenderSection("scripts", required: false)
 </body>
