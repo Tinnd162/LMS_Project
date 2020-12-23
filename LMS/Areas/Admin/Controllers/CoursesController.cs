@@ -6,7 +6,7 @@ using System.Web.Mvc;
 using System.Web.Script.Serialization;
 using DAL.DAO;
 using DAL.EF;
-using DAL.ViewModel;
+
 using Newtonsoft.Json;
 using LMS.Common;
 using System.Text;

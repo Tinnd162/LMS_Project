@@ -16,9 +16,22 @@ namespace LMS.Areas.Teacher.Controllers
         // GET: Teacher/Assessment
         public ActionResult Index(string id)
         {
-            CommonFunc cFunc = new CommonFunc();
-            if (cFunc.CheckSectionInvalid() == false || cFunc.checkRole("TEACHER") == false)
+            try
+            {
+                CommonFunc cFunc = new CommonFunc();
+                if (cFunc.CheckSectionInvalid() == false || cFunc.checkRole("TEACHER") == false) { 
+                    if (cFunc.GetSession() == null)
+                    {
+                        return RedirectToAction("Index", "Home", new { area = "" });
+                    }
+                    else return RedirectToAction("Error", "Home", new { area = "" });
+                }
+                 
+            }
+            catch
+            {
                 return RedirectToAction("Error", "Home", new { area = "" });
+            }
 
             List<EVENT> listEvent = new List<EVENT>();
             EventDAO eventDao = new EventDAO();
@@ -29,10 +42,22 @@ namespace LMS.Areas.Teacher.Controllers
 
         public ActionResult Detail(string eventID, string courseID)
         {
-            CommonFunc cFunc = new CommonFunc();
-            if (cFunc.CheckSectionInvalid() == false || cFunc.checkRole("TEACHER") == false)
+            try
+            {
+                CommonFunc cFunc = new CommonFunc();
+                if (cFunc.CheckSectionInvalid() == false || cFunc.checkRole("TEACHER") == false)
+                {
+                    if (cFunc.GetSession() == null)
+                    {
+                        return RedirectToAction("Index", "Home", new { area = "" });
+                    }
+                    else return RedirectToAction("Error", "Home", new { area = "" });
+                } 
+            }
+            catch
+            {
                 return RedirectToAction("Error", "Home", new { area = "" });
-
+            }
 
             EventDAO eDao = new EventDAO();
             EVENT ev = eDao.GetEventByID(eventID);
@@ -50,11 +75,23 @@ namespace LMS.Areas.Teacher.Controllers
 
         public ActionResult StudentDetail(string studentID, string eventID)
         {
-            CommonFunc cFunc = new CommonFunc();
-            if (cFunc.CheckSectionInvalid() == false || cFunc.checkRole("TEACHER") == false)
+            try
+            {
+                CommonFunc cFunc = new CommonFunc();
+                if (cFunc.CheckSectionInvalid() == false || cFunc.checkRole("TEACHER") == false)
+                {
+                    if (cFunc.GetSession() == null)
+                    {
+                        return RedirectToAction("Index", "Home", new { area = "" });
+                    }
+                    else return RedirectToAction("Error", "Home", new { area = "" });
+                }
+            }
+               
+            catch
+            {
                 return RedirectToAction("Error", "Home", new { area = "" });
-
-
+            }
             UserDAO userDao = new UserDAO();
             C_USER student = userDao.GetStudentsByIDWithSubmit(studentID, eventID);
 

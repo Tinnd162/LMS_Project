@@ -18,10 +18,10 @@ namespace DAL.DAO
         {
             return db.SEMESTERs.ToList();
         }
-        //public List<SEMESTER> getdetail(string id)
-        //{
-        //    return db.SEMESTERs.Where(x=>x.ID==id).ToList();
-        //}
+        public List<SEMESTER> getdetail(string id)
+        {
+            return db.SEMESTERs.Where(x => x.ID == id).ToList();
+        }
         public bool DelSemester(string id)
         {
             var sem = db.SEMESTERs.Find(id);

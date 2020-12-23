@@ -21,7 +21,7 @@ namespace LMS.Areas.Admin.Controllers
         [HttpGet]
         public JsonResult GetCourse(int page, int pageSize)
         {
-            var listcourse = new CourseDAO().getcourse().Select(x => new
+            var listcourse = new CourseDAO().GetCOURSEs().Select(x => new
             {
                 ID = x.ID,
                 NAME = x.NAME,
@@ -39,7 +39,7 @@ namespace LMS.Areas.Admin.Controllers
         }
         public JsonResult Delete(string id)
         {
-            var model = new CourseDAO().deletecourse(id);
+            var model = new CourseDAO().DelCourse(id);
             return Json(new
             {
                 status = true

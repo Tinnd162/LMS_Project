@@ -6,7 +6,7 @@ using System.Web.Mvc;
 using System.Web.Script.Serialization;
 using DAL.DAO;
 using DAL.EF;
-using DAL.ViewModel;
+
 using Newtonsoft.Json;
 using LMS.Common;
 using System.Text;
@@ -23,7 +23,7 @@ namespace LMS.Areas.Admin.Controllers
         }
         public JsonResult GetSemester(int page, int pageSize)
         {
-            var model = new SemesterDAO().getsemester().Select(x => new
+            var model = new SemesterDAO().GetSEMESTERs().Select(x => new
             {
                 ID = x.ID,
                 TITLE = x.TITLE,
@@ -41,13 +41,18 @@ namespace LMS.Areas.Admin.Controllers
         }
         public JsonResult Detail(string id)
         {
-            var model = new SemesterDAO().getdetail(id).Select(x => new {
-                ID = x.ID,
-                TITLE = x.TITLE,
-                DESCRIPTION = x.DESCRIPTION,
-                START = x.START,
-                END_SEM = x.END_SEM
-            });
+            SEMESTER sem = new SemesterDAO().GetSemesterByID(id);
+
+            var model = new
+            {
+                ID = sem.ID,
+                TITLE = sem.TITLE,
+                DESCRIPTION = sem.DESCRIPTION,
+                START = sem.START,
+                END_SEM = sem.END_SEM
+            };
+            
+           
             return Json(new
             {
                 data = model,
@@ -56,13 +61,19 @@ namespace LMS.Areas.Admin.Controllers
         }
         public JsonResult Delete(string id)
         {
-            var model = new SemesterDAO().deletesemester(id);
+            if(new SemesterDAO().DelSemester(id))
+            {
+                return Json(new
+                {
+                    status = true
+                }, JsonRequestBehavior.AllowGet);
+            }
             return Json(new
             {
-                status = true
-            },
-            JsonRequestBehavior.AllowGet);
+                status = false
+            }, JsonRequestBehavior.AllowGet);
         }
+
         public JsonResult Save(SEMESTER semester)
         {
             bool status = false;

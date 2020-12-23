@@ -71,35 +71,35 @@ namespace DAL.DAO
         //                                     };
         //    return model.ToList();
         //}
-        //public int insertsubject(string id, string name, string description, string course_id)
-        //{
-        //    object[] sqlParms = {
-        //    new SqlParameter("@id", id),
-        //    new SqlParameter("@name", name),
-        //    new SqlParameter("@description", description),
-        //    new SqlParameter("@course_id", course_id)
-        //};
-        //    var model = db.Database.ExecuteSqlCommand("sp_CREATE_SUBJECT @id, @name, @description, @course_id", sqlParms);
-        //    return model;
-        //}
-        //public int updatesubject(string id, string name, string description, string course_id)
-        //{
-        //    object[] sqlParms = {
-        //    new SqlParameter("@id", id),
-        //    new SqlParameter("@name", name),
-        //    new SqlParameter("@description", description),
-        //    new SqlParameter("@course_id", course_id)
-        //    };
-        //    var model = db.Database.ExecuteSqlCommand("sp_UPDATE_SUBJECT  @id, @name, @description, @course_id", sqlParms);
-        //    return model;
-        //}
-        //public bool deletesubject(string id)
-        //{
-        //    var sub = db.SUBJECTs.First(x => x.ID == id);
-        //    db.SUBJECTs.Remove(sub);
-        //    db.SaveChanges();
-        //    return true;
-        //}
+        public int insertsubject(string id, string name, string description, string course_id)
+        {
+            object[] sqlParms = {
+            new SqlParameter("@id", id),
+            new SqlParameter("@name", name),
+            new SqlParameter("@description", description),
+            new SqlParameter("@course_id", course_id)
+        };
+            var model = db.Database.ExecuteSqlCommand("sp_CREATE_SUBJECT @id, @name, @description, @course_id", sqlParms);
+            return model;
+        }
+        public int updatesubject(string id, string name, string description, string course_id)
+        {
+            object[] sqlParms = {
+            new SqlParameter("@id", id),
+            new SqlParameter("@name", name),
+            new SqlParameter("@description", description),
+            new SqlParameter("@course_id", course_id)
+            };
+            var model = db.Database.ExecuteSqlCommand("sp_UPDATE_SUBJECT  @id, @name, @description, @course_id", sqlParms);
+            return model;
+        }
+        public bool deletesubject(string id)
+        {
+            var sub = db.SUBJECTs.First(x => x.ID == id);
+            db.SUBJECTs.Remove(sub);
+            db.SaveChanges();
+            return true;
+        }
         public List<COURSE> GetCourseInSemester(string id_sem)
         {
             SEMESTER sem = db.SEMESTERs.Where(a => a.ID == id_sem).FirstOrDefault();

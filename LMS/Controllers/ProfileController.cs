@@ -43,5 +43,17 @@ namespace LMS.Controllers
             }
             return Json(new { status = false });
         }
+
+        [HttpPost]
+        public JsonResult Logout()
+        {
+            CommonFunc cf = new CommonFunc();
+            if (cf.DelCookie())
+            {
+                Session.Clear();
+                return Json(new { status = true});
+            }
+            return Json(new { status = false });
+        }
     }
 }

@@ -62,21 +62,37 @@ namespace LMS.Common
             HttpCookie httpCookie = new HttpCookie(GetIdUserBySession());
             httpCookie.Values.Add(CommonConstants.SESSION, HttpContext.Current.Session.SessionID);
             httpCookie.Expires = DateTime.Now.AddDays(1);
-            HttpContext.Current.Response.SetCookie(httpCookie);
+            HttpContext.Current.Response.Cookies.Add(httpCookie);
         }
 
         public bool CheckSectionInvalid()
         {
-            if(HttpContext.Current.Request.Cookies[GetIdUserBySession()].Value == (CommonConstants.SESSION+"="+HttpContext.Current.Session.SessionID))
+            try
             {
+                if((HttpContext.Current.Session[CommonConstants.SESSION] as Session) != null)
+                {
+                    if (HttpContext.Current.Request.Cookies[GetIdUserBySession()].Value == (CommonConstants.SESSION + "=" + HttpContext.Current.Session.SessionID))
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
+            catch
+            {
+                return false;
+            }
+            
+        }
+
+        public bool DelCookie()
+        {
+            if(HttpContext.Current.Request.Cookies[GetIdUserBySession()] != null)
+            {
+                HttpContext.Current.Response.Cookies[GetIdUserBySession()].Expires = DateTime.Now.AddDays(-1);
                 return true;
             }
             return false;
-        }
-
-        public void DelCookie()
-        {
-            HttpContext.Current.Request.Cookies[GetIdUserBySession()].Expires = DateTime.Now.AddDays(-1);
         }
 
         public bool checkRole(string role)
