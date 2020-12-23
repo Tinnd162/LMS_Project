@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DAL.EF;
-
+using DAL.ViewModel;
 
 namespace DAL.DAO
 {
@@ -16,43 +16,16 @@ namespace DAL.DAO
         {
             db = new LMSProjectDBContext();
         }
-
-        public List<COURSE> GetCourseByTeacherAndSemester(string teacher_id, string sem_id)
+        public List<SUBJECT> GetSubjectByTeacherAndCourse(string teacher_id, string course_id)
         {
-            C_USER teacher = db.C_USER.First(x => x.ID == teacher_id);
-            List<TEACH> teaches = teacher.TEACHES.Select(c => new TEACH { COURSE = c.COURSE }).ToList();
-            List<COURSE> courses = new List<COURSE>();
-            foreach(TEACH teach in teaches)
-            {
-                courses.Add(teach.COURSE);
-            }
-            return courses;
+            object[] sqlParams = {
+        new SqlParameter("@user_id", teacher_id),
+        new SqlParameter("@course_id", course_id)
+      };
+            var listSubject = db.Database.SqlQuery<SUBJECT>("sp_GET_SUBJECT_BY_TEACHER_AND_COURSE @user_id, @course_id", sqlParams).ToList();
+            return listSubject;
         }
-
-        public COURSE GetCourseByID(string id)
-        {
-            COURSE s =  db.COURSEs.First(x => x.ID == id);
-            return new COURSE() {
-                ID = s.ID,
-                NAME = s.NAME,
-                DESCRIPTION = s.DESCRIPTION,
-                SEMESTER_ID = s.SEMESTER_ID,
-                C_USER = s.C_USER.Select(u => new C_USER
-                {
-                    ID = u.ID,
-                    FIRST_NAME = u.FIRST_NAME,
-                    LAST_NAME = u.LAST_NAME,
-                    MIDDLE_NAME = u.MIDDLE_NAME
-                }).ToList(),
-                TOPICs = s.TOPICs.Select(t => new TOPIC
-                {
-                    ID = t.ID,
-                    TITLE = t.TITLE,
-                    DESCRIPTION = t.DESCRIPTION
-                }).ToList()
-            };
-        }
-        public List<COURSE> GetCOURSEs()
+        public List<COURSE> getcourse()
         {
             return db.COURSEs.ToList();
         }
@@ -101,32 +74,21 @@ namespace DAL.DAO
             return true;
         }
         public List<COURSE> GetCourseInSemester(string id_sem)
+        public bool deletecourse(string id)
         {
-            SEMESTER sem = db.SEMESTERs.Where(a => a.ID == id_sem).FirstOrDefault();
-            List<COURSE> course = sem.COURSEs.Select(b => new COURSE
+            var course = db.COURSEs.First(x => x.ID == id);
+            db.COURSEs.Remove(course);
+            db.SaveChanges();
+            return true;
+        }
+        public List<COURSE> courseinsemester(string id)
+        {
+            SEMESTER semester = db.SEMESTERs.Where(a => a.ID == id).FirstOrDefault();
+            List<COURSE> course = semester.COURSEs.Select(b => new COURSE
             {
                 ID = b.ID,
                 NAME = b.NAME,
                 DESCRIPTION = b.DESCRIPTION,
-                TEACH = new TEACH 
-                { C_USER = new C_USER 
-                    { 
-                        ID = b.TEACH.C_USER.ID,
-                        FIRST_NAME = b.TEACH.C_USER.FIRST_NAME,
-                        LAST_NAME = b.TEACH.C_USER.LAST_NAME,
-                        MIDDLE_NAME = b.TEACH.C_USER.MIDDLE_NAME,
-                    } 
-                }
-            }).ToList();
-            return course;
-        }
-        public List<COURSE> Info_Teacher_Student_Course(string id)
-        {
-            List<COURSE> s = db.COURSEs.Where(x => x.ID == id).ToList();
-            return s.Select(b=> new COURSE()
-            {
-                ID = b.ID,
-                NAME = b.NAME,
                 TEACH = new TEACH
                 {
                     C_USER = new C_USER
@@ -134,10 +96,30 @@ namespace DAL.DAO
                         ID = b.TEACH.C_USER.ID,
                         FIRST_NAME = b.TEACH.C_USER.FIRST_NAME,
                         LAST_NAME = b.TEACH.C_USER.LAST_NAME,
-                        MIDDLE_NAME = b.TEACH.C_USER.MIDDLE_NAME,
+                        MIDDLE_NAME = b.TEACH.C_USER.MIDDLE_NAME
                     }
                 },
-                C_USER = b.C_USER.Select(c => new C_USER
+            }).ToList();
+            return course;
+        }
+        public List<COURSE> InfoTeacherStudentInCourse(string id)
+        {
+            List<COURSE> s = db.COURSEs.Where(x => x.ID == id).ToList();
+            return s.Select(a => new COURSE()
+            {
+                ID = a.ID,
+                NAME = a.NAME,
+                TEACH = new TEACH
+                {
+                    C_USER = new C_USER
+                    {
+                        ID=a.TEACH.C_USER.ID,
+                        FIRST_NAME=a.TEACH.C_USER.FIRST_NAME,
+                        LAST_NAME=a.TEACH.C_USER.LAST_NAME,
+                        MIDDLE_NAME=a.TEACH.C_USER.MIDDLE_NAME
+                    }
+                },
+                C_USER = a.C_USER.Select(c => new C_USER
                 {
                     ID = c.ID,
                     FIRST_NAME = c.FIRST_NAME,
@@ -146,31 +128,33 @@ namespace DAL.DAO
                 }).ToList()
             }).ToList();
         }
-        //public bool DelCourseByID(string idcourse,string idsem)
-        //{
-        //    SEMESTER sem = db.SEMESTERs.Where(x => x.ID == idsem).First();
-        //    var course = sem.COURSEs.Where(y => y.ID == idcourse).First();
-        //    db.COURSEs.Remove(course);
-        //    db.SaveChanges();
-        //    return true;
-        //}
-
-        public bool DelCourse(string id)
+        public List<COURSE> getdetail(string id)
         {
-            try
+            var model = db.COURSEs.Where(x => x.ID == id).ToList();
+            return model.Select(a => new COURSE
             {
-                SUBJECT sub = db.SUBJECTs.First(x => x.ID == id);
-                db.SUBJECTs.Remove(sub);
-                db.SaveChanges();
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
+                ID = a.ID,
+                NAME=a.NAME,
+                DESCRIPTION=a.DESCRIPTION,
+                SEMESTER= new SEMESTER { ID=a.SEMESTER.ID, TITLE=a.SEMESTER.TITLE},
+                SUBJECT= new SUBJECT { ID=a.SUBJECT.ID, NAME=a.SUBJECT.NAME}
+            }).ToList();
         }
-
-
-        
+        public bool addcourse(COURSE course)
+        {
+            db.COURSEs.Add(course);
+            db.SaveChanges();
+            return true;
+        }
+        public bool updatecourse(COURSE course)
+        {
+            var model = db.COURSEs.Find(course.ID);
+            model.NAME = course.NAME;
+            model.DESCRIPTION = course.DESCRIPTION;
+            model.SUBJECT_ID = course.SUBJECT_ID;
+            model.SEMESTER_ID = course.SEMESTER_ID;
+            db.SaveChanges();
+            return true;
+        }
     }
 }
