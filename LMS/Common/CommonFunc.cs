@@ -65,7 +65,7 @@ namespace LMS.Common
             HttpContext.Current.Response.Cookies.Add(httpCookie);
         }
 
-        public bool CheckSectionInvalid()
+        public bool CheckSessionInvalid()
         {
             try
             {

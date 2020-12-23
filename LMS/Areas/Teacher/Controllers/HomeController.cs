@@ -12,27 +12,11 @@ namespace LMS.Areas.Teacher.Controllers
     public class HomeController : Controller
     {
         // GET: Teacher/Home
+        [CustomAuthorize("TEACHER")]
         public ActionResult Index(string semester_id)
         {
 
             CommonFunc cFunc = new CommonFunc();
-            try
-            {
-                if (cFunc.CheckSectionInvalid() == false || cFunc.checkRole("TEACHER") == false)
-                {
-                    if(cFunc.GetSession() == null)
-                    {
-                        return RedirectToAction("Index", "Home", new { area = "" });
-                    }
-                    else return RedirectToAction("Error", "Home", new { area = "" });
-                }
-            }
-                
-            catch
-            {
-                return RedirectToAction("Error", "Home", new { area = "" });
-            }
-
             if (semester_id == null)
             {
                 semester_id = cFunc.GetIdSemesterBySession();

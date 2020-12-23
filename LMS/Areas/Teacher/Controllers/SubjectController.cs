@@ -12,31 +12,12 @@ using System.Web.Script.Serialization;
 
 namespace LMS.Areas.Teacher.Controllers
 {
+    [CustomAuthorize("TEACHER")]
     public class SubjectController : Controller
     {
         // GET: Teacher/Subject
         public ActionResult Index(string id)
         {
-            try
-            {
-                CommonFunc cFunc = new CommonFunc();
-                if (cFunc.CheckSectionInvalid() == false || cFunc.checkRole("TEACHER") == false)
-                {
-                    if (cFunc.GetSession() == null)
-                    {
-                        return RedirectToAction("Index", "Home", new { area = "" });
-                    }
-                    else return RedirectToAction("Error", "Home", new { area = "" });
-                }
-               
-            }
-            catch
-            {
-                return RedirectToAction("Error", "Home", new { area = "" });
-            }
-           
-
-
             CourseDAO courseDao = new CourseDAO();   
             return View(courseDao.GetCourseByID(id));
         }
