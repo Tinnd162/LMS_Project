@@ -57,52 +57,32 @@ namespace LMS.Common
 
 
 
-        //public void SetCookie(string id_user, string path)
-        //{
-        //    HttpCookie httpCookie = new HttpCookie(id_user);
-        //    httpCookie.Path = path;
-        //    httpCookie.Expires = DateTime.Now.AddDays(5);
-        //    HttpContext.Current.Response.SetCookie(httpCookie);
-        //}
+        public void SetCookie()
+        {
+            HttpCookie httpCookie = new HttpCookie(GetIdUserBySession());
+            httpCookie.Values.Add(CommonConstants.SESSION, HttpContext.Current.Session.SessionID);
+            httpCookie.Expires = DateTime.Now.AddDays(1);
+            HttpContext.Current.Response.SetCookie(httpCookie);
+        }
 
-        //public string GetPathByCookie(string id_user)
-        //{
-        //    return HttpContext.Current.Request.Cookies[id_user].Path;
-        //}
+        public bool CheckSectionInvalid()
+        {
+            if(HttpContext.Current.Request.Cookies[GetIdUserBySession()].Value == (CommonConstants.SESSION+"="+HttpContext.Current.Session.SessionID))
+            {
+                return true;
+            }
+            return false;
+        }
 
-        //public bool isExistCookie(string id_user)
-        //{
-        //    if (HttpContext.Current.Response.Cookies.AllKeys.Contains(id_user))
-        //        return true;
-        //    return false;
-        //}
+        public void DelCookie()
+        {
+            HttpContext.Current.Request.Cookies[GetIdUserBySession()].Expires = DateTime.Now.AddDays(-1);
+        }
 
-
-
-
-        //******************************Permission***************************************************
-
-        //public bool CheckPermission(string id_user, string id_subject)
-        //{
-        //    UserDAO userDao = new UserDAO();
-        //    C_USER user = userDao.GetUserByID(id_user);
-        //    if(user.ROLEs.Where(r => r.ROLE1 == "TEACHER").FirstOrDefault() != null)
-        //    {
-        //        if (user.SUBJECTs1.Where(s => s.ID == id_subject).FirstOrDefault() != null)
-        //            return true;
-        //    }
-        //    else if(user.ROLEs.Where(r => r.ROLE1 == "STUDENT").FirstOrDefault() != null)
-        //    {
-        //        if (user.SUBJECTs.Where(s => s.ID == id_subject).FirstOrDefault() != null)
-        //            return true;
-        //    }           
-        //    return false;
-        //}
-
-        public bool checkRole(string id_user, string role)
+        public bool checkRole(string role)
         {
             RoleDAO roleDao = new RoleDAO();
-            if (roleDao.GetRoles(id_user).Where(r => r.ROLE1 == role).FirstOrDefault() != null)
+            if (roleDao.GetRoles(GetIdUserBySession()).Where(r => r.ROLE1 == role).FirstOrDefault() != null)
                 return true;
             return false;
         }
