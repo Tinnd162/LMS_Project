@@ -4,7 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DAL.EF;
-
+using DAL.ViewModel;
+using PagedList;
 
 namespace DAL.DAO
 {
@@ -26,7 +27,6 @@ namespace DAL.DAO
                 LAST_NAME = x.LAST_NAME,
                 MIDDLE_NAME = x.MIDDLE_NAME,
                 PHONE_NO = x.PHONE_NO,
-                //SEX = x.SEX,
                 MAIL = x.MAIL,
                 FACULTY = new FACULTY { ID = x.FACULTY.ID, NAME = x.FACULTY.NAME },
                 CLASS=new CLASS { ID=x.CLASS.ID, NAME=x.CLASS.NAME, MAJOR=x.CLASS.MAJOR}
@@ -76,7 +76,7 @@ namespace DAL.DAO
             db.SaveChanges();
             return true;
         }
-        public List<C_USER> GetCourseByIDStudent(string ID)
+        public List<C_USER> getcoursebyID(string ID)
         {
             List<C_USER> teacher = db.C_USER.Where(x => x.ID == ID).ToList();
             return teacher.Select(a => new C_USER
@@ -85,7 +85,18 @@ namespace DAL.DAO
                 FIRST_NAME = a.FIRST_NAME,
                 MIDDLE_NAME = a.MIDDLE_NAME,
                 LAST_NAME = a.LAST_NAME,
-                COURSEs = a.COURSEs.Select(b => new COURSE { ID = b.ID, NAME = b.NAME, SEMESTER = new SEMESTER { ID = b.SEMESTER.ID, TITLE = b.SEMESTER.TITLE } }).ToList()
+                COURSEs = a.COURSEs.Select(b => new COURSE
+                {
+                    ID = b.ID,
+                    NAME = b.NAME,
+                    DESCRIPTION=b.DESCRIPTION,
+                    SUBJECT_ID=b.SUBJECT_ID,
+                    SEMESTER = new SEMESTER
+                    {
+                        ID = b.SEMESTER.ID,
+                        TITLE = b.SEMESTER.TITLE,
+                    }
+                }).ToList()
             }).ToList();
         }
     }

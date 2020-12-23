@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DAL.EF;
+using PagedList;
+using DAL.ViewModel;
 using System.Data.SqlClient;
 using System.Data.Entity.Migrations;
 namespace DAL.DAO
@@ -14,38 +16,37 @@ namespace DAL.DAO
 
         public SemesterDAO() { db = new LMSProjectDBContext(); }
 
-        public List<SEMESTER> GetSEMESTERs()
+        public List<SEMESTER> getsemester()
         {
             return db.SEMESTERs.ToList();
         }
-        //public List<SEMESTER> getdetail(string id)
-        //{
-        //    return db.SEMESTERs.Where(x=>x.ID==id).ToList();
-        //}
-        public bool DelSemester(string id)
+        public List<SEMESTER> getdetail(string id)
         {
-            var sem = db.SEMESTERs.Find(id);
-            db.SEMESTERs.Remove(sem);
+            return db.SEMESTERs.Where(x=>x.ID==id).ToList();
+        }
+        public bool deletesemester(string id)
+        {
+            var semeste = db.SEMESTERs.Find(id);
+            db.SEMESTERs.Remove(semeste);
             db.SaveChanges();
             return true;
         }
-        public bool UpdateSemester(SEMESTER semester)
+        public bool updatesemester(SEMESTER semester)
         {
             var model = db.SEMESTERs.Find(semester.ID);
             model.TITLE = semester.TITLE;
             model.DESCRIPTION = semester.DESCRIPTION;
+            model.START = semester.START;
+            model.START=semester.END_SEM;
             db.SaveChanges();
             return true;
         }
-        public bool AddSemester(SEMESTER semester)
+        public bool addsemester(SEMESTER semester)
         {
             db.SEMESTERs.Add(semester);
             db.SaveChanges();
             return true;
         }
-        public SEMESTER GetSemesterByID(string id)
-        {
-            return db.SEMESTERs.First(x => id == x.ID);
-        }
+
     }
 }
