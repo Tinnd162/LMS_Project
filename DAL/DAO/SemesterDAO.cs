@@ -4,8 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DAL.EF;
-using PagedList;
-using DAL.ViewModel;
 using System.Data.SqlClient;
 using System.Data.Entity.Migrations;
 namespace DAL.DAO
@@ -16,6 +14,10 @@ namespace DAL.DAO
 
         public SemesterDAO() { db = new LMSProjectDBContext(); }
 
+        public List<SEMESTER> GetSEMESTERs()
+        {
+            return db.SEMESTERs.ToList();
+        }
         public List<SEMESTER> getsemester()
         {
             return db.SEMESTERs.ToList();
@@ -24,10 +26,7 @@ namespace DAL.DAO
         {
             return db.SEMESTERs.Where(x => x.ID == id).ToList();
         }
-        public bool DelSemester(string id)
-        {
-            return db.SEMESTERs.Where(x=>x.ID==id).ToList();
-        }
+        
         public bool deletesemester(string id)
         {
             var semeste = db.SEMESTERs.Find(id);
@@ -51,6 +50,12 @@ namespace DAL.DAO
             db.SaveChanges();
             return true;
         }
+
+        public SEMESTER GetSemesterByID(string id)
+        {
+            return db.SEMESTERs.First(x => id == x.ID);
+        }
+
 
     }
 }

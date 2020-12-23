@@ -4,8 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DAL.EF;
-using DAL.ViewModel;
-using PagedList;
+
 
 namespace DAL.DAO
 {
