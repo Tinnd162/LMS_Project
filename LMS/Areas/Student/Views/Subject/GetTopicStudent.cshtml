@@ -4,7 +4,7 @@
     Layout = "~/Areas/Student/Views/Shared/_BlankStudentLayout.cshtml";
 }
 
-<h2></h2>
+<h2>@Model[0].courseName</h2>
 <div class="card">
     @foreach (var item in Model)
     {
@@ -18,6 +18,5 @@
             </blockquote>
         </div>
     }
-
 </div>
 

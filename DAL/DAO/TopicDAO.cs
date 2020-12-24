@@ -81,17 +81,20 @@ namespace DAL.DAO
         }
         public List<CourseDetailsView> GetCourseDetailByStuAndCourseAndSubject(string user_id, string course_id, string semester_id)
         {
-            C_USER stu = db.C_USER.Where(u => u.ID == user_id).First();
-            var model = (from a in db.COURSEs
+            C_USER stu = db.C_USER.First(x => x.ID == user_id);
+            var course = stu.COURSEs.Where(c => c.SEMESTER_ID == semester_id && c.ID == course_id).Select(c => new COURSE
+            {
+                ID = c.ID,
+                NAME = c.NAME,
+
+            });
+            var model = (from a in course
                          join b in db.TOPICs
                          on a.ID equals b.COURSE_ID
                          join f in db.DOCUMENTs
                          on b.ID equals f.TOPIC_ID
                          join c in db.EVENTs
                          on b.ID equals c.TOPIC_ID
-                         join d in db.SUBMITs
-                         on c.ID equals d.EVENT_ID
-                         where a.ID == course_id && stu.ID == d.USER_ID && a.SEMESTER_ID == semester_id
                          select new
                          {
                              courseID = a.ID,

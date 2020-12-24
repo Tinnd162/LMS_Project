@@ -22,13 +22,13 @@ namespace LMS.Areas.Student.Controllers
             var ListTopic = TopicDAO.GetCourseDetailByStuAndCourseAndSubject(user_id, course_id, semester_id);
             return View(ListTopic);
         }
-        public ActionResult GetSubjectAssessments(string course_id, string semester_id = "20211", string user_id = "U00008")
-        {
-            course_id = "MATH143001_20211_1";
-            SubmitDAO submitDAO = new SubmitDAO();
-            var ListSubmit = from s in submitDAO.GetSubmitAssessmentByStuAndCourseAndSem(user_id, course_id, semester_id) select s;
-            ListSubmit = ListSubmit.OrderBy(s => s.eventDeadline);
-            return View(ListSubmit);
-        }
+        //public ActionResult GetSubjectAssessments(string course_id = "MATH143001_20211_1", string semester_id = "20211", string user_id = "U00008")
+        //{
+        //    course_id = "MATH143001_20211_1";
+        //    SubmitDAO submitDAO = new SubmitDAO();
+        //    var ListSubmit = from s in submitDAO.GetSubmitAssessmentByStuAndCourseAndSem(user_id, course_id, semester_id) select s;
+        //    ListSubmit = ListSubmit.OrderBy(s => s.eventDeadline);
+        //    return View(ListSubmit.ToList());
+        //}
     }
 }
