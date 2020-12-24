@@ -63,7 +63,7 @@ namespace LMS.Common
         //    httpCookie.Path = path;
         //    httpCookie.Expires = DateTime.Now.AddDays(5);
         //    HttpContext.Current.Response.SetCookie(httpCookie);
-        //}
+        //}e
 
         //public string GetPathByCookie(string id_user)
         //{
