@@ -6,10 +6,12 @@ using System.Web.Mvc;
 using System.Web.Script.Serialization;
 using DAL.DAO;
 using DAL.EF;
+using LMS.Common;
 using Newtonsoft.Json;
 
 namespace LMS.Areas.Admin.Controllers
 {
+    [CustomAuthorize("ADMIN")]
     public class TeacherController : Controller
     {
         LMSProjectDBContext db = new LMSProjectDBContext();

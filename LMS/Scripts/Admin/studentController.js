@@ -29,13 +29,13 @@ var studentController = {
 				studentController.Save();
 			}
 		})
-		$(document).stop().on('click', '#facultyname', function (e) {
+		$(document).stop().on('change', '#facultyname', function (e) {
 			var optionSelected = $(this).find("option:selected");
 			var id = optionSelected.data("idOptionfacul");
 			$('#IDfacl').val(id);
 			studentController.GetClassInFaculty(id);
 		})
-		$(document).stop().on('click', '#classname', function (e) {
+		$(document).stop().on('change', '#classname', function (e) {
 			var optionSelected = $(this).find("option:selected");
 			var id = optionSelected.data("idOptionclass");
 			$('#IDclass').val(id);
@@ -131,7 +131,6 @@ var studentController = {
 						studentController.paging(response.total, function () {
 							studentController.GetStudent();
 						});
-						studentController.registerEvent();
 					});
 				}
 			}
@@ -139,13 +138,6 @@ var studentController = {
 	},
 	paging: function (totalRow, callback) {
 		var totalPage = Math.ceil(totalRow / studentconfig.pageSize);
-
-		////Unbind pagination if it existed or click change pagesize
-		//if ($('#pagination a').length === 0 || changePageSize === true) {
-		//    $('#pagination').empty();
-		//    $('#pagination').removeData("twbs-pagination");
-		//    $('#pagination').unbind("page");
-		//}
 
 		$('#pagination').twbsPagination({
 			totalPages: totalPage,

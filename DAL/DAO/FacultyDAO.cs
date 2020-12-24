@@ -47,6 +47,25 @@ namespace DAL.DAO
                 CLASSes = x.CLASSes.Select(a => new CLASS { ID = a.ID, NAME = a.NAME, MAJOR = a.MAJOR }).ToList()
             }).ToList();
         }
+        public List<FACULTY> getteacherinfaculty (string id)
+        {
+            List<FACULTY> listF = db.FACULTies.Where(x => x.ID == id).ToList();
+            List<FACULTY> listFac = listF.Select(f => new FACULTY
+            {
+                C_USER = f.C_USER.Where(u => u.ROLEs.Where(r => r.ROLE1 == "TEACHER")
+                                                    .ToList()
+                                                    .Count() == 1)
+                                                   .Select(u => new C_USER
+                                                   {
+                                                       ID = u.ID,
+                                                       FIRST_NAME = u.FIRST_NAME,
+                                                       MIDDLE_NAME = u.MIDDLE_NAME,
+                                                       LAST_NAME = u.LAST_NAME
+                                                   })
+                                                   .ToList()
+            }).ToList();
+            return listFac; 
+        }
     }
 }
        

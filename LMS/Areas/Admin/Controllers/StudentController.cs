@@ -5,9 +5,11 @@ using System.Web;
 using System.Web.Mvc;
 using DAL.DAO;
 using DAL.EF;
+using LMS.Common;
 
 namespace LMS.Areas.Admin.Controllers
 {
+    [CustomAuthorize("ADMIN")]
     public class StudentController : Controller
     {
         // GET: Admin/Student
