@@ -1,0 +1,39 @@
+﻿@model List<DAL.StudentView.SubmitAssessmentView>
+@{
+    ViewBag.Title = "GetSubjectAssessments";
+    Layout = "~/Areas/Student/Views/Shared/_BlankStudentLayout.cshtml";
+}
+
+@*<h2>@Model[0].courseName</h2>*@
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">STT</th>
+            <th scope="col">Toppic</th>
+            <th scope="col">Bài tập</th>
+            <th scope="col">Dealine</th>
+            <th scope="col">Status</th>
+            <th scope="col">Comment by Teacher</th>
+            <th scope="col">Score</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            <th scope="row">1</th>
+            <td>@item.topicTitle</td>
+            <td>@item.eventTitle</td>
+            <td>@item.eventDeadline</td> 
+            @*{       
+            @if (@item.submitID == null) {<td><a href="~/Student/Submit/@item.eventID">Chưa nộp</a></td>}
+            else {<td><a href="~/Student/Submit/@item.eventID">Đã nộp</a></td>}
+            }
+            <td>@item.assComment</td>
+            <td>@item.assScore</td>*@
+        </tr>
+        }
+
+    </tbody>
+</table>
+
