@@ -23,9 +23,6 @@
             integrity="sha512-COtY6/Rv4GyQdDShOyay/0YI4ePJ7QeKwtJIOCQ3RNE32WOPI4IYxq6Iz5JWcQpnylt/20KBvqEROZTEj/Hopw=="
             crossorigin="anonymous"></script>
 
-    @*<script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"></script>
-    <script src="~/Scripts/Admin/datatables-demo.js"></script>*@
     <script src="~/Scripts/jquery.validate.min.js"></script>
     <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
 
@@ -132,12 +129,12 @@
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages3"
                        aria-expanded="true" aria-controls="collapsePages">
                         <i class="fas fa-fw fa-folder"></i>
                         <span>Môn học</span>
                     </a>
-                    <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                    <div id="collapsePages3" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                         <div class="bg-white py-2 collapse-inner rounded">
                             <h6 class="collapse-header">Components:</h6>
                             <a class="collapse-item" href="~/Admin/Subjects/Index">Tìm kiếm môn học</a>
@@ -167,54 +164,8 @@
                         <i class="fa fa-bars"></i>
                     </button>
 
-                    <!-- Topbar Search -->
-                    <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-                        <div class="input-group">
-                            <input type="text"
-                                   class="form-control bg-light border-0 small"
-                                   placeholder="Search for..."
-                                   aria-label="Search"
-                                   aria-describedby="basic-addon2" />
-                            <div class="input-group-append">
-                                <button class="btn btn-primary" type="button">
-                                    <i class="fas fa-search fa-sm"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
-                        <!-- Nav Item - Search Dropdown (Visible Only XS) -->
-                        <li class="nav-item dropdown no-arrow d-sm-none">
-                            <a class="nav-link dropdown-toggle"
-                               href="#"
-                               id="searchDropdown"
-                               role="button"
-                               data-toggle="dropdown"
-                               aria-haspopup="true"
-                               aria-expanded="false">
-                                <i class="fas fa-search fa-fw"></i>
-                            </a>
-                            <!-- Dropdown - Messages -->
-                            <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
-                                 aria-labelledby="searchDropdown">
-                                <form class="form-inline mr-auto w-100 navbar-search">
-                                    <div class="input-group">
-                                        <input type="text"
-                                               class="form-control bg-light border-0 small"
-                                               placeholder="Search for..."
-                                               aria-label="Search"
-                                               aria-describedby="basic-addon2" />
-                                        <div class="input-group-append">
-                                            <button class="btn btn-primary" type="button">
-                                                <i class="fas fa-search fa-sm"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </li>
 
                         <!-- Nav Item - User Information -->
                         <li class="nav-item dropdown no-arrow">
@@ -303,21 +254,46 @@
                             data-dismiss="modal">
                         Cancel
                     </button>
-                    <a class="btn btn-primary" href="login.html">Logout</a>
+                    <a class="btn btn-primary" id="logoutBtnOk">Logout</a>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
+        $(document).ready(
+            ModalToggleLogout()
+        )
 
         var sidebarToggle = function () {
             $("#accordionSidebar").toggleClass("toggled")
         }
         $("#sidebarToggle").on("click", sidebarToggle)
         $("#sidebarToggleTop").on("click", sidebarToggle)
-    </script>
 
+        function ModalToggleLogout() {
+
+                $('#logoutBtnOk').on('click', function () {
+                    $.ajax({
+                        url: "/Profile/Logout",
+                        type: 'post',
+                        data: {},
+                        dataType: 'json',
+                        success: function (response) {
+                            if (response.status) {
+                                window.location.href = '/Home/Index'
+                                return;
+                            }
+                            else {
+                                alert('Error')
+                            }
+                        }
+                    })
+
+
+                })
+        };
+    </script>
     @RenderSection("scripts", required: false)
 </body>
 </html>

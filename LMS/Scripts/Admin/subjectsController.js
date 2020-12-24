@@ -1,5 +1,5 @@
 ﻿var subjectsconfig = {
-    pageSize: 5,
+    pageSize: 1,
     pageIndex: 1,
 }
 var subjectsController = {
@@ -8,7 +8,8 @@ var subjectsController = {
         subjectsController.registerEvent();
     },
     registerEvent: function () {
-        $(document).stop().on('click', '.btn-delete-Subjects', function () {
+        $(document).stop().on('click', '.btn-delete-Subjects', function (e) {
+            console.log(e)
             var id = $(this).data('id');
             bootbox.confirm("Bạn có chắc chắn muốn xóa?", function (result) {
                 if (result) {
@@ -45,7 +46,8 @@ var subjectsController = {
             })
         })
     },
-    GetSubjects: function () {
+    GetSubjects: function ()
+    {
         $.ajax({
             url: '/Subjects/GetSubjects',
             type: 'GET',
@@ -71,7 +73,6 @@ var subjectsController = {
                     subjectsController.paging(response.total, function () {
                         subjectsController.GetSubjects();
                     });
-                    subjectsController.registerEvent();
                 }
             },
         });
@@ -85,6 +86,7 @@ var subjectsController = {
             success: function (response) {
                 if (response.status == true) {
                     bootbox.alert("Xóa thành công!", function () {
+                        console.log(response.total)
                         subjectsController.GetSubjects(true);
                     })
                 }
@@ -196,7 +198,6 @@ var subjectsController = {
         //    $('#pagination').removeData("twbs-pagination");
         //    $('#pagination').unbind("page");
         //}
-
         $('#pagination').twbsPagination({
             totalPages: totalPage,
             first: "Đầu",
@@ -205,7 +206,6 @@ var subjectsController = {
             prev: "Trước",
             visiblePages: 10,
             onPageClick: function (event, page) {
-                subjectsController.GetSubjects();
                 subjectsconfig.pageIndex = page;
                 setTimeout(callback, 200);
             }

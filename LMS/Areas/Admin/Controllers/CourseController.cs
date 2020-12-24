@@ -7,9 +7,11 @@ using DAL.EF;
 using DAL.DAO;
 using System.Text;
 using System.Web.Script.Serialization;
+using LMS.Common;
 
 namespace LMS.Areas.Admin.Controllers
 {
+    [CustomAuthorize("ADMIN")]
     public class CourseController : Controller
     {
         LMSProjectDBContext db = new LMSProjectDBContext();
@@ -21,16 +23,23 @@ namespace LMS.Areas.Admin.Controllers
         [HttpGet]
         public JsonResult GetCourse(int page, int pageSize)
         {
-
-     
-
-
             var listcourse = new CourseDAO().GetCOURSEs().Select(x => new
             {
                 ID = x.ID,
                 NAME = x.NAME,
                 DESCRIPTION = x.DESCRIPTION,
-                SEMESTER_ID = x.SEMESTER_ID
+                SEMESTER_ID = x.SEMESTER_ID,
+                TEACH = new TEACH
+                {
+                    C_USER = new C_USER
+                    {
+                        ID = x.TEACH.C_USER.ID,
+                        FIRST_NAME = x.TEACH.C_USER.FIRST_NAME,
+                        LAST_NAME = x.TEACH.C_USER.LAST_NAME,
+                        MIDDLE_NAME = x.TEACH.C_USER.MIDDLE_NAME,
+                        FACULTY = new FACULTY { ID = x.TEACH.C_USER.FACULTY.ID, NAME = x.TEACH.C_USER.FACULTY.NAME }
+                    }
+                },
             });
             var course = listcourse.Skip((page - 1) * pageSize).Take(pageSize);
             int totalRow = listcourse.Count();
@@ -71,14 +80,25 @@ namespace LMS.Areas.Admin.Controllers
             builder.Append(code + DateTime.Now.ToString("yyyyMMddHHmmssff"));
             return builder.ToString();
         }
-        public JsonResult Detail(string id)
+        public JsonResult Detail(string id= "INPR130285_20211_1")
         {
             var model = new CourseDAO().getdetail(id).Select(x => new {
                 IDCOURSE = x.ID,
                 NAMECOURSE = x.NAME,
                 DESCRIPTION = x.DESCRIPTION,
                 SEMESTER = new SEMESTER { ID = x.SEMESTER.ID, TITLE = x.SEMESTER.TITLE },
-                SUBJECT = new SUBJECT { ID = x.SUBJECT.ID, NAME = x.SUBJECT.NAME }
+                SUBJECT = new SUBJECT { ID = x.SUBJECT.ID, NAME = x.SUBJECT.NAME },
+                TEACH = new TEACH
+                {
+                    C_USER = new C_USER
+                    {
+                        ID = x.TEACH.C_USER.ID,
+                        FIRST_NAME = x.TEACH.C_USER.FIRST_NAME,
+                        LAST_NAME = x.TEACH.C_USER.LAST_NAME,
+                        MIDDLE_NAME = x.TEACH.C_USER.MIDDLE_NAME,
+                        FACULTY = new FACULTY { ID = x.TEACH.C_USER.FACULTY.ID, NAME = x.TEACH.C_USER.FACULTY.NAME }
+                    }
+                },
             });
             return Json(new
             {
@@ -95,7 +115,7 @@ namespace LMS.Areas.Admin.Controllers
                 status = true
             }, JsonRequestBehavior.AllowGet);
         }
-        public JsonResult Save(COURSE Course)
+        public JsonResult Save(COURSE Course, TEACH Teach)
         {
             bool status = false;
             string message = string.Empty;
@@ -103,7 +123,8 @@ namespace LMS.Areas.Admin.Controllers
             {
                 try
                 {
-                    var model = new CourseDAO().updatecourse(Course);
+                    var model = new TeachDAO().updateteach(Teach);
+                    var course = new CourseDAO().updatecourse(Course);
                     status = true;
                 }
                 catch (Exception ex)
@@ -117,8 +138,8 @@ namespace LMS.Areas.Admin.Controllers
                 try
                 {
                     Course.ID = createID("COUR");
-                    db.COURSEs.Add(Course);
-                    db.SaveChanges();
+                    var course = new CourseDAO().addcourse(Course);
+                    var teach = new TeachDAO().addteach(Teach, Course);
                     status = true;
                 }
                 catch (System.Data.Entity.Validation.DbEntityValidationException dbEx)
@@ -143,11 +164,19 @@ namespace LMS.Areas.Admin.Controllers
         }
         public JsonResult DeleteStudent(string id)
         {
-            var user = new InfoStudentDAO().deletestudent(id);
+            var delstudent = new InfoStudentDAO().deletestudent(id);
             return Json(new
             {
                 status = true
             });
+        }
+        public JsonResult GetTeacherInFaculy(string id)
+        {
+            var model = new FacultyDAO().getteacherinfaculty(id).Select(x => new
+            {
+                C_USER = x.C_USER.Select(a => new { IDTEA=a.ID, FIRST_NAME=a.FIRST_NAME, LAST_NAME=a.LAST_NAME, MIDDLE_NAME=a.MIDDLE_NAME})
+            });
+            return Json(new { data = model }, JsonRequestBehavior.AllowGet);
         }
     }
 }

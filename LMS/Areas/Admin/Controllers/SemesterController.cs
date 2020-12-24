@@ -13,6 +13,7 @@ using System.Text;
 
 namespace LMS.Areas.Admin.Controllers
 {
+    [CustomAuthorize("ADMIN")]
     public class SemesterController : Controller
     {
         LMSProjectDBContext db = new LMSProjectDBContext();
@@ -39,7 +40,7 @@ namespace LMS.Areas.Admin.Controllers
             },
             JsonRequestBehavior.AllowGet);
         }
-        public JsonResult Detail(string id)
+        public JsonResult Detail(string id= "19201")
         {
             SEMESTER sem = new SemesterDAO().GetSemesterByID(id);
 
@@ -57,7 +58,7 @@ namespace LMS.Areas.Admin.Controllers
             {
                 data = model,
                 status = true
-            });
+            },JsonRequestBehavior.AllowGet);
         }
         public JsonResult Delete(string id)
         {

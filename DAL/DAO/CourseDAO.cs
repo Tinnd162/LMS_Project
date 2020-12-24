@@ -63,13 +63,13 @@ namespace DAL.DAO
                         MIDDLE_NAME = a.TEACH.C_USER.MIDDLE_NAME
                     }
                 },
-                C_USER = a.C_USER.Select(c => new C_USER
+                C_USER = ((a.C_USER == null) ? null : (a.C_USER.Select(c => new C_USER
                 {
                     ID = c.ID,
                     FIRST_NAME = c.FIRST_NAME,
                     LAST_NAME = c.LAST_NAME,
                     MIDDLE_NAME = c.MIDDLE_NAME
-                }).ToList()
+                }).ToList()))
             }).ToList();
         }
         public List<COURSE> getdetail(string id)
@@ -81,7 +81,18 @@ namespace DAL.DAO
                 NAME = a.NAME,
                 DESCRIPTION = a.DESCRIPTION,
                 SEMESTER = new SEMESTER { ID = a.SEMESTER.ID, TITLE = a.SEMESTER.TITLE },
-                SUBJECT = new SUBJECT { ID = a.SUBJECT.ID, NAME = a.SUBJECT.NAME }
+                SUBJECT = new SUBJECT { ID = a.SUBJECT.ID, NAME = a.SUBJECT.NAME },
+                TEACH = new TEACH
+                {
+                    C_USER = new C_USER
+                    {
+                        ID = a.TEACH.C_USER.ID,
+                        FIRST_NAME = a.TEACH.C_USER.FIRST_NAME,
+                        LAST_NAME = a.TEACH.C_USER.LAST_NAME,
+                        MIDDLE_NAME = a.TEACH.C_USER.MIDDLE_NAME,
+                        FACULTY= new FACULTY { ID=a.TEACH.C_USER.FACULTY.ID, NAME=a.TEACH.C_USER.FACULTY.NAME}
+                    }
+                },
             }).ToList();
         }
         public bool addcourse(COURSE course)
@@ -140,8 +151,26 @@ namespace DAL.DAO
         }
         public List<COURSE> GetCOURSEs()
         {
-
-            return db.COURSEs.ToList();
+            var listcourse = db.COURSEs.ToList();
+            return listcourse.Select(a => new COURSE
+            {
+                ID = a.ID,
+                NAME = a.NAME,
+                DESCRIPTION = a.DESCRIPTION,
+                SEMESTER = new SEMESTER { ID = a.SEMESTER.ID, TITLE = a.SEMESTER.TITLE },
+                SUBJECT = new SUBJECT { ID = a.SUBJECT.ID, NAME = a.SUBJECT.NAME },
+                TEACH = new TEACH
+                {
+                    C_USER = new C_USER
+                    {
+                        ID = a.TEACH.C_USER.ID,
+                        //FIRST_NAME = a.TEACH.C_USER.FIRST_NAME,
+                        //LAST_NAME = a.TEACH.C_USER.LAST_NAME,
+                        //MIDDLE_NAME = a.TEACH.C_USER.MIDDLE_NAME,
+                        FACULTY= new FACULTY { ID=a.TEACH.C_USER.FACULTY.ID, NAME=a.TEACH.C_USER.FACULTY.NAME}
+                    }
+                },
+            }).ToList();
         }
         public List<COURSE> GetCourseByTeacherAndSemester(string teacher_id, string sem_id)
         {

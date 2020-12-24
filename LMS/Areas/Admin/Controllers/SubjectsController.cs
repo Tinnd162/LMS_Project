@@ -6,9 +6,11 @@ using System.Web;
 using System.Web.Mvc;
 using DAL.DAO;
 using DAL.EF;
+using LMS.Common;
 
 namespace LMS.Areas.Admin.Controllers
 {
+    [CustomAuthorize("ADMIN")]
     public class SubjectsController : Controller
     {
         LMSProjectDBContext db = new LMSProjectDBContext();
@@ -25,8 +27,8 @@ namespace LMS.Areas.Admin.Controllers
                 NAME = a.NAME,
                 DESCRIPTION = a.DESCRIPTION
             });
-            var subjects = sub.Skip((page - 1) * pageSize).Take(pageSize);
             int totalRow = sub.Count();
+            var subjects = sub.Skip((page - 1) * pageSize).Take(pageSize);          
             return Json(new
             {
                 total = totalRow,
@@ -37,8 +39,16 @@ namespace LMS.Areas.Admin.Controllers
         public JsonResult Delete(string id)
         {
             var model = new SubjectsDAO().delete(id);
+            var sub = new SubjectsDAO().getsubject().Select(a => new
+            {
+                ID = a.ID,
+                NAME = a.NAME,
+                DESCRIPTION = a.DESCRIPTION
+            });
+            int totalRow = sub.Count();
             return Json(new
             {
+                total = totalRow,
                 status = true
             });
         }

@@ -6,7 +6,9 @@
 @section scripts{
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.5.2/bootbox.min.js" integrity="sha512-RdSPYh1WA6BF0RhpisYJVYkOyTzK4HwofJ3Q7ivt/jkpW6Vc8AurL1R+4AUcvn9IwEKAPm/fk7qFZW3OuiUDeg==" crossorigin="anonymous"></script>
+
     <script src="~/Scripts/Admin/mustache.min.js"></script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twbs-pagination/1.4.2/jquery.twbsPagination.min.js" integrity="sha512-frFP3ZxLshB4CErXkPVEXnd5ingvYYtYhE5qllGdZmcOlRKNEPbufyupfdSTNmoF5ICaQNO6SenXzOZvoGkiIA==" crossorigin="anonymous"></script>
 
     <script src="~/Scripts/Admin/courseController.js"></script>
@@ -39,12 +41,14 @@
 
             <script id="data-Course" type="x-tmpl-mustache">
                 <tr>
+
                     <input type="hidden" value="{{ID}}"/>
+                    <input type="hidden" value="{{IDFACULTY}}"/>
                     <td>{{NAME}}</td>
                     <td>{{DESCRIPTION}}</td>
                     <input type="hidden" value="{{IDSEMESTER}}"/>
                     <td>
-                        <button class="btn btn-primary btn-edit-Course" data-id="{{ID}}"><i class="fa fa-edit"></i></button>
+                        <button class="btn btn-primary btn-edit-Course" data-id="{{ID}}" data-facl="{{IDFACULTY}}"><i class="fa fa-edit"></i></button>
                         <button class="btn btn-danger btn-delete-Course" data-id="{{ID}}"><i class="fa fa-trash-alt"></i></button>
                         <button class="btn btn-info btn-info-Course" data-id="{{ID}}"><i class="fa fa-info"></i></button>
                 </td>

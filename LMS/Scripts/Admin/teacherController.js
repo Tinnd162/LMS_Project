@@ -27,7 +27,7 @@ var teacherController = {
 				teacherController.Save();
 			}
 		})
-		$(document).stop().on('click', '#facultyname', function (e) {
+		$(document).stop().on('change', '#facultyname', function (e) {
 			var optionSelected = $(this).find("option:selected");
 			var id = optionSelected.data("idOption");
 			$('#IDfacl').val(id);
@@ -118,7 +118,6 @@ var teacherController = {
 						teacherController.paging(response.total, function () {
 							teacherController.GetTeacher();
 						});
-						teacherController.registerEvent();
 					});
 				}
 			}
@@ -126,13 +125,6 @@ var teacherController = {
 	},
 	paging: function (totalRow, callback) {
 		var totalPage = Math.ceil(totalRow / teacherconfig.pageSize);
-
-		////Unbind pagination if it existed or click change pagesize
-		//if ($('#pagination a').length === 0 || changePageSize === true) {
-		//    $('#pagination').empty();
-		//    $('#pagination').removeData("twbs-pagination");
-		//    $('#pagination').unbind("page");
-		//}
 
 		$('#pagination').twbsPagination({
 			totalPages: totalPage,
