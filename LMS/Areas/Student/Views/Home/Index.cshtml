@@ -1,0 +1,33 @@
+﻿@model List<DAL.StudentView.DeadlineView>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Student/Views/Shared/_BlankStudentLayout.cshtml";
+}
+
+<h2>Time Line</h2>
+@using (Html.BeginForm())
+{
+    <p>
+        <select class="searchString">
+            @Html.ActionLink("Tất cả bài tập", "Index", new { searchString = AjaxOptions })<option value="1" disabled selected>Tất cả bài tập</option>
+            <option value="1">Tất cả bài tập</option>
+            <option value="2">Bài tập chưa nộp</option>
+        </select>
+    </p>
+}
+
+<div class="card">
+    @foreach (var item in Model)
+    {
+        <div class="card-header">
+            @item.eventTitle
+        </div>
+        <div class="card-body">
+            <blockquote class="blockquote mb-0">
+                <p>@item.courseName</p>
+                <footer class="blockquote-footer">@item.eventDeadline</footer>
+            </blockquote>
+        </div>
+    }
+
+</div>

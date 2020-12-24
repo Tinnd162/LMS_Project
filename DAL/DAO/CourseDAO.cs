@@ -28,7 +28,15 @@ namespace DAL.DAO
             }
             return courses;
         }
-
+        public List<COURSE> GetCourseByStudentAndSemester(string student_id, string sem_id)
+        {
+            C_USER stu = db.C_USER.First(x => x.ID == student_id);
+            return stu.COURSEs.Where(c => c.SEMESTER_ID == sem_id).Select(c => new COURSE
+            {
+                ID = c.ID,
+                NAME = c.NAME
+            }).ToList();
+        }
         public COURSE GetCourseByID(string id)
         {
             COURSE s =  db.COURSEs.First(x => x.ID == id);

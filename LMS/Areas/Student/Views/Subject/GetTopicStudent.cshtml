@@ -1,0 +1,23 @@
+﻿@model List<DAL.StudentView.CourseDetailsView>
+@{
+    ViewBag.Title = "GetTopicStudent";
+    Layout = "~/Areas/Student/Views/Shared/_BlankStudentLayout.cshtml";
+}
+
+<h2></h2>
+<div class="card">
+    @foreach (var item in Model)
+    {
+        <div class="card-header">
+            @item.topicTitle
+        </div>
+        <div class="card-body">
+            <blockquote class="blockquote mb-0">
+                <p>@item.topicDescription</p>
+                <p>@item.eventTitle</p>
+            </blockquote>
+        </div>
+    }
+
+</div>
+
