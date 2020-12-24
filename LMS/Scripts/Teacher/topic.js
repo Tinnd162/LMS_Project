@@ -134,6 +134,12 @@ function PostAndRenderTopic() {
             success: function (msg) {
                 if (msg.success) {
                     renderDataObjectIntoTopicTemplate(data.data)
+                  
+                    $('#cardAddTopic').toggleClass('d-none')
+                    $('#divBtnAddTopic').toggleClass('d-inline-flex d-none ')
+                    $('#loadingAddTopic').html('');
+                    $('#AddTopic_title').val('')
+                    CKEDITOR.instances.fullDesTopic.setData('')
                     alert('Thêm thành công !')
                     return;
                 }

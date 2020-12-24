@@ -12,7 +12,22 @@ namespace DAL.DAO
     {
         LMSProjectDBContext db = null;
         public InfoTeacherDAO() { db = new LMSProjectDBContext(); }
-        //Done
+        public List<C_USER> getteacher()
+        {
+            ROLE role = db.ROLEs.Where(a => a.ROLE1 == "TEACHER").FirstOrDefault();
+            List<C_USER> listteacher = role.C_USER.ToList();
+            return listteacher.Select(x => new C_USER
+            {
+                ID = x.ID,
+                FIRST_NAME = x.FIRST_NAME,
+                LAST_NAME = x.LAST_NAME,
+                MIDDLE_NAME = x.MIDDLE_NAME,
+                PHONE_NO = x.PHONE_NO,
+                DoB = x.DoB,
+                MAIL = x.MAIL,
+                FACULTY = new FACULTY { ID = x.FACULTY.ID, NAME = x.FACULTY.NAME }
+            }).ToList();
+        }
         public List<C_USER> detailteacher(string IDteacher)
         {
             ROLE role = db.ROLEs.Where(a => a.ROLE1 == "TEACHER").FirstOrDefault();
@@ -41,23 +56,6 @@ namespace DAL.DAO
             db.SaveChanges();
             return true;
         }
-        //Done
-        public List<C_USER> getteacher()
-        {
-            ROLE role = db.ROLEs.Where(a => a.ROLE1 == "TEACHER").FirstOrDefault();
-            List<C_USER> listteacher = role.C_USER.ToList();
-            return listteacher.Select(x => new C_USER
-            {
-                ID = x.ID,
-                FIRST_NAME = x.FIRST_NAME,
-                LAST_NAME=x.LAST_NAME,
-                MIDDLE_NAME=x.MIDDLE_NAME,
-                PHONE_NO = x.PHONE_NO,
-                DoB = x.DoB,
-                MAIL = x.MAIL,
-                FACULTY = new FACULTY { ID = x.FACULTY.ID, NAME = x.FACULTY.NAME }
-            }).ToList();
-        }
         public bool updateteacher(C_USER teacher)
         {
             var model = db.C_USER.Find(teacher.ID);
@@ -73,7 +71,7 @@ namespace DAL.DAO
             db.SaveChanges();
             return true;
         }
-        public List<C_USER> GetCourseByIDTeacher(string ID)
+        public List<C_USER> getcoursebyID(string ID)
         {
             List<C_USER> teacher = db.C_USER.Where(x => x.ID == ID).ToList();
             return teacher.Select(a => new C_USER
@@ -82,7 +80,19 @@ namespace DAL.DAO
                 FIRST_NAME = a.FIRST_NAME,
                 MIDDLE_NAME = a.MIDDLE_NAME,
                 LAST_NAME = a.LAST_NAME,
-                COURSEs = a.COURSEs.Select(b => new COURSE { ID = b.ID, NAME = b.NAME, SEMESTER=new SEMESTER {ID=b.SEMESTER.ID, TITLE = b.SEMESTER.TITLE} }).ToList()             
+                TEACHES = a.TEACHES.Select(b => new TEACH
+                {
+                    COURSE= new COURSE
+                    {
+                        ID=b.COURSE.ID,
+                        NAME=b.COURSE.NAME,
+                        SEMESTER = new SEMESTER
+                        {
+                              ID = b.COURSE.SEMESTER.ID,
+                              TITLE = b.COURSE.SEMESTER.TITLE,
+                        }
+                    }
+                }).ToList()             
             }).ToList();
         }
     }

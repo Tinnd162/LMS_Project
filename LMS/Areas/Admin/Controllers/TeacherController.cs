@@ -6,7 +6,6 @@ using System.Web.Mvc;
 using System.Web.Script.Serialization;
 using DAL.DAO;
 using DAL.EF;
-using DAL.ViewModel;
 using Newtonsoft.Json;
 
 namespace LMS.Areas.Admin.Controllers
@@ -20,14 +19,14 @@ namespace LMS.Areas.Admin.Controllers
             return View();
         }
         //Done
-        public JsonResult getteacher()
+        public JsonResult GetTeacher(int page, int pageSize)
         {
             var model = new InfoTeacherDAO().getteacher().Select(x => new
             {
                 ID = x.ID,
                 FIRST_NAME = x.FIRST_NAME,
-                LAST_NAME=x.LAST_NAME,
-                MIDDLE_NAME=x.MIDDLE_NAME,
+                LAST_NAME = x.LAST_NAME,
+                MIDDLE_NAME = x.MIDDLE_NAME,
                 PHONE_NO = x.PHONE_NO,
                 DoB = x.DoB,
                 MAIL = x.MAIL,
@@ -37,14 +36,17 @@ namespace LMS.Areas.Admin.Controllers
                     NAME = x.FACULTY.NAME
                 }
             });
+            var subjects = model.Skip((page - 1) * pageSize).Take(pageSize);
+            int totalRow = model.Count();
             return Json(new
             {
-                data = model,
+                total = totalRow,
+                data = subjects,
                 status = true
             }, JsonRequestBehavior.AllowGet);
         }
         //Done
-        public JsonResult delete(string id)
+        public JsonResult Delete(string id)
         {
             var model = new InfoTeacherDAO().deleteteacher(id);
             return Json(new
@@ -53,14 +55,14 @@ namespace LMS.Areas.Admin.Controllers
             });
         }
         //Done
-        public JsonResult detail(string idnameteacher)
+        public JsonResult Detail(string idnameteacher)
         {
             var model = new InfoTeacherDAO().detailteacher(idnameteacher).Select(x => new
             {
                 ID = x.ID,
                 FIRST_NAME = x.FIRST_NAME,
-                LAST_NAME=x.LAST_NAME,
-                MIDDLE_NAME=x.MIDDLE_NAME,
+                LAST_NAME = x.LAST_NAME,
+                MIDDLE_NAME = x.MIDDLE_NAME,
                 PHONE_NO = x.PHONE_NO,
                 DoB = x.DoB,
                 SEX = x.SEX,
@@ -72,22 +74,22 @@ namespace LMS.Areas.Admin.Controllers
             return Json(new
             {
                 data = model,
-                status=true
+                status = true
             });
         }
 
-        public JsonResult save (C_USER infoteacher)
+        public JsonResult Save(C_USER infoteacher)
         {
             bool status = false;
             string message = string.Empty;
-            if (infoteacher.ID!=null)
+            if (infoteacher.ID != null)
             {
                 try
                 {
                     var model = new InfoTeacherDAO().updateteacher(infoteacher);
                     status = true;
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     status = false;
                     message = ex.Message;
@@ -99,30 +101,42 @@ namespace LMS.Areas.Admin.Controllers
                 message = message
             });
         }
-        public JsonResult getfacultyID_NAME()
+        public JsonResult GetFacultyID_NAME()
         {
             var model = new FacultyDAO().getfaculty().Select(x => new { ID = x.ID, NAME = x.NAME });
             return Json(new { data = model }, JsonRequestBehavior.AllowGet);
         }
-        public JsonResult getsubbyID(string idteacher)
+        public JsonResult GetCoursebyID(string idteacher = "U00003")
         {
-            var sub = new InfoTeacherDAO().getsubbyID(idteacher).Select(x => new
+            var sub = new InfoTeacherDAO().getcoursebyID(idteacher).Select(x => new
             {
                 ID = x.ID,
                 FIRST_NAME = x.FIRST_NAME,
                 MIDDLE_NAME = x.MIDDLE_NAME,
                 LAST_NAME = x.LAST_NAME,
-                SUBJECTs1 = x.SUBJECTs1.Select(y => new { IDSUB = y.ID, NAMESUB = y.NAME, COURSE = new COURSE {ID=y.COURSE.ID ,TILTE = y.COURSE.TILTE } })
+                TEACHES = x.TEACHES.Select(b => new
+                {
+                    COURSE = new COURSE
+                    {
+                        ID = b.COURSE.ID,
+                        NAME = b.COURSE.NAME,
+                        SEMESTER = new SEMESTER
+                        {
+                            ID = b.COURSE.SEMESTER.ID,
+                            TITLE = b.COURSE.SEMESTER.TITLE,
+                        }
+                    }
+                })
             });
             return Json(new
             {
                 data = sub,
                 status = true
-            });
+            }, JsonRequestBehavior.AllowGet);
         }
-        public JsonResult deletesubbyID(string idsub, string idcourse)
+        public JsonResult DeleteCoursebyID(string idcourse)
         {
-            var model = new SubjectDAO().deletesubbyID(idsub, idcourse);
+            var model = new CourseDAO().deletecourse(idcourse);
             return Json(new
             {
                 status = true

@@ -12,13 +12,13 @@ using System.Web.Script.Serialization;
 
 namespace LMS.Areas.Teacher.Controllers
 {
+    [CustomAuthorize("TEACHER")]
     public class SubjectController : Controller
     {
         // GET: Teacher/Subject
         public ActionResult Index(string id)
         {
-            CourseDAO courseDao = new CourseDAO();
-            
+            CourseDAO courseDao = new CourseDAO();   
             return View(courseDao.GetCourseByID(id));
         }
 

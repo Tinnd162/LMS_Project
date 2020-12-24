@@ -6,14 +6,14 @@ using System.Web.Mvc;
 using System.Web.Script.Serialization;
 using DAL.DAO;
 using DAL.EF;
-using DAL.ViewModel;
+
 using Newtonsoft.Json;
 using LMS.Common;
 using System.Text;
 
 namespace LMS.Areas.Admin.Controllers
 {
-    public class CoursesController : Controller
+    public class SemesterController : Controller
     {
         LMSProjectDBContext db = new LMSProjectDBContext();
         // GET: Admin/Courses
@@ -21,59 +21,68 @@ namespace LMS.Areas.Admin.Controllers
         {
             return View();
         }
-        //Done
-        public JsonResult getcourse(int page, int pageSize=2)
+        public JsonResult GetSemester(int page, int pageSize)
         {
-            var model = new CourseDAO().GetCOURSEs().Select(x => new {
+            var model = new SemesterDAO().GetSEMESTERs().Select(x => new
+            {
                 ID = x.ID,
-                TILTE = x.TILTE,
-                DESCRIPTION = x.DESCRIPTION
-            }).Skip((page-1)*pageSize).Take(pageSize);
+                TITLE = x.TITLE,
+                DESCRIPTION = x.DESCRIPTION,
+            });
+            var subjects = model.Skip((page - 1) * pageSize).Take(pageSize);
             int totalRow = model.Count();
             return Json(new
             {
-                data = model,
-                total=totalRow,
+                total = totalRow,
+                data = subjects,
                 status = true
             },
             JsonRequestBehavior.AllowGet);
         }
-        //Done
-        public JsonResult detail(string id)
+        public JsonResult Detail(string id)
         {
-            var model = new CourseDAO().getdetail(id).Select(x => new {
-                ID = x.ID,
-                TILTE = x.TILTE,
-                DESCRIPTION = x.DESCRIPTION
-            });
+            SEMESTER sem = new SemesterDAO().GetSemesterByID(id);
+
+            var model = new
+            {
+                ID = sem.ID,
+                TITLE = sem.TITLE,
+                DESCRIPTION = sem.DESCRIPTION,
+                START = sem.START,
+                END_SEM = sem.END_SEM
+            };
+            
+           
             return Json(new
             {
                 data = model,
                 status = true
             });
         }
-        //Done
-        public JsonResult delete(string id)
+        public JsonResult Delete(string id)
         {
-            var model = new CourseDAO().deletecourse(id);
+            if(new SemesterDAO().deletesemester(id))
+            {
+                return Json(new
+                {
+                    status = true
+                }, JsonRequestBehavior.AllowGet);
+            }
             return Json(new
             {
-                status = true
-            },
-            JsonRequestBehavior.AllowGet);
+                status = false
+            }, JsonRequestBehavior.AllowGet);
         }
-        //Done
-        public JsonResult save(string strCourse)
+
+        public JsonResult Save(SEMESTER semester)
         {
-            JavaScriptSerializer serializer = new JavaScriptSerializer();
-            COURSE course = serializer.Deserialize<COURSE>(strCourse);
             bool status = false;
             string message = string.Empty;
-            if (course.ID != "0")
+            if (semester.ID != "0")
             {
                 try
                 {
-                    var model = new CourseDAO().updatecourse(course);
+                    var model = new SemesterDAO().updatesemester(semester);
                     status = true;
                 }
                 catch (Exception ex)
@@ -86,8 +95,8 @@ namespace LMS.Areas.Admin.Controllers
             {
                 try
                 {
-                    course.ID = createID("COUR");
-                    db.COURSEs.Add(course);
+                    semester.ID = createID("SEME");
+                    db.SEMESTERs.Add(semester);
                     db.SaveChanges();
                     status = true;
                 }
@@ -111,38 +120,39 @@ namespace LMS.Areas.Admin.Controllers
                 message = message
             });
         }
-        //Done
         public string createID(string code)
         {
             var builder = new StringBuilder();
             builder.Append(code + DateTime.Now.ToString("yyyyMMddHHmmssff"));
             return builder.ToString();
         }
-        //Done
-        public JsonResult subjectIncourse(string id= "JZDN2020112521542821")
+        public JsonResult CourseInSemester(string id = "19201")
         {
-            var model = new SubjectDAO().subjectIncourse(id).Select(x => new {
+            var model = new CourseDAO().courseinsemester(id).Select(x => new {
                 ID = x.ID,
                 NAME = x.NAME,
                 DESCRIPTION = x.DESCRIPTION,
-                C_USER1 = x.C_USER1.Select(b => new {
-                    ID = b.ID,
-                    FIRST_NAME = b.FIRST_NAME,
-                    LAST_NAME=b.LAST_NAME,
-                    MIDDLE_NAME=b.MIDDLE_NAME,
-                })
+                TEACH = new TEACH
+                {
+                    C_USER = new C_USER
+                    {
+                        ID = x.TEACH.C_USER.ID,
+                        FIRST_NAME = x.TEACH.C_USER.FIRST_NAME,
+                        LAST_NAME = x.TEACH.C_USER.LAST_NAME,
+                        MIDDLE_NAME = x.TEACH.C_USER.MIDDLE_NAME
+                    }
+                },
             });
             return Json(new
             {
                 data = model,
                 status = true
-            },JsonRequestBehavior.AllowGet);
+            }, JsonRequestBehavior.AllowGet);
         }
-        //Done
-        public JsonResult deleteSubjectInCourse(string id)
+        public JsonResult DeleteCourseInSemester(string id)
         {
-            SubjectDAO model = new SubjectDAO();
-            var course = model.deletesubject(id);
+            CourseDAO model = new CourseDAO();
+            var course = model.deletecourse(id);
             return Json(new
             {
                 status = true

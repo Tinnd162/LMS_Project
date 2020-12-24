@@ -39,6 +39,7 @@ namespace DAL.DAO
                 LAST_NAME = user.LAST_NAME,
                 DoB = user.DoB,
                 MAIL = user.MAIL,
+                PHONE_NO = user.PHONE_NO,
                 LASTVISITDATE = user.LASTVISITDATE,
                 CLASS = new CLASS
                 {
@@ -102,5 +103,23 @@ namespace DAL.DAO
             return student;
 
         } 
+
+
+        public bool UpdatePhoneEmail(string id_user, string phone, string email)
+        {
+            C_USER user = db.C_USER.First(x => x.ID == id_user);
+            try
+            {
+                user.PHONE_NO = phone;
+                user.MAIL = email;
+                db.SaveChanges();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+           
+        }
     }
 }

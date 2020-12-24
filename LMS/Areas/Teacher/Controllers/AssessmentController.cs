@@ -7,14 +7,17 @@ using System.Web.Mvc;
 using DAL.DAO;
 using DAL.EF;
 using LMS.Areas.Teacher.Data;
+using LMS.Common;
 
 namespace LMS.Areas.Teacher.Controllers
 {
+    [CustomAuthorize("TEACHER")]
     public class AssessmentController : Controller
     {
         // GET: Teacher/Assessment
         public ActionResult Index(string id)
-        {
+        {            
+
             List<EVENT> listEvent = new List<EVENT>();
             EventDAO eventDao = new EventDAO();
             listEvent = eventDao.GetEventsOfCourse(id);
@@ -24,8 +27,7 @@ namespace LMS.Areas.Teacher.Controllers
 
         public ActionResult Detail(string eventID, string courseID)
         {
-     
-           
+
             EventDAO eDao = new EventDAO();
             EVENT ev = eDao.GetEventByID(eventID);
 
@@ -42,7 +44,6 @@ namespace LMS.Areas.Teacher.Controllers
 
         public ActionResult StudentDetail(string studentID, string eventID)
         {
-            
             UserDAO userDao = new UserDAO();
             C_USER student = userDao.GetStudentsByIDWithSubmit(studentID, eventID);
 

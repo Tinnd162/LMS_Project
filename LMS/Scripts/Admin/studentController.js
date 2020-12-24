@@ -1,57 +1,60 @@
-﻿var studentController = {
+﻿var studentconfig = {
+	pageSize: 5,
+	pageIndex: 1,
+}
+var studentController = {
 	init: function () {
-		studentController.getstudent();
+		studentController.GetStudent();
 		studentController.registerEvent();
-		studentController.getfacultyID_NAME();
+		studentController.GetFacultyID_NAME();
 	},
 	registerEvent: function () {
-		$(document).stop().on('click', '.btn-delete-student', function () {
+		$(document).stop().on('click', '.btn-delete-Student', function () {
 			var id = $(this).data('id');
 			bootbox.confirm("Bạn có chắc chắn muốn xóa?", function (result) {
 				if (result) {
-					studentController.delete(id);
+					studentController.Delete(id);
 				}
 			})
 		})
-		$(document).stop().on('click', '.btn-edit-student', function () {
+		$(document).stop().on('click', '.btn-edit-Student', function () {
 			var id = $(this).data('id');
 			var idfac = $(this).data('fac');
-			$('#update-student-info').modal('show');
-			studentController.detail(id);
-			studentController.getclassinfaculty(idfac);
+			$('#InfoUpdateStudent').modal('show');
+			studentController.Detail(id);
+			studentController.GetClassInFaculty(idfac);
 		})
-		$(document).stop().on('click', '#btnSave-infostudent', function () {
+		$(document).stop().on('click', '#btnSave-InfoStudent', function () {
 			if ($('#frmSaveDataStudent').valid()) {
-				studentController.save();
+				studentController.Save();
 			}
 		})
 		$(document).stop().on('click', '#facultyname', function (e) {
 			var optionSelected = $(this).find("option:selected");
 			var id = optionSelected.data("idOptionfacul");
 			$('#IDfacl').val(id);
-			studentController.getclassinfaculty(id);
+			studentController.GetClassInFaculty(id);
 		})
 		$(document).stop().on('click', '#classname', function (e) {
 			var optionSelected = $(this).find("option:selected");
 			var id = optionSelected.data("idOptionclass");
 			$('#IDclass').val(id);
 		})
-		$(document).stop().on('click', '.btn-info-student', function () {
+		$(document).stop().on('click', '.btn-info-Student', function () {
 			var id = $(this).data('id');
-			$('#infostudent').modal('show');
-			studentController.getsubbyID(id);
+			$('#InfoStudent').modal('show');
+			studentController.GetCoursebyID(id);
 		})
-		$(document).stop().on('click', '.btn-delete-subject', function () {
-			var idsub = $(this).data('id');
-			var idcourse = $(this).data('course');
+		$(document).stop().on('click', '.btn-delete-Course', function () {
+			var idcourse = $(this).data('id');
 			bootbox.confirm("Bạn có chắc chắn muốn xóa?", function (result) {
 				if (result) {
-					studentController.deletesubbyID(idsub, idcourse);
+					studentController.DeleteCoursebyID(idcourse);
 				}
 			})
 		})
 	},
-	save: function () {
+	Save: function () {
 		var id = $('#ID').val();
 		var first = $('#first_name').val();
 		var last = $('#last_name').val();
@@ -64,7 +67,7 @@
 		var lastvisited = $('#lastvisited').val();
 		var facultyid = $('#IDfacl').val();
 		var classid = $('#IDclass').val();
-		var infostudent = {
+		var InfoStudent = {
 			ID: id,
 			FIRST_NAME: first,
 			LAST_NAME: last,
@@ -79,15 +82,15 @@
 			CLASS_ID: classid,
 		}
 		$.ajax({
-			url: '/Admin/Student/save',
-			data: infostudent,
+			url: '/Admin/Student/Save',
+			data: InfoStudent,
 			type: 'POST',
 			dataType: 'json',
 			success: function (response) {
 				if (response.status == true) {
-					bootbox.alert("Save success", function () {
+					bootbox.alert("Xóa thành công!", function () {
 						$('#frmSaveDataStudent').modal('hide');
-						studentController.getstudent(true);
+						studentController.GetStudent(true);
 					})
 				} else {
 					bootbox.log(response.message);
@@ -98,16 +101,20 @@
 			}
 		})
 	},
-	getstudent: function () {
+	GetStudent: function () {
 		$.ajax({
-			url: "/Admin/Student/getstudent",
+			url: "/Admin/Student/GetStudent",
 			type: 'GET',
 			dataType: 'json',
+			data: {
+				page: studentconfig.pageIndex,
+				pageSize: studentconfig.pageSize
+			},
 			success: function (response) {
 				if (response.status) {
 					var data = response.data;
 					var html = '';
-					var template = $('#data-student').html();
+					var template = $('#data-Student').html();
 					$.each(data, function (i, item) {
 						html += Mustache.render(template, {
 							IDFACULTY: item.FACULTY.ID,
@@ -120,15 +127,43 @@
 							PHONE_NO: item.PHONE_NO,
 							MAIL: item.MAIL,
 						});
-						$('#tblData-student').html(html);
+						$('#tblData-Student').html(html);
+						studentController.paging(response.total, function () {
+							studentController.GetStudent();
+						});
+						studentController.registerEvent();
 					});
 				}
 			}
 		})
 	},
-	delete: function (id) {
+	paging: function (totalRow, callback) {
+		var totalPage = Math.ceil(totalRow / studentconfig.pageSize);
+
+		////Unbind pagination if it existed or click change pagesize
+		//if ($('#pagination a').length === 0 || changePageSize === true) {
+		//    $('#pagination').empty();
+		//    $('#pagination').removeData("twbs-pagination");
+		//    $('#pagination').unbind("page");
+		//}
+
+		$('#pagination').twbsPagination({
+			totalPages: totalPage,
+			first: "Đầu",
+			next: "Tiếp",
+			last: "Cuối",
+			prev: "Trước",
+			visiblePages: 10,
+			onPageClick: function (event, page) {
+				studentController.GetStudent();
+				studentconfig.pageIndex = page;
+				setTimeout(callback, 200);
+			}
+		});
+	},
+	Delete: function (id) {
 		$.ajax({
-			url: '/Admin/Student/delete',
+			url: '/Admin/Student/Delete',
 			data: {
 				id: id
 			},
@@ -137,15 +172,15 @@
 			success: function (response) {
 				if (response.status == true) {
 					bootbox.alert("Xóa thành công", function () {
-						studentController.getstudent(true);
+						studentController.GetStudent(true);
 					})
 				}
 			}
 		});
 	},
-	detail: function (id) {
+	Detail: function (id) {
 		$.ajax({
-			url: '/Admin/Student/detail',
+			url: '/Admin/Student/Detail',
 			data: {
 				idstudent: id,
 			},
@@ -180,9 +215,9 @@
 			'/' + (date.getDate() > 9 ? date.getDate() : ('0' + date.getDate())) +
 			' ' + date.toLocaleTimeString('vi');
 	},
-	getclassinfaculty: function (id) {
+	GetClassInFaculty: function (id) {
 		$.ajax({
-			url: '/Admin/Student/getclassinfaculty',
+			url: '/Admin/Student/GetClassInFaculty',
 			type: 'POST',
 			data: {id:id},
 			dataType: 'json',
@@ -198,9 +233,9 @@
 			}
 		})
 	},
-	getfacultyID_NAME: function () {
+	GetFacultyID_NAME: function () {
 		$.ajax({
-			url: '/Admin/Teacher/getfacultyID_NAME',
+			url: '/Admin/Teacher/GetFacultyID_NAME',
 			type: 'GET',
 			dataType: 'json',
 			success: function (response) {
@@ -216,9 +251,9 @@
 			}
 		})
 	},
-	getsubbyID: function (id) {
+	GetCoursebyID: function (id) {
 		$.ajax({
-			url: '/Admin/Student/getsubbyID',
+			url: '/Admin/Student/GetCoursebyID',
 			data: { idstudent: id },
 			type: 'POST',
 			datatype: 'json',
@@ -226,26 +261,25 @@
 				if (response.status == true) {
 					var data = response.data;
 					var html = '';
-					var template = $('#data-infosubject').html();
-					var student = $('#namestudent').val(data[0].LAST_NAME + ' ' + data[0].MIDDLE_NAME + ' ' + data[0].FIRST_NAME);
-					$.each(data[0].SUBJECTs, function (i, item) {
+					var template = $('#data-InfoCourse').html();
+					var student = $('#NameStudent').val(data[0].LAST_NAME + ' ' + data[0].MIDDLE_NAME + ' ' + data[0].FIRST_NAME);
+					$.each(data[0].COURSE, function (i, item) {
 						html += Mustache.render(template, {
-							IDSUB: item.IDSUB,
-							NAMESUB: item.NAMESUB,
-							IDCOURSE: item.COURSE.ID,
-							COURSE: item.COURSE.TILTE,
+							IDCOURSE: item.IDCOURSE,
+							NAMECOURSE: item.NAMECOURSE,
+							IDSEMESTER: item.SEMESTER.ID,
+							SEMESTER: item.SEMESTER.TILTE,
 						});
 					});
-					$('#tblData-subject').html(html);
+					$('#tblData-Course').html(html);
 				}
 			}
 		})
 	},
-	deletesubbyID: function (idsub, idcourse) {
+	DeleteCoursebyID: function (idcourse) {
 		$.ajax({
-			url: '/Admin/Teacher/deletesubbyID',
+			url: '/Admin/Teacher/DeleteCoursebyID',
 			data: {
-				idsub: idsub,
 				idcourse: idcourse
 			},
 			type: 'POST',
@@ -253,7 +287,7 @@
 			success: function (response) {
 				if (response.status == true) {
 					bootbox.alert("Xóa thành công", function () {
-						$('#infostudent').modal('hide');
+						$('#InfoStudent').modal('hide');
 					})
 				}
 			}
