@@ -1,5 +1,5 @@
 ﻿var subjectsconfig = {
-    pageSize: 1,
+    pageSize: 5,
     pageIndex: 1,
 }
 var subjectsController = {
