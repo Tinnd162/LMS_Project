@@ -13,10 +13,19 @@
         </div>
         <div class="card-body">
             <blockquote class="blockquote mb-0">
-                <p>@item.topicDescription</p>
-                <p>@item.eventTitle</p>
+                <p>@item.documentTitle</p>
+                <p><a href="~/Student/Submit/@item.eventID">@item.eventTitle</a></p>
             </blockquote>
         </div>
+
+        /*foreach (var i in Model.Where(s=> s.topicID == item.topicID))*/
+        @*{   <div class="card-body">
+                    <blockquote class="blockquote mb-0">
+                        <p>@i.documentTitle</p>
+                        <p><a href="~/Student/Submit/@item.eventID">@i.eventTitle</a></p>
+                    </blockquote>
+                </div>
+            }*@
     }
 </div>
 
