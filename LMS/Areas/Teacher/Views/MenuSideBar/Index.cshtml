@@ -20,9 +20,9 @@
         </ul>
     </li>
     <li>
-        <a href="#courseSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Khóa học</a>
-        <ul class="collapse list-unstyled" id="courseSubmenu">
-            @{ Html.RenderAction("Semester", "MenuSideBar", new { area = "Teacher" });}
+        <a href="#processSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Quá trình học tập</a>
+        <ul class="collapse list-unstyled" id="asessmentSubmenu">
+            @{ Html.RenderAction("SubjectAssessments", "MenuSideBar", new { area = "Teacher" });}
         </ul>
     </li>
     <li>

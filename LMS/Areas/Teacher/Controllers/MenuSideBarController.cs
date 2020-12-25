@@ -73,5 +73,20 @@ namespace LMS.Areas.Teacher.Controllers
             var listCourse = courseDao.GetCourseByTeacherAndSemester(user_id, semester_id);
             return View(listCourse);
         }
+
+        [ChildActionOnly]
+        public ActionResult SubjectProcess(string semester_id)//string user_id = "JZDN2020112521542805", string course_id = "JZDN2020112521542821")
+        {
+            CommonFunc comf = new CommonFunc();
+            string user_id = comf.GetIdUserBySession();
+            if (semester_id == null)
+            {
+                semester_id = comf.GetIdSemesterBySession();
+            }
+
+            CourseDAO courseDao = new CourseDAO();
+            var listCourse = courseDao.GetCourseByTeacherAndSemester(user_id, semester_id);
+            return View(listCourse);
+        }
     }
 }

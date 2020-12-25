@@ -6,9 +6,11 @@ using System.Web.Mvc;
 using DAL.DAO;
 using DAL.StudentView;
 using DAL.EF;
+using LMS.Common;
 
 namespace LMS.Areas.Student.Controllers
 {
+    [CustomAuthorize("STUDENT")]
     public class HomeController : Controller
     {
         // GET: Student/Home
