@@ -61,7 +61,7 @@ namespace LMS.Areas.Admin.Controllers
         }
         public JsonResult Delete(string id)
         {
-            if(new SemesterDAO().deletesemester(id))
+            if (new SemesterDAO().deletesemester(id))
             {
                 return Json(new
                 {
