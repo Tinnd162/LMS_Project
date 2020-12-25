@@ -14,6 +14,7 @@ namespace DAL.StudentView
         public string topicTitle { get; set; }
         public string eventID { get; set; }
         public string eventTitle { get; set; }
+        public string eventDescription { get; set; }
         public DateTime? eventDeadline { get; set; }
         public string submitID { get; set; }
         public string submitLink { get; set; }
