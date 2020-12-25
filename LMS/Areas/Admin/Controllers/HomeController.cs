@@ -7,6 +7,7 @@ using LMS.Common;
 
 namespace LMS.Areas.Admin.Controllers
 {
+    [CustomAuthorize("ADMIN")]
     public class HomeController : Controller
     {
         // GET: Admin/Home

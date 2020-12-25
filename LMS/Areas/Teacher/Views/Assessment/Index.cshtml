@@ -16,16 +16,15 @@
     }
  }
 <div id="all-event">
-
+    
+    <div class="mb-4"><h5>Các sự kiện của môn học :</h5></div>
     @foreach (var ev in Model)
-    {
-
-
+    {       
         <div class=" text-dark bg-light mr-4 mb-4 d-block">
             <div id="@ev.ID" class="itemEvent mb-2" style="box-shadow: 5px 5px 5px #DDD;">
                 <div class="itemEventContent card-body pt-0 pb-1 pl-0 pr-0 ml-5 mr-4 position-relative d-flex flex-column">
                     <div class="ml-auto mt-2 position-absolute" style="right:0px; top:0px">
-                        <button type="button" class="btn_Detail btn btn-light text-danger">Chi tiết</button>'
+                        <button type="button" class="btn_Detail btn btn-light text-danger">Chi tiết</button>
                     </div>
                     <h5 class="text-primary">@ev.TITLE</h5>
                     <div class="date d-flex flex-row"><p class="mb-0" name="startDate">Bắt đầu : <span>@ev.STARTDATE</span></p><p class="ml-3 mb-0" name="finishDate"> Kết thúc: <span>@ev.DEADLINE</span></p></div>

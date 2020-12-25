@@ -73,20 +73,12 @@ var semesterController = {
                     semesterController.paging(response.total, function () {
                         semesterController.GetSemester();
                     });
-                    semesterController.registerEvent();
                 }
             },
         });
     },
     paging: function (totalRow, callback) {
         var totalPage = Math.ceil(totalRow / semesterconfig.pageSize);
-
-        ////Unbind pagination if it existed or click change pagesize
-        //if ($('#pagination a').length === 0 || changePageSize === true) {
-        //    $('#pagination').empty();
-        //    $('#pagination').removeData("twbs-pagination");
-        //    $('#pagination').unbind("page");
-        //}
 
         $('#pagination').twbsPagination({
             totalPages: totalPage,
@@ -110,7 +102,7 @@ var semesterController = {
             dataType: 'json',
             success: function (response) {
                 if (response.status == true) {
-                    var data = response.data[0];
+                    var data = response.data;
                     $('#IDsemester').val(data.ID);
                     $('#title').val(data.TITLE);
                     $('#description').val(data.DESCRIPTION);
