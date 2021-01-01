@@ -1,8 +1,35 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "Index";
     Layout = "~/Areas/Admin/Views/Shared/_BlankAdminLayout.cshtml";
 }
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 
-<h2>Admin + @ViewBag.id</h2>
+<div id="chartContainer" style="height: 300px; width: 100%;"></div>
 
+<script>
+    $.ajax({
+        url: "/Admin/Home/GetPieData",
+        dataType: "json",
+        type: 'GET',
+        success: function (response) {
+            var chart = new CanvasJS.Chart("chartContainer", {
+                animationEnabled: true,
+                title: {
+                    text: "Tỉ lệ nam nữ của Giảng Viên"
+                },
+                data: [{
+                    type: "pie",
+                    startAngle: 240,
+                    yValueFormatString: "##0.00\"%\"",
+                    indexLabel: "{label} {y}",
+                    dataPoints: [
+                        { y: response.male, label: "Nam" },
+                        { y: response.female, label: "Nữ" },
+
+                    ]
+                }]
+            });
+            chart.render();
+        }
+    });
+</script>

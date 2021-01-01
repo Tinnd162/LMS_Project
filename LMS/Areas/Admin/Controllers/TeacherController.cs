@@ -21,9 +21,9 @@ namespace LMS.Areas.Admin.Controllers
             return View();
         }
         //Done
-        public JsonResult GetTeacher(int page, int pageSize)
+        public JsonResult GetTeacher(string name,int page, int pageSize)
         {
-            var model = new InfoTeacherDAO().getteacher().Select(x => new
+            var ListTeacher = new InfoTeacherDAO().getteacher().Select(x => new
             {
                 ID = x.ID,
                 FIRST_NAME = x.FIRST_NAME,
@@ -38,12 +38,16 @@ namespace LMS.Areas.Admin.Controllers
                     NAME = x.FACULTY.NAME
                 }
             });
-            var subjects = model.Skip((page - 1) * pageSize).Take(pageSize);
-            int totalRow = model.Count();
+            if (!string.IsNullOrEmpty(name))
+            {
+                ListTeacher = ListTeacher.Where(x => (x.LAST_NAME == name) || (x.MIDDLE_NAME == name) || (x.FIRST_NAME == name));
+            }
+            int TotalRow = ListTeacher.Count();
+            var lstTeacher = ListTeacher.Skip((page - 1) * pageSize).Take(pageSize);
             return Json(new
             {
-                total = totalRow,
-                data = subjects,
+                total = TotalRow,
+                data = lstTeacher,
                 status = true
             }, JsonRequestBehavior.AllowGet);
         }

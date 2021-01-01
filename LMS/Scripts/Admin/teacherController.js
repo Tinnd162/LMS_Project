@@ -44,7 +44,15 @@ var teacherController = {
 					teacherController.DeleteCoursebyID(idcourse);
                 }
             })
-        })
+		})
+		$(document).stop().on('click', '#btnSearch', function () {
+			teacherController.GetTeacher(true);
+		})
+		$(document).stop().on('keypress', '#txtSearch', function (e) {
+			if (e.which == 13) {
+				teacherController.GetTeacher(true);
+			}
+		})
 	},
 	Save: function () {
 		var id = $('#ID').val();
@@ -91,12 +99,14 @@ var teacherController = {
 			}
 		})
 	},
-	GetTeacher: function () {
+	GetTeacher: function (changePageSize) {
+		var name = $('#txtSearch').val();
 		$.ajax({
 			url: '/Admin/Teacher/GetTeacher',
 			type: 'GET',
 			dataType: 'json',
 			data: {
+				name:name,
 				page: teacherconfig.pageIndex,
 				pageSize: teacherconfig.pageSize
 			},
@@ -105,26 +115,37 @@ var teacherController = {
 					var data = response.data;
 					var html = '';
 					var template = $('#data-Teacher').html();
-					$.each(data, function (i, item) {
-						html += Mustache.render(template, {
-							IDNAMEFACULTY: item.FACULTY.ID,
-							NAMEFACULTY: item.FACULTY.NAME,
-							ID: item.ID,
-							FIRST_NAME: item.LAST_NAME + ' ' + item.MIDDLE_NAME + ' ' + item.FIRST_NAME,
-							PHONE_NO: item.PHONE_NO,
-							MAIL: item.MAIL,
+					if (data != '') {
+						$.each(data, function (i, item) {
+							html += Mustache.render(template, {
+								IDNAMEFACULTY: item.FACULTY.ID,
+								NAMEFACULTY: item.FACULTY.NAME,
+								ID: item.ID,
+								FIRST_NAME: item.LAST_NAME + ' ' + item.MIDDLE_NAME + ' ' + item.FIRST_NAME,
+								PHONE_NO: item.PHONE_NO,
+								MAIL: item.MAIL,
+							});
+							$('#tblData-Teacher').html(html);
+							teacherController.paging(response.total, function () {
+								teacherController.GetTeacher();
+							}, changePageSize);
 						});
-						$('#tblData-Teacher').html(html);
-						teacherController.paging(response.total, function () {
-							teacherController.GetTeacher();
-						});
-					});
+					}
+					else {
+						alert("Không có thông tin!")
+                    }
 				}
 			}
 		})
 	},
-	paging: function (totalRow, callback) {
+	paging: function (totalRow, callback, changePageSize) {
 		var totalPage = Math.ceil(totalRow / teacherconfig.pageSize);
+
+		if ($('#pagination a').length === 0 || changePageSize === true) {
+			$('#pagination').empty();
+			$('#pagination').removeData("twbs-pagination");
+			$('#pagination').unbind("page");
+		}
 
 		$('#pagination').twbsPagination({
 			totalPages: totalPage,

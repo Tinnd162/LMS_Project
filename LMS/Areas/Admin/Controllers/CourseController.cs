@@ -21,9 +21,9 @@ namespace LMS.Areas.Admin.Controllers
             return View();
         }
         [HttpGet]
-        public JsonResult GetCourse(int page, int pageSize)
+        public JsonResult GetCourse(string name,int page, int pageSize)
         {
-            var listcourse = new CourseDAO().GetCOURSEs().Select(x => new
+            var ListCourse = new CourseDAO().GetCOURSEs().Select(x => new
             {
                 ID = x.ID,
                 NAME = x.NAME,
@@ -41,12 +41,16 @@ namespace LMS.Areas.Admin.Controllers
                     }
                 },
             });
-            var course = listcourse.Skip((page - 1) * pageSize).Take(pageSize);
-            int totalRow = listcourse.Count();
+            if (!string.IsNullOrEmpty(name))
+            {
+                ListCourse = ListCourse.Where(x => x.NAME.Contains(name));
+            }
+            int TotalRow = ListCourse.Count();
+            var lstCourse = ListCourse.Skip((page - 1) * pageSize).Take(pageSize);
             return Json(new
             {
-                total = totalRow,
-                data = course,
+                total = TotalRow,
+                data = lstCourse,
                 status = true
             }, JsonRequestBehavior.AllowGet);
         }

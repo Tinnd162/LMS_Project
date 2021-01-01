@@ -17,9 +17,9 @@ namespace LMS.Areas.Admin.Controllers
         {
             return View();
         }
-        public JsonResult GetStudent(int page, int pageSize)
+        public JsonResult GetStudent(string name,int page, int pageSize)
         {
-            var model = new InfoStudentDAO().getstudent().Select(x => new
+            var ListStudent = new InfoStudentDAO().getstudent().Select(x => new
             {
                 ID = x.ID,
                 FIRST_NAME = x.FIRST_NAME,
@@ -39,12 +39,16 @@ namespace LMS.Areas.Admin.Controllers
                     MAJOR = x.CLASS.MAJOR
                 }
             });
-            var subjects = model.Skip((page - 1) * pageSize).Take(pageSize);
-            int totalRow = model.Count();
+            if (!string.IsNullOrEmpty(name))
+            {
+                ListStudent = ListStudent.Where(x => (x.LAST_NAME == name) || (x.MIDDLE_NAME == name) || (x.FIRST_NAME==name));
+            }
+            int TotalRow = ListStudent.Count();
+            var lstStudent = ListStudent.Skip((page - 1) * pageSize).Take(pageSize);
             return Json(new
             {
-                total = totalRow,
-                data = subjects,
+                total = TotalRow,
+                data = lstStudent,
                 status = true
             }, JsonRequestBehavior.AllowGet);
         }

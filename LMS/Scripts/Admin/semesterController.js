@@ -46,14 +46,24 @@ var semesterController = {
             $('#InfoSemester').modal('show');
             semesterController.reset();
         })
+        $(document).stop().on('click', '#btnSearch', function () {
+            semesterController.GetSemester(true);
+        })
+        $(document).stop().on('keypress', '#txtSearch', function (e) {
+            if (e.which == 13) {
+                semesterController.GetSemester(true);
+            }
+        })
     },
 
-    GetSemester: function () {
+    GetSemester: function (changePageSize) {
+        var name = $('#txtSearch').val();
         $.ajax({
             url: '/Semester/GetSemester',
             type: 'GET',
             dataType: 'json',
             data: {
+                name: name,
                 page: semesterconfig.pageIndex,
                 pageSize: semesterconfig.pageSize
             },
@@ -62,23 +72,34 @@ var semesterController = {
                     var data = response.data;
                     var html = '';
                     var template = $('#data-Semester').html();
-                    $.each(data, function (i, item) {
-                        html += Mustache.render(template, {
-                            ID: item.ID,
-                            TITLE: item.TITLE,
-                            DESCRIPTION: item.DESCRIPTION,
+                    if (data != '') {
+                        $.each(data, function (i, item) {
+                            html += Mustache.render(template, {
+                                ID: item.ID,
+                                TITLE: item.TITLE,
+                                DESCRIPTION: item.DESCRIPTION,
+                            });
                         });
-                    });
-                    $('#tblData-Semester').html(html);
-                    semesterController.paging(response.total, function () {
-                        semesterController.GetSemester();
-                    });
+                        $('#tblData-Semester').html(html);
+                        semesterController.paging(response.total, function () {
+                            semesterController.GetSemester();
+                        }, changePageSize);
+                    }
+                    else {
+                        alert("Không có thông tin")
+                    }
                 }
             },
         });
     },
-    paging: function (totalRow, callback) {
+    paging: function (totalRow, callback, changePageSize) {
         var totalPage = Math.ceil(totalRow / semesterconfig.pageSize);
+
+        if ($('#pagination a').length === 0 || changePageSize === true) {
+            $('#pagination').empty();
+            $('#pagination').removeData("twbs-pagination");
+            $('#pagination').unbind("page");
+        }
 
         $('#pagination').twbsPagination({
             totalPages: totalPage,

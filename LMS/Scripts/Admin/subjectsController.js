@@ -45,14 +45,24 @@ var subjectsController = {
                 }
             })
         })
+        $(document).stop().on('click', '#btnSearch', function () {
+            subjectsController.GetSubjects(true);
+        })
+        $(document).stop().on('keypress', '#txtSearch', function (e) {
+            if (e.which == 13) {
+                subjectsController.GetSubjects(true);
+            }
+        })
     },
-    GetSubjects: function ()
+    GetSubjects: function (changePageSize)
     {
+        var name = $('#txtSearch').val();
         $.ajax({
             url: '/Subjects/GetSubjects',
             type: 'GET',
             dataType: 'json',
             data: {
+                name: name,
                 page: subjectsconfig.pageIndex,
                 pageSize: subjectsconfig.pageSize
             },
@@ -62,17 +72,22 @@ var subjectsController = {
                     var html = '';
                     var a = [];
                     var template = $('#data-Subjects').html();
-                    $.each(data, function (i, item) {
-                        html += Mustache.render(template, {
-                            ID: item.ID,
-                            NAME: item.NAME,
-                            DESCRIPTION: item.DESCRIPTION,
+                    if (data != '') {
+                        $.each(data, function (i, item) {
+                            html += Mustache.render(template, {
+                                ID: item.ID,
+                                NAME: item.NAME,
+                                DESCRIPTION: item.DESCRIPTION,
+                            });
                         });
-                    });
-                    $('#tblData-Subjects').html(html);
-                    subjectsController.paging(response.total, function () {
-                        subjectsController.GetSubjects();
-                    });
+                        $('#tblData-Subjects').html(html);
+                        subjectsController.paging(response.total, function () {
+                            subjectsController.GetSubjects();
+                        }, changePageSize);
+                    }
+                    else {
+                        alert("không có thông tin");
+                    }
                 }
             },
         });
@@ -189,15 +204,14 @@ var subjectsController = {
             }
         });
     },
-    paging: function (totalRow, callback) {
+    paging: function (totalRow, callback, changePageSize) {
         var totalPage = Math.ceil(totalRow / subjectsconfig.pageSize);
 
-        ////Unbind pagination if it existed or click change pagesize
-        //if ($('#pagination a').length === 0 || changePageSize === true) {
-        //    $('#pagination').empty();
-        //    $('#pagination').removeData("twbs-pagination");
-        //    $('#pagination').unbind("page");
-        //}
+        if ($('#pagination a').length === 0 || changePageSize === true) {
+            $('#pagination').empty();
+            $('#pagination').removeData("twbs-pagination");
+            $('#pagination').unbind("page");
+        }
         $('#pagination').twbsPagination({
             totalPages: totalPage,
             first: "Đầu",

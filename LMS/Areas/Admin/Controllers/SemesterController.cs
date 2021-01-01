@@ -22,25 +22,29 @@ namespace LMS.Areas.Admin.Controllers
         {
             return View();
         }
-        public JsonResult GetSemester(int page, int pageSize)
+        public JsonResult GetSemester(string name,int page, int pageSize)
         {
-            var model = new SemesterDAO().GetSEMESTERs().Select(x => new
+            var ListSemester = new SemesterDAO().GetSEMESTERs().Select(x => new
             {
                 ID = x.ID,
                 TITLE = x.TITLE,
                 DESCRIPTION = x.DESCRIPTION,
             });
-            var subjects = model.Skip((page - 1) * pageSize).Take(pageSize);
-            int totalRow = model.Count();
+            if (!string.IsNullOrEmpty(name))
+            {
+                ListSemester = ListSemester.Where(x => x.TITLE.Contains(name));
+            }
+            int TotalRow = ListSemester.Count();
+            var lstSemester = ListSemester.Skip((page - 1) * pageSize).Take(pageSize);
             return Json(new
             {
-                total = totalRow,
-                data = subjects,
+                total = TotalRow,
+                data = lstSemester,
                 status = true
             },
             JsonRequestBehavior.AllowGet);
         }
-        public JsonResult Detail(string id= "19201")
+        public JsonResult Detail(string id)
         {
             SEMESTER sem = new SemesterDAO().GetSemesterByID(id);
 
