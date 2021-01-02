@@ -112,8 +112,6 @@ namespace DAL.DAO
             return true;
 
         }
-
-
         public List<COURSE> GetCourseByStudentAndSemester(string student_id, string sem_id)
         {
             C_USER stu = db.C_USER.First(x => x.ID == student_id);
@@ -157,19 +155,7 @@ namespace DAL.DAO
                 ID = a.ID,
                 NAME = a.NAME,
                 DESCRIPTION = a.DESCRIPTION,
-                SEMESTER = new SEMESTER { ID = a.SEMESTER.ID, TITLE = a.SEMESTER.TITLE },
-                SUBJECT = new SUBJECT { ID = a.SUBJECT.ID, NAME = a.SUBJECT.NAME },
-                TEACH = new TEACH
-                {
-                    C_USER = new C_USER
-                    {
-                        ID = a.TEACH.C_USER.ID,
-                        //FIRST_NAME = a.TEACH.C_USER.FIRST_NAME,
-                        //LAST_NAME = a.TEACH.C_USER.LAST_NAME,
-                        //MIDDLE_NAME = a.TEACH.C_USER.MIDDLE_NAME,
-                        FACULTY= new FACULTY { ID=a.TEACH.C_USER.FACULTY.ID, NAME=a.TEACH.C_USER.FACULTY.NAME}
-                    }
-                },
+                SUBJECT = new SUBJECT { ID = a.SUBJECT.ID, NAME = a.SUBJECT.NAME, FACULTY_ID=a.SUBJECT.FACULTY_ID},
             }).ToList();
         }
         public List<COURSE> GetCourseByTeacherAndSemester(string teacher_id, string sem_id)

@@ -1,5 +1,5 @@
 ﻿var semesterconfig = {
-    pageSize: 5,
+    pageSize: 2,
     pageIndex: 1,
 }
 var semesterController = {
@@ -8,6 +8,16 @@ var semesterController = {
         semesterController.registerEvent();
     },
     registerEvent: function () {
+        $('#frmSaveData-Semester').validate({
+            rules: {
+                semestername: "required",
+                description: "required",
+            },
+            messages: {
+                semestername: "Tên học kỳ không được để trống",
+                description: "Mô tả không được để trống",
+            }
+        })
 
         $(document).stop().on('click', '#btnSave-Semester', function () {
             if ($('#frmSaveData-Semester').valid()) {
@@ -72,7 +82,7 @@ var semesterController = {
                     var data = response.data;
                     var html = '';
                     var template = $('#data-Semester').html();
-                    if (data != '') {
+                    if (data != '' || name=='') {
                         $.each(data, function (i, item) {
                             html += Mustache.render(template, {
                                 ID: item.ID,

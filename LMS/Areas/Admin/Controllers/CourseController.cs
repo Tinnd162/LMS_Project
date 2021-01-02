@@ -21,25 +21,14 @@ namespace LMS.Areas.Admin.Controllers
             return View();
         }
         [HttpGet]
-        public JsonResult GetCourse(string name,int page, int pageSize)
+        public JsonResult GetCourse(string name, int page, int pageSize)
         {
             var ListCourse = new CourseDAO().GetCOURSEs().Select(x => new
             {
                 ID = x.ID,
                 NAME = x.NAME,
                 DESCRIPTION = x.DESCRIPTION,
-                SEMESTER_ID = x.SEMESTER_ID,
-                TEACH = new TEACH
-                {
-                    C_USER = new C_USER
-                    {
-                        ID = x.TEACH.C_USER.ID,
-                        FIRST_NAME = x.TEACH.C_USER.FIRST_NAME,
-                        LAST_NAME = x.TEACH.C_USER.LAST_NAME,
-                        MIDDLE_NAME = x.TEACH.C_USER.MIDDLE_NAME,
-                        FACULTY = new FACULTY { ID = x.TEACH.C_USER.FACULTY.ID, NAME = x.TEACH.C_USER.FACULTY.NAME }
-                    }
-                },
+                SUBJECT = new SUBJECT { FACULTY_ID=x.SUBJECT.FACULTY_ID}
             });
             if (!string.IsNullOrEmpty(name))
             {
@@ -84,7 +73,7 @@ namespace LMS.Areas.Admin.Controllers
             builder.Append(code + DateTime.Now.ToString("yyyyMMddHHmmssff"));
             return builder.ToString();
         }
-        public JsonResult Detail(string id= "INPR130285_20211_1")
+        public JsonResult Detail(string id)
         {
             var model = new CourseDAO().getdetail(id).Select(x => new {
                 IDCOURSE = x.ID,
@@ -108,7 +97,7 @@ namespace LMS.Areas.Admin.Controllers
             {
                 data = model,
                 status = true
-            }, JsonRequestBehavior.AllowGet);
+            });
         }
         public JsonResult InfoCourse(string idcourse)
         {
@@ -117,7 +106,7 @@ namespace LMS.Areas.Admin.Controllers
             {
                 data = course,
                 status = true
-            }, JsonRequestBehavior.AllowGet);
+            });
         }
         public JsonResult Save(COURSE Course, TEACH Teach)
         {
@@ -180,7 +169,7 @@ namespace LMS.Areas.Admin.Controllers
             {
                 C_USER = x.C_USER.Select(a => new { IDTEA=a.ID, FIRST_NAME=a.FIRST_NAME, LAST_NAME=a.LAST_NAME, MIDDLE_NAME=a.MIDDLE_NAME})
             });
-            return Json(new { data = model }, JsonRequestBehavior.AllowGet);
+            return Json(new { data = model });
         }
     }
 }

@@ -125,7 +125,7 @@ var studentController = {
 					var data = response.data;
 					var html = '';
 					var template = $('#data-Student').html();
-					if (data != '') {
+					if (data != '' || name =='') {
 						$.each(data, function (i, item) {
 							html += Mustache.render(template, {
 								IDFACULTY: item.FACULTY.ID,

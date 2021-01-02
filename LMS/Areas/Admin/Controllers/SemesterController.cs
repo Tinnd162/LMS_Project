@@ -32,7 +32,7 @@ namespace LMS.Areas.Admin.Controllers
             });
             if (!string.IsNullOrEmpty(name))
             {
-                ListSemester = ListSemester.Where(x => x.TITLE.Contains(name));
+                ListSemester = ListSemester.Where(a => a.TITLE.Contains(name));
             }
             int TotalRow = ListSemester.Count();
             var lstSemester = ListSemester.Skip((page - 1) * pageSize).Take(pageSize);
@@ -66,19 +66,12 @@ namespace LMS.Areas.Admin.Controllers
         }
         public JsonResult Delete(string id)
         {
-            if (new SemesterDAO().deletesemester(id))
-            {
-                return Json(new
-                {
-                    status = true
-                }, JsonRequestBehavior.AllowGet);
-            }
+            var semester = new SemesterDAO().deletesemester(id);
             return Json(new
             {
-                status = false
-            }, JsonRequestBehavior.AllowGet);
+                status = true
+            });
         }
-
         public JsonResult Save(SEMESTER semester)
         {
             bool status = false;

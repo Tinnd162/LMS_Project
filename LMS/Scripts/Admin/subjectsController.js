@@ -8,6 +8,16 @@ var subjectsController = {
         subjectsController.registerEvent();
     },
     registerEvent: function () {
+        $('#frmSaveData-Subjects').validate({
+            rules: {
+                subjectsname: "required",
+                description: "required",
+            },
+            messages: {
+                subjectsname: "Tên môn học không được để trống",
+                description: "Mô tả không được để trống",
+            }
+        })
         $(document).stop().on('click', '.btn-delete-Subjects', function (e) {
             console.log(e)
             var id = $(this).data('id');
@@ -72,7 +82,7 @@ var subjectsController = {
                     var html = '';
                     var a = [];
                     var template = $('#data-Subjects').html();
-                    if (data != '') {
+                    if (data != '' || name=='') {
                         $.each(data, function (i, item) {
                             html += Mustache.render(template, {
                                 ID: item.ID,

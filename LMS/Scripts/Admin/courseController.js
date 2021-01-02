@@ -11,6 +11,24 @@ var courseController = {
         courseController.GetFacultyID_NAME();
     },
     registerEvent: function () {
+        $('#frmSaveData-Course').validate({
+            rules: {
+                coursename: "required",
+                description: "required",
+                semestername: "required",
+                subjectname: "required",
+                facultyname: "required",
+                teachername: "required",
+            },
+            messages: {
+                coursename: "Tên học phần không được để trống",
+                description: "Mô tả không được để trống",
+                semestername: "Vui lòng chọn khóa học",
+                subjectname: "Vui lòng chọn môn học",
+                facultyname: "Vui lòng chọn khoa",
+                teachername: "Vui lòng chọn giảng viên",
+            }
+        })
         $(document).stop().on('change', '#title', function (e) {
             var optionSelected1 = $(this).find("option:selected");
             var id1 = optionSelected1.data("idOptionsemester");
@@ -79,6 +97,7 @@ var courseController = {
                 courseController.GetCourse(true);
             }
         })
+       
     },
     GetCourse: function (changePageSize) {
         var name = $('#txtSearch').val();
@@ -96,13 +115,13 @@ var courseController = {
                     var data = response.data;
                     var html = '';
                     var template = $('#data-Course').html();
-                    if (data !='') {
+                    if (data != '' || name == '') {
                         $.each(data, function (i, item) {
                             html += Mustache.render(template, {
                                 ID: item.ID,
                                 NAME: item.NAME,
                                 DESCRIPTION: item.DESCRIPTION,
-                                IDFACULTY: item.TEACH.C_USER.FACULTY.ID,
+                                IDFACULTY: item.SUBJECT.IDFACULTY,
                             });
                         });
                         $('#tblData-Course').html(html);
