@@ -16,7 +16,7 @@ namespace LMS.Areas.Student.Controllers
         //{
         //    return View();
         //}
-        public ViewResult Index(string searchString, string user_id = "U00008", string semester_id = "20211")
+        public ViewResult Index(string user_id = "U00008", string semester_id = "20211")
         {
             SubmitDAO dao = new SubmitDAO();
             List<COURSE> courses = dao.GetDeadlinebyStuAndCourseAndSem(user_id, semester_id);
@@ -51,6 +51,7 @@ namespace LMS.Areas.Student.Controllers
                 }
             }
             var ListEvent = from s in dView select s;
+            ListEvent = ListEvent.Where(s => s.eventDeadline > DateTime.Now);
             ListEvent = ListEvent.OrderBy(s => s.eventDeadline);
             return View(ListEvent.ToList());
 

@@ -4,56 +4,60 @@
     Layout = "~/Areas/Student/Views/Shared/_BlankStudentLayout.cshtml";
 }
 
-<h2>@Model[0].courseName</h2>
-<table class="table">
-    <thead>
-        <tr>
-            
-            <th scope="col">Toppic</th>
-            <th scope="col">Bài tập</th>
-            <th scope="col">Dealine</th>
-            <th scope="col">Status</th>
-            <th scope="col">Comment by Teacher</th>
-            <th scope="col">Score</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
+@if (Model == null)
+    {
+        <h3>Không có deadline</h3>
+    }
+    <h2>@Model[0].courseName</h2>
+    <table class="table">
+        <thead>
             <tr>
-                
-                <td>@item.topicTitle</td>
-                <td>@item.eventTitle</td>
-                <td>@item.eventDeadline</td>
-                @if (@item.submitID == null)
-                {
-                    <td><a href="~/Student/Submit/@item.eventID">Chưa nộp</a></td>
-                }
-                else
-                {
-                    <td><a href="~/Student/Submit/@item.eventID">Đã nộp</a></td>
-                }
-                @if (@item.assComment == null)
-                {
-                    <td></td>
-                }
-                else
-                {
-                    <td>@item.assComment</td>
-                }
-                @if (@item.assScore == 0)
-                {
-                    <td></td>
-                }
-                else
-                {
-                    <td>@item.assScore</td>
-                }
 
+                <th scope="col">Chủ đề</th>
+                <th scope="col">Bài tập</th>
+                <th scope="col">Hạn chót</th>
+                <th scope="col">Trạng thái</th>
+                <th scope="col">Lời phê</th>
+                <th scope="col">Điểm số</th>
             </tr>
-        }
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
 
-    </tbody>
-</table>
+                    <td>@item.topicTitle</td>
+                    <td>@item.eventTitle</td>
+                    <td>@item.eventDeadline</td>
+                    @if (@item.submitID == null)
+                    {
+                        <td><a href="~/Student/Submit/@item.eventID">Chưa nộp</a></td>
+                    }
+                    else
+                    {
+                        <td><a href="~/Student/Submit/@item.eventID">Đã nộp</a></td>
+                    }
+                    @if (@item.assComment == null)
+                    {
+                        <td></td>
+                    }
+                    else
+                    {
+                        <td>@item.assComment</td>
+                    }
+                    @if (@item.assScore == 0)
+                    {
+                        <td></td>
+                    }
+                    else
+                    {
+                        <td>@item.assScore</td>
+                    }
+
+                </tr>
+            }
+
+        </tbody>
+    </table>
 
 

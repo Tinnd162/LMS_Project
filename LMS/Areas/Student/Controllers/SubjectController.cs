@@ -18,19 +18,12 @@ namespace LMS.Areas.Student.Controllers
         }
         public ActionResult GetTopicStudent(string course_id ,string semester_id = "20211", string user_id = "U00008")
         {
-            course_id = "MATH143001_20211_1";
             TopicDAO TopicDAO = new TopicDAO();
             var ListTopic = TopicDAO.GetCourseDetailByStuAndCourseAndSubject(user_id, course_id, semester_id);
             return View(ListTopic);
         }
         public ActionResult GetSubjectAssessments(string course_id, string semester_id = "20211", string user_id = "U00008")
         {
-            //course_id = "MATH143001_20211_1";
-            //SubmitDAO submitDAO = new SubmitDAO();
-            //var ListSubmit = from s in submitDAO.GetSubmitAssessmentByStuAndCourseAndSem(user_id, course_id, semester_id) select s;
-            //ListSubmit = ListSubmit.OrderBy(s => s.eventDeadline);
-            //return View(ListSubmit.ToList());
-            course_id = "MATH143001_20211_1";
             SubmitDAO DAO = new SubmitDAO();
             List<COURSE> courses = DAO.GetSubmitAssessmentByStuAndCourseAndSem(user_id, course_id, semester_id);
             List<SubmitAssessmentView> dView = new List<SubmitAssessmentView>();
@@ -87,7 +80,6 @@ namespace LMS.Areas.Student.Controllers
         }
         public ActionResult GetSubmitDetailsByStudentAndEvent(string event_id,string user_id = "U00008", string course_id = "MATH143001_20211_1", string semester_id = "20211")
         {
-            event_id = "event16086191562960h";
             SubmitDAO DAO = new SubmitDAO();
             List<COURSE> courses = DAO.GetSubmitAssessmentByStuAndCourseAndSem(user_id, course_id, semester_id);
             List<SubmitAssessmentView> dView = new List<SubmitAssessmentView>();

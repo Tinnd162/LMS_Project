@@ -73,5 +73,43 @@ namespace DAL.DAO
             }).ToList(); 
             return courses;
         }
+        public bool InsertSubmit(SUBMIT submit)
+        {
+            db.SUBMITs.Add(submit);
+            db.SaveChanges();
+            return true;
+        }
+        public bool UpdateSubmit(SUBMIT submit)
+        {
+            try
+            {
+                var sb = db.SUBMITs.Find(submit.ID);
+                sb.ID = submit.ID;
+                sb.LINK = submit.LINK;
+                sb.TIME = submit.TIME;
+                sb.EVENT_ID = submit.EVENT_ID;
+                sb.USER_ID = submit.USER_ID;
+                db.SaveChanges();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+        public bool DeleteSubmit(string id)
+        {
+            try
+            {
+                SUBMIT submit = db.SUBMITs.First(x => x.ID == id);
+                db.SUBMITs.Remove(submit);
+                db.SaveChanges();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
     }
 }
