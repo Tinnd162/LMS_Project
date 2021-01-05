@@ -37,7 +37,7 @@ function renderFrmAddEvent(topicId, position) {
 function hideCardAddEvent(position) {
     $(position).on('click', 'div[name="frmAddEvent"] button[name="btn-CloseEvent"]', function () {
         $(this).closest('.frmAddEvent').toggleClass('d-none')
-        $(this).parents('.card-body').children('form').children('.divBtnAddEvent').toggleClass('d-inline-flex d-none ')
+        $(this).parents('.card-body').children('div').children('.divBtnAddEvent').toggleClass('d-inline-flex d-none ')
     })
 }
 
@@ -144,7 +144,7 @@ function addEvent(position) {
             }
          
             $(this).closest('.frmAddEvent').toggleClass('d-none')
-            $(this).parents('.card-body').children('form').children('.divBtnAddEvent').toggleClass('d-inline-flex d-none ')
+            $(this).parents('.card-body').children('div').children('.divBtnAddEvent').toggleClass('d-inline-flex d-none ')
         }
     });
 }

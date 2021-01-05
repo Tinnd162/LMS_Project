@@ -8,14 +8,22 @@ function showCardAddDocInCardAddTopic() {
 function renderFrmAddDoc(topicId, position) {
 
     var template = $('#data-template-addDoc').html()
-    var html = Mustache.render(template, {
-        topicid: topicId
-    });
+    if (position == '#cardAddTopic') {
+        var html = Mustache.render(template, {
+            action: '/Teacher/Subject/UploadFileFromFormAddTopic',
+            topicid: topicId
+        });
+    }
+    else {
+        var html = Mustache.render(template, {
+            action: '/Teacher/Subject/PostDoc',
+            topicid: topicId
+        });
+    }
+    
+
 
     $(position + ' div[data-id="' + topicId + '"] div[name="frmAddDoc"]').html(html)
-
-    CKEDITOR.replace("fullDesDoc" + topicId);
-
     $(position + ' div[data-id="' + topicId + '"] .AddTopic_btnAddDoc').click(function () {
         $(position + ' div[data-id="' + topicId + '"] div[name="frmAddDoc"] .frmAddDoc').toggleClass('d-none')
         $(position + ' div[data-id="' + topicId + '"] .divBtnAddDoc').toggleClass('d-none d-inline-flex')
@@ -38,7 +46,7 @@ function hideCardAddDocInCardTopicAdded() {
 function hideCardAddDoc(position) {
     $(position).on('click', 'div[name="frmAddDoc"] button[name="btn-CloseDoc"]', function () {
         $(this).closest('.frmAddDoc').toggleClass('d-none')
-        $(this).parents('.card-body').children('form').children('.divBtnAddDoc').toggleClass('d-inline-flex d-none ')
+        $(this).parents('.card-body').children('div').children('.divBtnAddDoc').toggleClass('d-inline-flex d-none ')
     })
 }
 
@@ -60,38 +68,38 @@ function addDoc(position) {
         let topicid = $(this).closest('.card-body').data('id')
         $(position + ' div[data-id="' + topicid +'"] .frmAddDoc div.text-danger').remove()
 
-        let title = $(position + ' div[data-id="'+ topicid +'"] div[name="frmAddDoc"] .frmAddDoc input[name="AddDoc_title"]')
         let link = $(position + ' div[data-id="' + topicid +'"] div[name="frmAddDoc"] .frmAddDoc input[name="AddDoc_link"]')
-        if (title.val() == '' && link.val() == '') {
-            $('<div class="text-danger">* Phải nhập tiêu đề</div>').insertAfter(title)
-            $('<div class="text-danger">* Phải thêm link tài liệu</div>').insertAfter(link)
+        if (link.val() == '') {
+            $('<div class="text-danger">* Phải thêm tài liệu</div>').insertAfter(link)
             return false;
         }
-        else if (title.val() == '') {
-            $('<div class="text-danger">* Phải nhập tiêu đề</div>').insertAfter(title)
-            return false;
-        }
-        else if (link.val() == '') {
-            $('<div class="text-danger">* Phải thêm link tài liệu</div>').insertAfter(link)
-            return false;
-        }
-        else {
+        else{
+            let flag = false;
+            let linkFile = '';
+            let filename = '';
+            alert(JSON.stringify($('#formDoc' + topicid).get(0)))
+            
+            var formdata = new FormData($('form#formDoc' + topicid).get(0));
+            
+            let docid = generateID('doc');
+            formdata.append('DocID', docid);
 
-            var valDesCKE = CKEDITOR.instances['fullDesDoc' + topicid + ''].getData().slice(3, -4);
-            let flag = false; 
-
+            alert(JSON.stringify(formdata))
             if (position == '#listTopic') {
+                formdata.append('TopicID', topicid);
                 $.ajax({
-                    url: '/Teacher/Subject/PostDoc',
                     type: 'POST',
-                    data: { ID: generateID('doc'), TITLE: title.val(), DESCRIPTION: valDesCKE, LINK: link.val(), TOPIC_ID: topicid },
+                    url: '/Teacher/Subject/PostDoc',
+                    data: formdata,
                     dataType: 'json',
+                    contentType: false,
+                    processData: false,
                     async: false,
                     success: function (msg) {
-                        if (msg.success) {
+                        if (msg.status == true) {
                             flag = true;
- 
-                            alert('Thêm thành công !')
+                            linkFile = msg.file.link;
+                            filename = msg.file.filename;
                         } else {
                             alert('Đã xảy ra lỗi !')
                         }
@@ -99,24 +107,40 @@ function addDoc(position) {
                 });
             } else {// trong cardAddTopic
                 flag = true;
+                $.ajax({
+                    type: 'POST',
+                    url: '/Teacher/Subject/UploadFileFromFormAddTopic',
+                    data: formdata,
+                    dataType: 'json',
+                    contentType: false,
+                    processData: false,
+                    async: false,
+                    success: function (msg) {
+                        if (msg.status == true) {
+                            flag = true;
+                            linkFile = msg.file.link;
+                            filename = msg.file.filename;
+                        } else {
+                            alert('Đã xảy ra lỗi !')
+                        }
+                    }
+                });
             }
 
             if (flag) {
                 var templateDoc = $('#data-template-doc-item').html()
                 var htmlItemDoc = Mustache.render(templateDoc, {
-                    IdDoc: 'null',
-                    TitleDoc: title.val(),
-                    LinkDoc: link.val(),
-                    DesDoc: valDesCKE
+                    IdDoc: docid,
+                    fileName: filename,
+                    LinkDoc: linkFile
                 });
                 $(position + ' div[data-id="' + topicid + '"]  div[name="listDoc"]').append(htmlItemDoc)
-                title.val('')
-                CKEDITOR.instances['fullDesDoc' + topicid + ''].setData('')
                 link.val('')
+                alert('Thêm thành công !')
             }
 
             $(this).closest('.frmAddDoc').toggleClass('d-none')
-            $(this).parents('.card-body').children('form').children('.divBtnAddDoc').toggleClass('d-inline-flex d-none ')
+            $(this).parents('.card-body').children('div').children('.divBtnAddDoc').toggleClass('d-inline-flex d-none ')
         }
 
     });
@@ -135,8 +159,9 @@ function removeDocChild(position) {
                 type: 'POST',
                 data: { id: $(this).closest('.itemDoc').data('id') },
                 async: true,
+                dataType: 'json',
                 success: function (msg) {
-                    if (msg.success) {
+                    if (msg.status) {
                         alert('Xóa thành công !')
                     } else {
                         alert('Đã xảy ra lỗi !')
@@ -144,7 +169,28 @@ function removeDocChild(position) {
                     }
                 }
             });
-        } 
+        }
+        else {
+            $.ajax({
+                url: '/Teacher/Subject/DeleteFileFromFormAddTopic',
+                dataType: 'json',
+                type: 'POST',
+                data: {
+                    title: $(this).closest('.itemDocContent').children('a').children('p').text(),
+                    link: $(this).closest('.itemDocContent').children('a').attr('href')
+                },
+                async: true,
+                dataType: 'json',
+                success: function (msg) {
+                    if (msg.status) {
+                        //alert('Xóa thành công !')
+                    } else {
+                        alert('Đã xảy ra lỗi !')
+                        return;
+                    }
+                }
+            });
+        }
         $(this).closest('.itemDoc').remove()
        
     });
@@ -179,16 +225,9 @@ function editDocChild(position) {
 
 
         item.toggleClass('d-none d-flex')
-        var linkItem = item.children('a').attr('href');
-        var titleItem = item.children('h5').text();
-        var desItem = item.children('p').text();
-
 
         var templateEditDoc = $('#data-template-editDoc-item').html()
         var editDocHtml = Mustache.render(templateEditDoc, {
-            titleItem: titleItem,
-            desItem: desItem,
-            linkItem: linkItem
         });      
         $(this).parents('div[data-id="' + docID +'"].itemDoc').append(editDocHtml)
     });
@@ -231,59 +270,72 @@ function editDocChildContent(position) {
     $(position).on('click', 'div[name = "listDoc"] .itemDoc .formEdit_itemDoc .btn_ComfirmEditDoc', function () {
 
         let docID = $(this).closest('div.itemDoc').data('id')
-        alert($(this).closest('div.itemDoc').html())
+        //alert($(this).closest('div.itemDoc').html())
 
         $(position + ' .itemDoc[data-id="'+docID+'"] .formEdit_itemDoc div.text-danger').remove()
 
         var item = $(this).closest('.itemDoc[data-id= "'+docID+'"] .formEdit_itemDoc')
-        
-        if (item.children('.editDocLink').val() == '' && item.children('.editDocTitle').val() == '') {
-            $('<div class="text-danger">* Không để trống</div>').insertAfter(item.children('.editDocTitle'))
-            $('<div class="text-danger">* Không để trống</div>').insertAfter(item.children('.editDocLink'))
-            return false;
-        }
-        else if (item.children('.editDocTitle').val() == '') {
-            $('<div class="text-danger">* Không để trống</div>').insertAfter(item.children('.editDocTitle'))
-            return false;
-        }
-        else if (item.children('.editDocLink').val() == '') {
+        alert(item.html())
+        if (item.children('.editDocLink').val() == '') {
             $('<div class="text-danger">* Không để trống</div>').insertAfter(item.children('.editDocLink'))
             return false;
         }
         else {
             var itemContent = $(this).closest('.itemDoc').children('.itemDocContent')
             let flag = false;
+            let link = '';
+            let filename = '';
+            let formdata = new FormData(item.get(0))
+       
             if (position == '#listTopic') {
+                formdata.append('DocID', docID);
                 $.ajax({
-                    url: '/Teacher/Subject/UpdateDoc',
                     type: 'POST',
-                    data: {
-                        ID: docID,
-                        TITLE: item.children('.editDocTitle').val(),
-                        DESCRIPTION: item.children('.editDocDes').val(),
-                        LINK: item.children('.editDocLink').val(),
-                        TOPIC_ID: $(this).closest('.card-body').data('id')
-                    },
+                    url: '/Teacher/Subject/UpdateDoc',
+                    data: formdata,
                     dataType: 'json',
+                    contentType: false,
+                    processData: false,
                     async: false,
                     success: function (msg) {
-                        if (msg.success) {
+                        if (msg.status == true) {
                             flag = true;
-                            alert('Sửa thành công !')
+                            linkFile = msg.file.link;
+                            filename = msg.file.filename;
+                           // alert('Sửa thành công !')
                         } else {
                             alert('Đã xảy ra lỗi !')
                         }
                     }
                 });
             } else {// trong cardAddTopic
-                flag = true;
+                formdata.append('link', itemContent.children('a').attr('href'))
+                $.ajax({
+                    type: 'POST',
+                    url: '/Teacher/Subject/UpdateDocFromFormAddTopic',
+                    data: formdata,
+                    dataType: 'json',
+                    contentType: false,
+                    processData: false,
+                    async: false,
+                    success: function (msg) {
+                        if (msg.status == true) {
+                            flag = true;
+                            linkFile = msg.file.link;
+                            filename = msg.file.filename;
+                            //alert('Sửa thành công !')
+                        } else {
+                            alert('Đã xảy ra lỗi !')
+                        }
+                    }
+                });
             }
 
             if (flag) {
-                itemContent.children('a').attr('href', item.children('.editDocLink').val())
-                itemContent.children('a').children('p').text(item.children('.editDocLink').val())
-                itemContent.children('h5').text(item.children('.editDocTitle').val())
-                itemContent.children('p').text(item.children('.editDocDes').val())
+                itemContent.children('a').attr('href', link)
+                itemContent.children('a').children('p').text(filename)
+               // itemContent.children('h5').text(item.children('.editDocTitle').val())
+                //itemContent.children('p').text(item.children('.editDocDes').val())
             }
             item.remove()
             itemContent.toggleClass('d-none d-flex')

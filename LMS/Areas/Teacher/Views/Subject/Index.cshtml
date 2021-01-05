@@ -11,7 +11,7 @@
 
 
 <div class="id_sub card text-dark bg-light mr-4 mb-3 d-block" data-id="@Model.ID">
-    <div class="card-header pb-1 pt-1">Đường dẫn > abc > xyz </div>
+    <div class="card-header pb-1 pt-1">@Model.SEMESTER.TITLE > @Model.NAME </div>
     <div class="card-body">
         <h5 class="card-title">@Model.NAME</h5>
         <p class="card-text">@Model.DESCRIPTION</p>
@@ -30,7 +30,7 @@
 <div class=" d-none card text-dark bg-light mr-4 mb-3" id="cardAddTopic">
     <div class="card-header pb-1 pt-1">Thêm chủ đề</div>
     <div class="card-body pt-1" data-id="0">
-        <form action="/Teacher/Subject/PostTopic" method="post" class="p-3 w-auto" id="frm-add-topic">
+        <div @*action="/Teacher/Subject/PostTopic" method="post"*@ class="p-3 w-auto" id="frm-add-topic">
             <div class="form-group">
                 <label for="AddTopic_title">Tiêu đề</label>
                 <input type="text" id="AddTopic_title" class="form-control">
@@ -70,18 +70,13 @@
                 <button id="btn-AddTopic" class="btn btn-primary" type="button">Thêm</button>
             </div>
 
-        </form>
+        </div>
     </div>
 </div>
 
 <!--//////////////////////////////List Topic //////////////////////////////////////////////////////////-->
 
 <div id="listTopic"></div>
-
-@*<script src="~/Scripts/Teacher/topic.js"></script>
-<script type="text/javascript">
-    LoadListTopic($('div.id_sub').data('id'))
-</script>*@
 
 
 
@@ -91,8 +86,8 @@
         <div class="card-body pt-1 position-relative" data-id="{{IdTopic}}" id="{{IdTopic}}">
 
             <div class="position-absolute" style="right:0px; top:0px"><button type="button" class="btn btn-light text-danger" name="removeTopic">x</button></div>
-            <form action="/" method="post" class="p-3 w-auto">
-                <h5 class="card-title mb-0"> {{TitleTopic}} </h5>
+            <div class="p3">
+                <h5 class="card-title mb-0"> {{TitleTopic}}</h5>
                 <p class="card-text">{{DesTopic}}</p>
 
                 <div class="divBtnAddDoc d-inline-flex align-items-center pl-3">
@@ -112,9 +107,7 @@
                 </div>
                 <div name="frmAddEvent"></div>
                 <div name="listEvent"></div>
-
-
-            </form>
+            </div>
         </div>
     </div>
 </script>
@@ -124,13 +117,11 @@
 
 <script id="data-template-doc-item" type="x-tmpl-mustache">
     <div class="itemDoc mb-2" data-id="{{IdDoc}}">
-        <div class="itemDocContent card-body pt-0 pb-1 pl-0 pr-0 ml-5 mr-4 border  border-primary border-right-0 border-left-0 border-top-0 position-relative d-flex flex-column">
-            <div class="ml-auto mt-2 position-absolute " style="right:0px; top:0px">
+        <div class="itemDocContent card-body pt-0 pb-1 pl-0 pr-0 ml-5 mr-4 pt-2 border  border-primary border-right-0 border-left-0 border-top-0 position-relative d-flex flex-column">
+            <div class="ml-auto position-absolute " style="right:0px; top:0px">
                 <button type="button" class="btn_EditDoc btn btn-light text-success">Sửa</button> | <button type="button" class="btn_RemoveDoc btn btn-light text-danger">Xóa</button>
             </div>
-            <h5 class="mb-1 text-primary d-block">{{TitleDoc}}</h5>
-            <a href="{{LinkDoc}} "><p class="text-primary m-0" style="width:300px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{LinkDoc}}</p> </a>
-            <p style="word-break:break-word">{{DesDoc}}</p>
+            <a href="{{LinkDoc}} "><p class="text-primary m-0" style="width:300px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{fileName}}</p> </a>
         </div>
     </div>
 </script>
@@ -152,18 +143,15 @@
 
 
 <script id="data-template-editDoc-item" type="x-tmpl-mustache">
-    <div class="formEdit_itemDoc form-group pl-5 pr-5 pb-2 mb-0 mt-2" style="background:#FAEBD7">
-        <label class="pt-2 m-0" style="font-size:1rem">Tiêu đề</label>
-        <input type="text" class="editDocTitle form-control" value="{{titleItem}}">
-        <label class="pt-2 m-0" style="font-size:1rem">Mô tả</label>
-        <input type="text" class="editDocDes form-control" value="{{desItem}}">
-        <label class="pt-2 m-0" style="font-size:1rem">Link</label>
-        <input type="text" class="editDocLink form-control" value="{{linkItem}}">
-        <div class="d-flex justify-content-end p-3">
-            <button type="button" class="btn_close_EditDoc btn btn-outline-dark mr-2">Đóng</button>
-            <button type="button" class="btn_ComfirmEditDoc btn btn-outline-warning">Sửa</button>
-        </div>
-    </div>
+    <form action="/Teacher/Subject/UpdateDoc" method="post" class="formEdit_itemDoc form-group pl-5 pr-5 pb-2 mb-0 mt-2" style="background:#FAEBD7">
+            <label for="file" class="pt-2 m-0" style="font-size:1rem">Tài liệu</label>
+                <input type="file" class="form-control" name="file" accept="application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint,
+                        text/plain, application/pdf, image/*" required/>
+            <div class="d-flex justify-content-end p-3">
+                <button type="button" class="btn_close_EditDoc btn btn-outline-dark mr-2">Đóng</button>
+                <button type="button" class="btn_ComfirmEditDoc btn btn-outline-warning">Sửa</button>
+            </div>
+    </form>
 </script>
 
 
@@ -186,24 +174,23 @@
      </div>
 </script>
 
+@*----------------------------------------Form Add Document----------------------------------------------------------------------------------------*@
 
 <script id="data-template-addDoc" type="x-tmpl-mustache">
 
-     <div class="frmAddDoc form-group-sm pr-5 pl-5 pb-1 border d-none" style="background-color:#fdfdfd">
-         <div class="bg-primary pb-1 pt-1 text-center text-white">Tài liệu</div>
-         <label for="AddDoc_title" class="pt-2 m-0" style="font-size:1rem">Tiêu đề tài liệu</label>
-         <input type="text" name="AddDoc_title" class="form-control">
-         <label for="fullDesDoc{{topicid}}" class="pt-2 m-0" style="font-size:1rem">Mô tả</label>
-         <div id="fullDesDoc{{topicid}}"></div>
-
-         <label for="AddDoc_link" class="pt-2 m-0" style="font-size:1rem">Link</label>
-         <input type="text" name="AddDoc_link" class="form-control">
-         <div class="d-flex justify-content-end p-3">
-             <button name="btn-CloseDoc" class="btn btn-light mr-2" type="button">Đóng</button>
-             <button name="btn-AddDoc" class="btn btn-primary" type="button">Thêm</button>
-         </div>
-     </div>
-     <br>
+    <div class="frmAddDoc form-group-sm pr-5 pl-5 pb-1 border d-none" style="background-color:#fdfdfd">
+        <div class="bg-primary pb-1 pt-1 text-center text-white">Tài liệu</div>
+        <form action="{{action}}" method="post"  id="formDoc{{topicid}}">
+                <label for="file" class="pt-2 m-0" style="font-size:1rem">Tài liệu</label>
+                <input type="file" class="form-control" name="file" accept="application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint,
+                    text/plain, application/pdf, image/*" required/>
+            <div class="d-flex justify-content-end p-3">
+                <button name="btn-CloseDoc" class="btn btn-light mr-2" type="button">Đóng</button>
+                <button name="btn-AddDoc" class="btn btn-primary" type="button">Thêm</button>
+            </div>
+        </form>
+    </div>
+    <br>
 </script>
 
 <script id="data-template-addEvent" type="x-tmpl-mustache">
@@ -231,7 +218,7 @@
 
 @section listTopicHTML{
     <div class="mt-3 p-0">        
-        <div class="w-auto">
+        <div class="w-auto" id="listTopicRightbar">
            <p>Danh sách chủ đề  :</p>
             @foreach (var t in Model.TOPICs)
             {

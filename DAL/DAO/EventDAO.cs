@@ -91,7 +91,7 @@ namespace DAL.DAO
 
         public EVENT GetEventByID(string event_id)
         {
-            EVENT ev =  db.EVENTs.First(x => x.ID == event_id);
+            EVENT ev = db.EVENTs.First(x => x.ID == event_id);
             return new EVENT
             {
                 ID = ev.ID,
@@ -107,18 +107,18 @@ namespace DAL.DAO
                     COURSE_ID = ev.TOPIC.COURSE_ID,
                     COURSE = new COURSE
                     {
-                        NAME= ev.TOPIC.COURSE.NAME,
+                        NAME = ev.TOPIC.COURSE.NAME,
                         DESCRIPTION = ev.TOPIC.COURSE.DESCRIPTION
                     }
                 },
-                SUBMITs = ev.SUBMITs.Select(s => new SUBMIT 
+                SUBMITs = ev.SUBMITs.Select(s => new SUBMIT
                 {
                     ID = s.ID,
                     USER_ID = s.USER_ID,
-                    ASSESSMENT = new ASSESSMENT 
-                    { 
-                        SCORE = ((s.ASSESSMENT == null) ?null : s.ASSESSMENT.SCORE ) ,
-                        COMMENT = ((s.ASSESSMENT == null) ?  null : s.ASSESSMENT.COMMENT)
+                    ASSESSMENT = new ASSESSMENT
+                    {
+                        SCORE = ((s.ASSESSMENT == null) ? null : s.ASSESSMENT.SCORE),
+                        COMMENT = ((s.ASSESSMENT == null) ? null : s.ASSESSMENT.COMMENT)
                     }
                 }).ToList()
             };

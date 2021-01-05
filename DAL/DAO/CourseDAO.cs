@@ -133,6 +133,7 @@ namespace DAL.DAO
                     NAME = s.NAME,
                     DESCRIPTION = s.DESCRIPTION,
                     SEMESTER_ID = s.SEMESTER_ID,
+                    SEMESTER = new SEMESTER { TITLE = s.SEMESTER.TITLE},
                     C_USER = s.C_USER.Select(u => new C_USER
                     {
                         ID = u.ID,
