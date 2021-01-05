@@ -1,10 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.Data.Entity.Validation;
+using System.Data.OleDb;
+using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using DAL.DAO;
 using DAL.EF;
+using LinqToExcel;
 using LMS.Common;
 
 namespace LMS.Areas.Admin.Controllers
@@ -12,6 +20,10 @@ namespace LMS.Areas.Admin.Controllers
     [CustomAuthorize("ADMIN")]
     public class StudentController : Controller
     {
+        SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["LMSProjectDBContext"].ConnectionString);
+        OleDbConnection Econ;
+
+        LMSProjectDBContext db = new LMSProjectDBContext();
         // GET: Admin/Student
         public ActionResult Index()
         {
@@ -41,7 +53,7 @@ namespace LMS.Areas.Admin.Controllers
             });
             if (!string.IsNullOrEmpty(name))
             {
-                ListStudent = ListStudent.Where(x => (x.LAST_NAME == name) || (x.MIDDLE_NAME == name) || (x.FIRST_NAME==name));
+                ListStudent = ListStudent.Where(x => (x.LAST_NAME == name) || (x.MIDDLE_NAME == name) || (x.FIRST_NAME==name) ||(x.FACULTY.NAME==name));
             }
             int TotalRow = ListStudent.Count();
             var lstStudent = ListStudent.Skip((page - 1) * pageSize).Take(pageSize);
@@ -114,7 +126,7 @@ namespace LMS.Areas.Admin.Controllers
                 message = message
             });
         }
-        public JsonResult GetcoursebyID(string idstudent = "U00006")
+        public JsonResult GetcoursebyID(string idstudent)
         {
             var sub = new InfoStudentDAO().getcoursebyID(idstudent).Select(x => new
             {
@@ -127,7 +139,6 @@ namespace LMS.Areas.Admin.Controllers
                     IDCOURSE = y.ID,
                     NAMECOURSE = y.NAME,
                     DESCRIPTION = y.DESCRIPTION,
-                    SUBJECT_ID = y.SUBJECT_ID,
                     SEMESTER = new SEMESTER
                     {
                         ID = y.SEMESTER.ID,
@@ -140,6 +151,85 @@ namespace LMS.Areas.Admin.Controllers
                 data = sub,
                 status = true
             }, JsonRequestBehavior.AllowGet);
+        }
+        private void ExcelConn(string filepath)
+        {
+            string constr = string.Format(@"Provider=Microsoft.ACE.OLEDB.12.0;Data Source={0};Extended Properties=""Excel 12.0 Xml;HDR=YES;""", filepath);
+            Econ = new OleDbConnection(constr);
+        }
+        private void InsertExceldata(string fileepath, string filename)
+        {
+            string fullpath = Server.MapPath("/Doc/") + filename;
+            ExcelConn(fullpath);
+            string query = string.Format("Select * from [{0}]", "Sheet1$");
+            OleDbCommand Ecom = new OleDbCommand(query, Econ);
+            Econ.Open();
+            DataSet ds = new DataSet();
+            OleDbDataAdapter oda = new OleDbDataAdapter(query, Econ);
+            Econ.Close();
+            oda.Fill(ds);
+            DataTable dt = ds.Tables[0];
+           
+            using (SqlBulkCopy objbulk = new SqlBulkCopy(con))
+            {
+                objbulk.DestinationTableName = "_USER";
+                objbulk.ColumnMappings.Add("ID", "ID");
+                objbulk.ColumnMappings.Add("FIRST_NAME", "FIRST_NAME");
+                objbulk.ColumnMappings.Add("LAST_NAME", "LAST_NAME");
+                objbulk.ColumnMappings.Add("MIDDLE_NAME", "MIDDLE_NAME");
+                objbulk.ColumnMappings.Add("PHONE_NO", "PHONE_NO");
+                objbulk.ColumnMappings.Add("SEX", "SEX");
+                objbulk.ColumnMappings.Add("DoB", "DoB");
+                objbulk.ColumnMappings.Add("MAIL", "MAIL");
+                objbulk.ColumnMappings.Add("PASSWORD", "PASSWORD");
+                objbulk.ColumnMappings.Add("CLASS_ID", "CLASS_ID");
+                objbulk.ColumnMappings.Add("FACULTY_ID", "FACULTY_ID");
+                con.Open();
+                objbulk.WriteToServer(dt);
+                con.Close();
+            }
+
+            using (SqlBulkCopy sqlBulkCopy = new SqlBulkCopy(con))
+            {
+                sqlBulkCopy.DestinationTableName = "USER_ROLE";
+                sqlBulkCopy.ColumnMappings.Add("ID", "USER_ID");
+                sqlBulkCopy.ColumnMappings.Add("ROLE", "ROLE_ID");
+                con.Open();
+                sqlBulkCopy.WriteToServer(dt);
+                con.Close();
+            }
+        }
+        [HttpPost]
+        public JsonResult UploadExcel(HttpPostedFileBase file)
+        {
+            if (file != null)
+            {
+                string filename = Guid.NewGuid() + Path.GetExtension(file.FileName);
+                if (filename.EndsWith(".xlsx"))
+                {
+                    string filepath = "/Doc/" + filename;
+                    file.SaveAs(Path.Combine(Server.MapPath("/Doc"), filename));
+                    InsertExceldata(filepath, filename);
+                    return Json(new
+                    {
+                        status = true
+                    });
+                }
+                else
+                {
+                    return Json(new
+                    {
+                        status = 1
+                    });
+                }
+            }
+            else
+            {
+                return Json(new
+                {
+                    status = false
+                });
+            }
         }
     }
 }

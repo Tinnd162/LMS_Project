@@ -84,19 +84,24 @@ namespace DAL.DAO
                 FIRST_NAME = a.FIRST_NAME,
                 MIDDLE_NAME = a.MIDDLE_NAME,
                 LAST_NAME = a.LAST_NAME,
-                COURSEs = a.COURSEs.Select(b => new COURSE
+                COURSEs = ((a.COURSEs==null) ? null : (a.COURSEs.Select(b => new COURSE
                 {
                     ID = b.ID,
                     NAME = b.NAME,
                     DESCRIPTION=b.DESCRIPTION,
-                    SUBJECT_ID=b.SUBJECT_ID,
                     SEMESTER = new SEMESTER
                     {
-                        ID = b.SEMESTER.ID,
-                        TITLE = b.SEMESTER.TITLE,
+                        ID = (b.SEMESTER.ID==null) ? null: (b.SEMESTER.ID),
+                        TITLE = (b.SEMESTER.TITLE==null) ? null: (b.SEMESTER.TITLE),
                     }
-                }).ToList()
+                }).ToList()))
             }).ToList();
+        }
+        public int CountStudent()
+        {
+            ROLE role = db.ROLEs.Where(a => a.ROLE1 == "STUDENT").FirstOrDefault();
+            List<C_USER> liststudent = role.C_USER.ToList();
+            return liststudent.Count();
         }
     }
 }

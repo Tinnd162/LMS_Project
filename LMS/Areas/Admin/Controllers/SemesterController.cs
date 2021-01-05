@@ -124,20 +124,20 @@ namespace LMS.Areas.Admin.Controllers
             builder.Append(code + DateTime.Now.ToString("yyyyMMddHHmmssff"));
             return builder.ToString();
         }
-        public JsonResult CourseInSemester(string id = "19201")
+        public JsonResult CourseInSemester(string id="20211")
         {
             var model = new CourseDAO().courseinsemester(id).Select(x => new {
                 ID = x.ID,
                 NAME = x.NAME,
                 DESCRIPTION = x.DESCRIPTION,
-                TEACH = new TEACH
+                TEACH =new TEACH
                 {
                     C_USER = new C_USER
                     {
-                        ID = x.TEACH.C_USER.ID,
-                        FIRST_NAME = x.TEACH.C_USER.FIRST_NAME,
-                        LAST_NAME = x.TEACH.C_USER.LAST_NAME,
-                        MIDDLE_NAME = x.TEACH.C_USER.MIDDLE_NAME
+                        ID =x.TEACH.C_USER.ID,
+                        FIRST_NAME =x.TEACH.C_USER.FIRST_NAME,
+                        LAST_NAME =x.TEACH.C_USER.LAST_NAME,
+                        MIDDLE_NAME =x.TEACH.C_USER.MIDDLE_NAME,
                     }
                 },
             });

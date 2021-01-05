@@ -72,5 +72,10 @@ namespace DAL.DAO
                 }).ToList()
             }).ToList();
         }
+        public int countsubjects()
+        {
+            var cntsubjects = db.SUBJECTs.ToList();
+            return cntsubjects.Count();
+        }
     }
 }

@@ -193,6 +193,7 @@ var subjectsController = {
                         html += Mustache.render(template, {
                             IDCOURSE: item.IDCOURSE,
                             NAMECOURSE: item.NAMECOURSE,
+                            DESCRIPTION: item.DESCRIPTION,
                             NAMETEACHER: item.TEACH.C_USER.LAST_NAME + ' ' + item.TEACH.C_USER.MIDDLE_NAME + ' ' + item.TEACH.C_USER.FIRST_NAME,
                         });
                     });

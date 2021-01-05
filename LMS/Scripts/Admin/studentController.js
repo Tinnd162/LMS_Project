@@ -1,9 +1,10 @@
-﻿var studentconfig = {
+﻿var	studentconfig = {
 	pageSize: 5,
 	pageIndex: 1,
 }
 var studentController = {
 	init: function () {
+		console.log($('form'));
 		studentController.GetStudent();
 		studentController.registerEvent();
 		studentController.GetFacultyID_NAME();
@@ -61,7 +62,32 @@ var studentController = {
 				studentController.GetStudent(true);
 			}
 		})
+		$(document).stop().on('click', '#btnAddUser', function () {
+			studentController.UpLoad();
+			studentController.GetStudent();
+        })
 	},
+	UpLoad: function () {
+		var file = new FormData($('form').get(0));
+		$.ajax({
+			url: '/Admin/Student/UploadExcel',
+			data: file,
+			type: 'POST',
+			contentType: false,
+			processData: false,
+			success: function (response) {
+				if (response.status == true) {
+					bootbox.alert("Thêm sinh viên thành công");
+				}
+				else if (response.status == false) {
+					bootbox.alert("Không có file đính kèm");
+				}
+				else {
+					bootbox.alert("Định dạng file không đúng")
+                }
+			},
+        })
+    },
 	Save: function () {
 		var id = $('#ID').val();
 		var first = $('#first_name').val();
@@ -280,8 +306,9 @@ var studentController = {
 						html += Mustache.render(template, {
 							IDCOURSE: item.IDCOURSE,
 							NAMECOURSE: item.NAMECOURSE,
+							DESCRIPTION: item.DESCRIPTION,
 							IDSEMESTER: item.SEMESTER.ID,
-							SEMESTER: item.SEMESTER.TILTE,
+							SEMESTER: item.SEMESTER.TITLE,
 						});
 					});
 					$('#tblData-Course').html(html);

@@ -40,7 +40,7 @@ namespace LMS.Areas.Admin.Controllers
             });
             if (!string.IsNullOrEmpty(name))
             {
-                ListTeacher = ListTeacher.Where(x => (x.LAST_NAME == name) || (x.MIDDLE_NAME == name) || (x.FIRST_NAME == name));
+                ListTeacher = ListTeacher.Where(x => (x.LAST_NAME == name) || (x.MIDDLE_NAME == name) || (x.FIRST_NAME == name) || (x.FACULTY.NAME==name));
             }
             int TotalRow = ListTeacher.Count();
             var lstTeacher = ListTeacher.Skip((page - 1) * pageSize).Take(pageSize);
@@ -112,7 +112,7 @@ namespace LMS.Areas.Admin.Controllers
             var model = new FacultyDAO().getfaculty().Select(x => new { ID = x.ID, NAME = x.NAME });
             return Json(new { data = model }, JsonRequestBehavior.AllowGet);
         }
-        public JsonResult GetCoursebyID(string idteacher = "U00003")
+        public JsonResult GetCoursebyID(string idteacher)
         {
             var sub = new InfoTeacherDAO().getcoursebyID(idteacher).Select(x => new
             {
@@ -126,6 +126,7 @@ namespace LMS.Areas.Admin.Controllers
                     {
                         ID = b.COURSE.ID,
                         NAME = b.COURSE.NAME,
+                        DESCRIPTION=b.COURSE.DESCRIPTION,
                         SEMESTER = new SEMESTER
                         {
                             ID = b.COURSE.SEMESTER.ID,

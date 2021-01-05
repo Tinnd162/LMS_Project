@@ -31,5 +31,37 @@ namespace LMS.Areas.Admin.Controllers
                 female= Math.Round(FemalePercent, 2)
             }, JsonRequestBehavior.AllowGet);
         }
+        public JsonResult CountTeacher()
+        {
+            var cntTeacher = new InfoTeacherDAO().CountTeacher();
+            return Json(new
+            {
+                data = cntTeacher
+            }, JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult CountStudent()
+        {
+            var cntStudent = new InfoStudentDAO().CountStudent();
+            return Json(new
+            {
+                data = cntStudent
+            }, JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult CountCourse()
+        {
+            var cntCourse = new CourseDAO().CountCourse();
+            return Json(new
+            {
+                data = cntCourse
+            },JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult CountSubjects()
+        {
+            var cntSubjects = new SubjectsDAO().countsubjects();
+            return Json(new
+            {
+                data = cntSubjects
+            }, JsonRequestBehavior.AllowGet);
+        }
     }
 }
