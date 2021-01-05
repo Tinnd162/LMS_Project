@@ -121,5 +121,18 @@ namespace DAL.DAO
             }
            
         }
+
+       public List<C_USER> GetListUserWithScore(string id_course)
+        {
+            COURSE course = db.COURSEs.First(x => x.ID == id_course);
+            return course.C_USER.Select(u => new C_USER { 
+                                                            ID = u.ID,
+                                                            FIRST_NAME = u.FIRST_NAME,
+                                                            MIDDLE_NAME = u.MIDDLE_NAME,
+                                                            LAST_NAME = u.LAST_NAME,
+
+                                                        }).ToList();
+        }
+        
     }
 }

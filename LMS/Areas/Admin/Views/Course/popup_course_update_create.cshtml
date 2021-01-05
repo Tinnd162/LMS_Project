@@ -13,7 +13,7 @@
                         <div class="form-group">
                             <label for="nameCourse">Học phần</label>
                             <div class="col-md-10">
-                                <input type="text" class="form-control" id="namecourse" />
+                                <input type="text" class="form-control" id="namecourse" name="coursename"/>
                                 <input type="hidden" id="IDcourse" value="null" />
                             </div>
                         </div>
@@ -21,15 +21,14 @@
                         <div class="form-group">
                             <label for="description">Mô tả học phần:</label>
                             <div class="col-md-10">
-                                <input type="text" class="form-control" id="description" />
+                                <input type="text" class="form-control" id="description" name="description"/>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label for="op1">Học kỳ:</label>
                             <div class="col-md-10">
-                                <select id="title" class="dropdown-header semester_id">
-                                   
+                                <select id="title" class="dropdown-header semester_id" name="semestername">            
                                 </select>
                                 <input type="hidden" class="form-control"  id="semester_id" />
                             </div>
@@ -38,24 +37,25 @@
                         <div class="form-group">
                             <label for="op2">Môn học:</label>
                             <div class="col-md-10">
-                                <select id="name" class="dropdown-header subject_id">
-                                  
+                                <select id="name" class="dropdown-header subject_id" name="subjectname">                           
                                 </select>
                                 <input type="hidden" id="subject_id" class="form-control" />
                             </div>
                         </div>
+
                         <div class="form-group">
                             <label for="facultyname">Khoa:</label>
                             <div class="col-md-10">
-                                <select id="facultyname" class="dropdown-header">
+                                <select id="facultyname" class="dropdown-header" name="facultyname">
                                 </select>
                                 <input type="hidden" class="form-control" id="IDfacl" />
                             </div>
                         </div>
+
                         <div class="form-group">
                             <label for="teachername">Giảng viên:</label>
                             <div class="col-md-10">
-                                <select id="teachername" class="dropdown-header">
+                                <select id="teachername" class="dropdown-header" name="teachername">
                                 </select>
                                 <input type="hidden" class="form-control" id="IDteacher" />
                             </div>

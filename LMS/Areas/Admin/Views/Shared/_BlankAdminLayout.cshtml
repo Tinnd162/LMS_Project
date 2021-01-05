@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/startbootstrap-sb-admin-2/4.1.3/css/sb-admin-2.css" integrity="sha512-1HclAOkQSKIyDqJS8azD2GusAZTbtDrChZU0o0UL2+3lDw2KeMLCEYOQzsO2joppy8L+CVKI3SkXBeZb3vUwYA==" crossorigin="anonymous" />
+    <link href="~/Content/Admin/Style.css" rel="stylesheet" />
+
     <script src="https://kit.fontawesome.com/9dbbecbb49.js" crossorigin="anonymous"></script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -35,7 +37,7 @@
              id="accordionSidebar">
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center"
-               href="#">
+               href="~/Admin/Home/Index">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-laugh-wink"></i>
                 </div>
@@ -45,7 +47,7 @@
             <hr class="sidebar-divider" />
 
             <!-- Heading -->
-            <div class="sidebar-heading">Manneger</div>
+            <div class="sidebar-heading">Quản lý</div>
 
             <!-- Nav Item - Pages Collapse Menu -->
             <ul class="navbar-nav">
@@ -66,7 +68,7 @@
                         <div class="bg-white py-2 collapse-inner rounded">
                             <h6 class="collapse-header">Components:</h6>
                             <a class="collapse-item" href="~/Admin/Semester/Index">Tìm kiếm học kỳ</a>
-                            <a class="collapse-item" href="#">Tạo học kỳ</a>
+                            <a class="collapse-item" href="#">Thêm mới học kỳ</a>
                         </div>
                     </div>
                 </li>
@@ -89,7 +91,7 @@
                         <div class="bg-white py-2 collapse-inner rounded">
                             <h6 class="collapse-header">Components:</h6>
                             <a class="collapse-item" href="~/Admin/Teacher/Index">Tìm kiếm giảng viên</a>
-                            <a class="collapse-item" href="~/Admin/Teacher/Index">Tạo tài khoản giảng viên</a>
+                            <a class="collapse-item" href="~/Admin/Teacher/Index">Cấp tài khoản giảng viên</a>
                         </div>
                     </div>
                 </li>
@@ -103,7 +105,7 @@
                         <div class="bg-white py-2 collapse-inner rounded">
                             <h6 class="collapse-header">Components:</h6>
                             <a class="collapse-item" href="~/Admin/Student/Index">Tìm kiếm sinh viên</a>
-                            <a class="collapse-item" href="#">Tạo tài khoản sinh viên</a>
+                            <a class="collapse-item" href="#">Cấp tài khoản sinh viên</a>
                         </div>
                     </div>
                 </li>
@@ -124,7 +126,7 @@
                         <div class="bg-white py-2 collapse-inner rounded">
                             <h6 class="collapse-header">Components:</h6>
                             <a class="collapse-item" href="~/Admin/Course/Index">Tìm kiếm lớp học phần</a>
-                            <a class="collapse-item" href="#">Tạo lớp học phần mới</a>
+                            <a class="collapse-item" href="#">Thêm mới lớp học phần</a>
                         </div>
                     </div>
                 </li>
@@ -138,7 +140,7 @@
                         <div class="bg-white py-2 collapse-inner rounded">
                             <h6 class="collapse-header">Components:</h6>
                             <a class="collapse-item" href="~/Admin/Subjects/Index">Tìm kiếm môn học</a>
-                            <a class="collapse-item" href="#">Tạo môn học</a>
+                            <a class="collapse-item" href="#">Thêm mới môn học</a>
                         </div>
                     </div>
                 </li>
@@ -176,7 +178,7 @@
                                data-toggle="dropdown"
                                aria-haspopup="true"
                                aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Admin</span>
                                 @*<img class="img-profile rounded-circle"
                                      src="img/undraw_profile.svg" />*@
                             </a>
@@ -237,7 +239,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Đăng xuất</h5>
                     <button class="close"
                             type="button"
                             data-dismiss="modal"
@@ -246,7 +248,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    Select "Logout" below if you are ready to end your current session.
+                    Bạn có chắc chắn muốn thoát?
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary"
@@ -254,7 +256,7 @@
                             data-dismiss="modal">
                         Cancel
                     </button>
-                    <a class="btn btn-primary" id="logoutBtnOk">Logout</a>
+                    <a class="btn btn-primary" id="logoutBtnOk">Đăng xuất</a>
                 </div>
             </div>
         </div>

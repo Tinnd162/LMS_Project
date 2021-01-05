@@ -14,6 +14,7 @@ namespace LMS.Areas.Student
 
         public override void RegisterArea(AreaRegistrationContext context) 
         {
+
             context.MapRoute(
                 "Student_submit",
                 "Student/Submit/{event_id}",

@@ -11,6 +11,24 @@ var courseController = {
         courseController.GetFacultyID_NAME();
     },
     registerEvent: function () {
+        $('#frmSaveData-Course').validate({
+            rules: {
+                coursename: "required",
+                description: "required",
+                semestername: "required",
+                subjectname: "required",
+                facultyname: "required",
+                teachername: "required",
+            },
+            messages: {
+                coursename: "Tên học phần không được để trống",
+                description: "Mô tả không được để trống",
+                semestername: "Vui lòng chọn khóa học",
+                subjectname: "Vui lòng chọn môn học",
+                facultyname: "Vui lòng chọn khoa",
+                teachername: "Vui lòng chọn giảng viên",
+            }
+        })
         $(document).stop().on('change', '#title', function (e) {
             var optionSelected1 = $(this).find("option:selected");
             var id1 = optionSelected1.data("idOptionsemester");
@@ -50,7 +68,6 @@ var courseController = {
             courseController.reset();
            
         })
-
         $(document).stop().on('click', '.btn-delete-Student', function () {
             var id = $(this).data('id');
             bootbox.confirm("Bạn có chắc muốn xóa?", function (result) {
@@ -72,14 +89,24 @@ var courseController = {
             courseController.GetTeacherInFaculty(idfacl);
             courseController.Detail(id);       
         })
-
+        $(document).stop().on('click', '#btnSearch', function () {
+            courseController.GetCourse(true);
+        })
+        $(document).stop().on('keypress', '#txtSearch', function (e) {
+            if (e.which == 13) {
+                courseController.GetCourse(true);
+            }
+        })
+       
     },
-    GetCourse: function () {
+    GetCourse: function (changePageSize) {
+        var name = $('#txtSearch').val();
         $.ajax({
             url: '/Course/GetCourse',
             type: 'GET',
             dataType: 'json',
             data: {
+                name:name,
                 page: courseconfig.pageIndex,
                 pageSize: courseconfig.pageSize
             },
@@ -87,26 +114,36 @@ var courseController = {
                 if (response.status == true) {
                     var data = response.data;
                     var html = '';
-                    var a = [];
                     var template = $('#data-Course').html();
-                    $.each(data, function (i, item) {
-                        html += Mustache.render(template, {
-                            ID: item.ID,
-                            NAME: item.NAME,
-                            DESCRIPTION: item.DESCRIPTION,
-                            IDFACULTY: item.TEACH.C_USER.FACULTY.ID,
+                    if (data != '' || name == '') {
+                        $.each(data, function (i, item) {
+                            html += Mustache.render(template, {
+                                ID: item.ID,
+                                NAME: item.NAME,
+                                DESCRIPTION: item.DESCRIPTION,
+                                IDFACULTY: item.SUBJECT.IDFACULTY,
+                            });
                         });
-                    });
-                    $('#tblData-Course').html(html);
-                    courseController.paging(response.total, function () {
-                        courseController.GetCourse();
-                    });
+                        $('#tblData-Course').html(html);
+                        courseController.paging(response.total, function () {
+                            courseController.GetCourse();
+                        }, changePageSize);
+                    }
+                    else {
+                        alert("Không có thông tin")
+                    }
                 }
             },
         });
     },
-    paging: function (totalRow, callback) {
+    paging: function (totalRow, callback, changePageSize) {
         var totalPage = Math.ceil(totalRow / courseconfig.pageSize);
+
+        if ($('#pagination a').length === 0 || changePageSize === true) {
+            $('#pagination').empty();
+            $('#pagination').removeData("twbs-pagination");
+            $('#pagination').unbind("page");
+        }
 
         $('#pagination').twbsPagination({
             totalPages: totalPage,

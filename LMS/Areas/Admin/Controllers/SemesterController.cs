@@ -22,25 +22,29 @@ namespace LMS.Areas.Admin.Controllers
         {
             return View();
         }
-        public JsonResult GetSemester(int page, int pageSize)
+        public JsonResult GetSemester(string name,int page, int pageSize)
         {
-            var model = new SemesterDAO().GetSEMESTERs().Select(x => new
+            var ListSemester = new SemesterDAO().GetSEMESTERs().Select(x => new
             {
                 ID = x.ID,
                 TITLE = x.TITLE,
                 DESCRIPTION = x.DESCRIPTION,
             });
-            var subjects = model.Skip((page - 1) * pageSize).Take(pageSize);
-            int totalRow = model.Count();
+            if (!string.IsNullOrEmpty(name))
+            {
+                ListSemester = ListSemester.Where(a => a.TITLE.Contains(name));
+            }
+            int TotalRow = ListSemester.Count();
+            var lstSemester = ListSemester.Skip((page - 1) * pageSize).Take(pageSize);
             return Json(new
             {
-                total = totalRow,
-                data = subjects,
+                total = TotalRow,
+                data = lstSemester,
                 status = true
             },
             JsonRequestBehavior.AllowGet);
         }
-        public JsonResult Detail(string id= "19201")
+        public JsonResult Detail(string id)
         {
             SEMESTER sem = new SemesterDAO().GetSemesterByID(id);
 
@@ -62,19 +66,12 @@ namespace LMS.Areas.Admin.Controllers
         }
         public JsonResult Delete(string id)
         {
-            if (new SemesterDAO().deletesemester(id))
-            {
-                return Json(new
-                {
-                    status = true
-                }, JsonRequestBehavior.AllowGet);
-            }
+            var semester = new SemesterDAO().deletesemester(id);
             return Json(new
             {
-                status = false
-            }, JsonRequestBehavior.AllowGet);
+                status = true
+            });
         }
-
         public JsonResult Save(SEMESTER semester)
         {
             bool status = false;

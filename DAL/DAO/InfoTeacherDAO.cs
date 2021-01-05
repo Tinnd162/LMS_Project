@@ -95,6 +95,41 @@ namespace DAL.DAO
                 }).ToList()             
             }).ToList();
         }
+        public int GetMaleTeacher ()
+        {
+            ROLE role = db.ROLEs.Where(a => a.ROLE1 == "TEACHER").FirstOrDefault();
+            List<C_USER> listteacher = role.C_USER.ToList();
+            var model=listteacher.Where(b=> b.SEX ==true).Select(x => new C_USER
+            {
+                ID = x.ID,
+                FIRST_NAME = x.FIRST_NAME,
+                LAST_NAME = x.LAST_NAME,
+                MIDDLE_NAME = x.MIDDLE_NAME,
+                PHONE_NO = x.PHONE_NO,
+                DoB = x.DoB,
+                MAIL = x.MAIL,
+                FACULTY = new FACULTY { ID = x.FACULTY.ID, NAME = x.FACULTY.NAME }
+            }).ToList();
+            return model.Count();
+
+        }
+        public int GetFemaleTeacher()
+        {
+            ROLE role = db.ROLEs.Where(a => a.ROLE1 == "TEACHER").FirstOrDefault();
+            List<C_USER> listteacher = role.C_USER.ToList();
+            var model = listteacher.Where(b => b.SEX == false).Select(x => new C_USER
+            {
+                ID = x.ID,
+                FIRST_NAME = x.FIRST_NAME,
+                LAST_NAME = x.LAST_NAME,
+                MIDDLE_NAME = x.MIDDLE_NAME,
+                PHONE_NO = x.PHONE_NO,
+                DoB = x.DoB,
+                MAIL = x.MAIL,
+                FACULTY = new FACULTY { ID = x.FACULTY.ID, NAME = x.FACULTY.NAME }
+            }).ToList();
+            return model.Count();
+        }
     }
 }
 

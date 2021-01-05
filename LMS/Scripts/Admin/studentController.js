@@ -53,6 +53,14 @@ var studentController = {
 				}
 			})
 		})
+		$(document).stop().on('click', '#btnSearch', function () {
+			studentController.GetStudent(true);
+		})
+		$(document).stop().on('keypress', '#txtSearch', function (e) {
+			if (e.which == 13) {
+				studentController.GetStudent(true);
+			}
+		})
 	},
 	Save: function () {
 		var id = $('#ID').val();
@@ -101,12 +109,14 @@ var studentController = {
 			}
 		})
 	},
-	GetStudent: function () {
+	GetStudent: function (changePageSize) {
+		var name = $('#txtSearch').val();
 		$.ajax({
 			url: "/Admin/Student/GetStudent",
 			type: 'GET',
 			dataType: 'json',
 			data: {
+				name: name,
 				page: studentconfig.pageIndex,
 				pageSize: studentconfig.pageSize
 			},
@@ -115,29 +125,40 @@ var studentController = {
 					var data = response.data;
 					var html = '';
 					var template = $('#data-Student').html();
-					$.each(data, function (i, item) {
-						html += Mustache.render(template, {
-							IDFACULTY: item.FACULTY.ID,
-							NAMEFACULTY: item.FACULTY.NAME,
-							IDCLASS: item.CLASS.ID,
-							NAMECLASS: item.CLASS.NAME,
-							MAJORCLASS: item.CLASS.MAJOR,
-							ID: item.ID,
-							FIRST_NAME: item.LAST_NAME + ' ' + item.MIDDLE_NAME + ' ' + item.FIRST_NAME,
-							PHONE_NO: item.PHONE_NO,
-							MAIL: item.MAIL,
+					if (data != '' || name =='') {
+						$.each(data, function (i, item) {
+							html += Mustache.render(template, {
+								IDFACULTY: item.FACULTY.ID,
+								NAMEFACULTY: item.FACULTY.NAME,
+								IDCLASS: item.CLASS.ID,
+								NAMECLASS: item.CLASS.NAME,
+								MAJORCLASS: item.CLASS.MAJOR,
+								ID: item.ID,
+								FIRST_NAME: item.LAST_NAME + ' ' + item.MIDDLE_NAME + ' ' + item.FIRST_NAME,
+								PHONE_NO: item.PHONE_NO,
+								MAIL: item.MAIL,
+							});
+							$('#tblData-Student').html(html);
+							studentController.paging(response.total, function () {
+								studentController.GetStudent();
+							}, changePageSize);
 						});
-						$('#tblData-Student').html(html);
-						studentController.paging(response.total, function () {
-							studentController.GetStudent();
-						});
-					});
+					}
+					else {
+						alert("Không có thông tin!")
+                    }
 				}
 			}
 		})
 	},
-	paging: function (totalRow, callback) {
+	paging: function (totalRow, callback, changePageSize) {
 		var totalPage = Math.ceil(totalRow / studentconfig.pageSize);
+
+		if ($('#pagination a').length === 0 || changePageSize === true) {
+			$('#pagination').empty();
+			$('#pagination').removeData("twbs-pagination");
+			$('#pagination').unbind("page");
+		}
 
 		$('#pagination').twbsPagination({
 			totalPages: totalPage,

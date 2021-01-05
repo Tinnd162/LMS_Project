@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using LMS.Common;
 
-namespace LMS.Areas.Admin.Controllers
+namespace LMS.Areas.Teacher.Controllers
 {
-    [CustomAuthorize("ADMIN")]
-    public class SearchController : Controller
+    public class StudyProcessController : Controller
     {
-        // GET: Admin/Search
+        // GET: Teacher/StudyProcess
         public ActionResult Index()
         {
             return View();

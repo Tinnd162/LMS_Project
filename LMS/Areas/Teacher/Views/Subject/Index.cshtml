@@ -231,14 +231,27 @@
 
 @section listTopicHTML{
     <div class="mt-3 p-0">        
-        <div class="w-auto">Danh sách chủ đề  :</div>
-        @foreach(var t in Model.TOPICs)
-        {
-            <a href="#@t.ID" style="color:blue; display:block; font-weight:400;">@t.TITLE</a>
-        }
+        <div class="w-auto">
+           <p>Danh sách chủ đề  :</p>
+            @foreach (var t in Model.TOPICs)
+            {
+                <a href="#@t.ID" style="color:blue; display:block; font-weight:400;">@t.TITLE</a>
+            }
+        </div>
     </div>
 }
 
+@section listStudentInCourse{
+    <div class="mt-3 p-0">
+        <div class="w-auto">
+            <p>Danh sách sinh viên  :</p>
+            @foreach (var u in Model.C_USER)
+            {
+                <a href="#" style="color:darkblue; display:block; font-weight:400;">@u.LAST_NAME @u.MIDDLE_NAME @u.FIRST_NAME</a>
+            }
+        </div>
+    </div>
+}
 
 @section script_subject{
 

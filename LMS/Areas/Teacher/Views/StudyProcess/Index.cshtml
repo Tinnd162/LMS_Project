@@ -1,0 +1,29 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Teacher/Views/Shared/_BlankTeacherLayout.cshtml";
+}
+<div class="mr-4">
+    <h3 class="panel-title">@Model.course.NAME</h3>
+    <h5 class="text-primary">@Model.eVent.TITLE</h5>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Điểm theo sự kiện</th>
+                <th scope="col">Chi tiết</th>
+            </tr>
+        </thead>
+        <tbody>
+           
+            @foreach (var student in Model.course.C_USER)
+            {
+                <tr>
+                    
+                    <td><a href="/Teacher/Assessment/StudentDetail?studentID=@student.ID&eventID=@Model.eVent.ID" class="btn btn-default text-primary">Xem</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+

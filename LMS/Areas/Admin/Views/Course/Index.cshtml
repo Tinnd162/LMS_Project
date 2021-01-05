@@ -10,7 +10,7 @@
     <script src="~/Scripts/Admin/mustache.min.js"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twbs-pagination/1.4.2/jquery.twbsPagination.min.js" integrity="sha512-frFP3ZxLshB4CErXkPVEXnd5ingvYYtYhE5qllGdZmcOlRKNEPbufyupfdSTNmoF5ICaQNO6SenXzOZvoGkiIA==" crossorigin="anonymous"></script>
-
+    <script src="~/Scripts/jquery.validate.min.js"></script>
     <script src="~/Scripts/Admin/courseController.js"></script>
 }
 
@@ -20,9 +20,14 @@
     </div>
     <div class="card-body">
         <div class="table-responsive">
-            <button class="btn btn-success" id="btnAdd-Course"><i class="fa fa-plus-square"></i></button>
-            <div class="d-flex justify-content-end mr-3">
-                <div class="dataTables_filter"><label>Search:<input type="search" class="form-control form-control-sm" placeholder="" aria-controls="dataTable" id="txtSearch"></label></div>
+            <div class="d-flex justify-content-between align-center mb-3">
+                <div>
+                    <button class="btn btn-success" id="btnAdd-Course"><i class="fa fa-plus-square"></i></button>
+                </div>
+                <div class="d-flex justify-content-end align-center">
+                    <div class="dataTables_filter mr-3"><input type="search" class="form-control" placeholder="Nhập thông tin tìm kiếm" aria-controls="dataTable" id="txtSearch"></div>
+                    <button class="btn btn-primary" id="btnSearch">Tìm kiếm</button>
+                </div>
             </div>
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                 <thead>

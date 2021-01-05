@@ -45,7 +45,6 @@
 
     function GotoDetail() {
         $('#all-event').on('click', '.itemEvent .btn_Detail', function () {
-            alert('a')
             let e_id = $(this).closest('.itemEvent').attr('id')
             let sub_id = getParamOfUrlSubject()
             window.location.href = '/Teacher/Assessment/Detail?eventID=' + e_id + '&courseID=' + sub_id

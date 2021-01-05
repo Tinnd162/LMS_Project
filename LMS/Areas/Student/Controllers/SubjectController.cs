@@ -6,9 +6,11 @@ using System.Web.Mvc;
 using DAL.DAO;
 using DAL.EF;
 using DAL.StudentView;
+using LMS.Common;
 
 namespace LMS.Areas.Student.Controllers
 {
+    [CustomAuthorize("STUDENT")]
     public class SubjectController : Controller
     {
         // GET: Student/Subject
