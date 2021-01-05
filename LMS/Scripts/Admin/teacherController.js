@@ -44,7 +44,40 @@ var teacherController = {
 					teacherController.DeleteCoursebyID(idcourse);
                 }
             })
-        })
+		})
+		$(document).stop().on('click', '#btnSearch', function () {
+			teacherController.GetTeacher(true);
+		})
+		$(document).stop().on('keypress', '#txtSearch', function (e) {
+			if (e.which == 13) {
+				teacherController.GetTeacher(true);
+			}
+		})
+		$(document).stop().on('click', '#btnAddUser', function () {
+			teacherController.UpLoad();
+			teacherController.GetTeacher();
+		})
+	},
+	UpLoad: function () {
+		var file = new FormData($('form').get(0));
+		$.ajax({
+			url: '/Admin/Student/UploadExcel',
+			data: file,
+			type: 'POST',
+			contentType: false,
+			processData: false,
+			success: function (response) {
+				if (response.status == true) {
+					alert("thanh cong");
+				}
+				else {
+					alert("bai");
+				}
+			},
+			error: function (err) {
+				alert(err);
+			}
+		})
 	},
 	Save: function () {
 		var id = $('#ID').val();
@@ -91,12 +124,14 @@ var teacherController = {
 			}
 		})
 	},
-	GetTeacher: function () {
+	GetTeacher: function (changePageSize) {
+		var name = $('#txtSearch').val();
 		$.ajax({
 			url: '/Admin/Teacher/GetTeacher',
 			type: 'GET',
 			dataType: 'json',
 			data: {
+				name:name,
 				page: teacherconfig.pageIndex,
 				pageSize: teacherconfig.pageSize
 			},
@@ -105,26 +140,37 @@ var teacherController = {
 					var data = response.data;
 					var html = '';
 					var template = $('#data-Teacher').html();
-					$.each(data, function (i, item) {
-						html += Mustache.render(template, {
-							IDNAMEFACULTY: item.FACULTY.ID,
-							NAMEFACULTY: item.FACULTY.NAME,
-							ID: item.ID,
-							FIRST_NAME: item.LAST_NAME + ' ' + item.MIDDLE_NAME + ' ' + item.FIRST_NAME,
-							PHONE_NO: item.PHONE_NO,
-							MAIL: item.MAIL,
+					if (data != '' || name =='') {
+						$.each(data, function (i, item) {
+							html += Mustache.render(template, {
+								IDNAMEFACULTY: item.FACULTY.ID,
+								NAMEFACULTY: item.FACULTY.NAME,
+								ID: item.ID,
+								FIRST_NAME: item.LAST_NAME + ' ' + item.MIDDLE_NAME + ' ' + item.FIRST_NAME,
+								PHONE_NO: item.PHONE_NO,
+								MAIL: item.MAIL,
+							});
+							$('#tblData-Teacher').html(html);
+							teacherController.paging(response.total, function () {
+								teacherController.GetTeacher();
+							}, changePageSize);
 						});
-						$('#tblData-Teacher').html(html);
-						teacherController.paging(response.total, function () {
-							teacherController.GetTeacher();
-						});
-					});
+					}
+					else {
+						alert("Không có thông tin!")
+                    }
 				}
 			}
 		})
 	},
-	paging: function (totalRow, callback) {
+	paging: function (totalRow, callback, changePageSize) {
 		var totalPage = Math.ceil(totalRow / teacherconfig.pageSize);
+
+		if ($('#pagination a').length === 0 || changePageSize === true) {
+			$('#pagination').empty();
+			$('#pagination').removeData("twbs-pagination");
+			$('#pagination').unbind("page");
+		}
 
 		$('#pagination').twbsPagination({
 			totalPages: totalPage,
@@ -224,8 +270,9 @@ var teacherController = {
 						html += Mustache.render(template, {
 							IDCOURSE: item.COURSE.ID,
 							NAMECOURSE: item.COURSE.NAME,
+							DESCRIPTION: item.COURSE.DESCRIPTION,
 							IDSEMESTER: item.COURSE.SEMESTER.ID,
-							SEMESTER: item.COURSE.SEMESTER.TILTE,
+							SEMESTER: item.COURSE.SEMESTER.TITLE,
 						});
 					});
 					$('#tblData-Course').html(html);

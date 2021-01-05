@@ -29,7 +29,7 @@ namespace DAL.DAO
         
         public bool deletesemester(string id)
         {
-            var semeste = db.SEMESTERs.Find(id);
+            var semeste = db.SEMESTERs.First(x => x.ID == id);
             db.SEMESTERs.Remove(semeste);
             db.SaveChanges();
             return true;

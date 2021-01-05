@@ -19,20 +19,24 @@ namespace LMS.Areas.Admin.Controllers
         {
             return View();
         }
-        public JsonResult GetSubjects(int page, int pageSize)
+        public JsonResult GetSubjects(string name,int page, int pageSize)
         {
-            var sub = new SubjectsDAO().getsubject().Select(a => new
+            var ListSubjects = new SubjectsDAO().getsubject().Select(a => new
             {
                 ID = a.ID,
                 NAME = a.NAME,
                 DESCRIPTION = a.DESCRIPTION
             });
-            int totalRow = sub.Count();
-            var subjects = sub.Skip((page - 1) * pageSize).Take(pageSize);          
+            if (!string.IsNullOrEmpty(name))
+            {
+                ListSubjects = ListSubjects.Where(x => x.NAME.Contains(name));
+            }
+            int TotalRow = ListSubjects.Count();
+            var lstSubjects = ListSubjects.Skip((page - 1) * pageSize).Take(pageSize);   
             return Json(new
             {
-                total = totalRow,
-                data = subjects,
+                total = TotalRow,
+                data = lstSubjects,
                 status = true
             }, JsonRequestBehavior.AllowGet);
         }

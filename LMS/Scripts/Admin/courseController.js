@@ -9,8 +9,27 @@ var courseController = {
         courseController.GetNameSemester();
         courseController.GetNameSubject();
         courseController.GetFacultyID_NAME();
+        
     },
     registerEvent: function () {
+        $('#frmSaveData-Course').validate({
+            rules: {
+                coursename: "required",
+                description: "required",
+                semestername: "required",
+                subjectname: "required",
+                facultyname: "required",
+                teachername: "required",
+            },
+            messages: {
+                coursename: "Tên học phần không được để trống",
+                description: "Mô tả không được để trống",
+                semestername: "Vui lòng chọn khóa học",
+                subjectname: "Vui lòng chọn môn học",
+                facultyname: "Vui lòng chọn khoa",
+                teachername: "Vui lòng chọn giảng viên",
+            }
+        })
         $(document).stop().on('change', '#title', function (e) {
             var optionSelected1 = $(this).find("option:selected");
             var id1 = optionSelected1.data("idOptionsemester");
@@ -50,7 +69,6 @@ var courseController = {
             courseController.reset();
            
         })
-
         $(document).stop().on('click', '.btn-delete-Student', function () {
             var id = $(this).data('id');
             bootbox.confirm("Bạn có chắc muốn xóa?", function (result) {
@@ -65,21 +83,30 @@ var courseController = {
             $('#InfoCourse').modal('show');
             courseController.InfoCourse(id);
         })
-        $(document).stop().on('click', '.btn-edit-Course', function () {
+        $(document).stop().on('click', '.btn-edit-Course', async function () {
             var id = $(this).data('id');
             var idfacl = $(this).data('facl')
+            await courseController.GetTeacherInFaculty(idfacl);
+            courseController.Detail(id)
             $('#CourseUpdateDetail').modal('show');
-            courseController.GetTeacherInFaculty(idfacl);
-            courseController.Detail(id);       
         })
-
+        $(document).stop().on('click', '#btnSearch', function () {
+            courseController.GetCourse(true);
+        })
+        $(document).stop().on('keypress', '#txtSearch', function (e) {
+            if (e.which == 13) {
+                courseController.GetCourse(true);
+            }
+        })
     },
-    GetCourse: function () {
+    GetCourse: function (changePageSize) {
+        var name = $('#txtSearch').val();
         $.ajax({
             url: '/Course/GetCourse',
             type: 'GET',
             dataType: 'json',
             data: {
+                name:name,
                 page: courseconfig.pageIndex,
                 pageSize: courseconfig.pageSize
             },
@@ -87,26 +114,36 @@ var courseController = {
                 if (response.status == true) {
                     var data = response.data;
                     var html = '';
-                    var a = [];
                     var template = $('#data-Course').html();
-                    $.each(data, function (i, item) {
-                        html += Mustache.render(template, {
-                            ID: item.ID,
-                            NAME: item.NAME,
-                            DESCRIPTION: item.DESCRIPTION,
-                            IDFACULTY: item.TEACH.C_USER.FACULTY.ID,
+                    if (data != '' || name == '') {
+                        $.each(data, function (i, item) {
+                            html += Mustache.render(template, {
+                                ID: item.ID,
+                                NAME: item.NAME,
+                                DESCRIPTION: item.DESCRIPTION,
+                                IDFACULTY: item.SUBJECT.FACULTY_ID,
+                            });
                         });
-                    });
-                    $('#tblData-Course').html(html);
-                    courseController.paging(response.total, function () {
-                        courseController.GetCourse();
-                    });
+                        $('#tblData-Course').html(html);
+                        courseController.paging(response.total, function () {
+                            courseController.GetCourse();
+                        }, changePageSize);
+                    }
+                    else {
+                        alert("Không có thông tin")
+                    }
                 }
             },
         });
     },
-    paging: function (totalRow, callback) {
+    paging: function (totalRow, callback, changePageSize) {
         var totalPage = Math.ceil(totalRow / courseconfig.pageSize);
+
+        if ($('#pagination a').length === 0 || changePageSize === true) {
+            $('#pagination').empty();
+            $('#pagination').removeData("twbs-pagination");
+            $('#pagination').unbind("page");
+        }
 
         $('#pagination').twbsPagination({
             totalPages: totalPage,
@@ -144,28 +181,22 @@ var courseController = {
                 id: id
             },
             type: 'POST',
-            dataType: 'json',
-            success: function (response) {
-                if (response.status == true) {
-                    var data = response.data[0];
-                    $('#IDcourse').val(data.IDCOURSE);
-                    $('#namecourse').val(data.NAMECOURSE);
-                    $('#description').val(data.DESCRIPTION);
-                    $('#semester_id').val(data.SEMESTER.ID);
-                    $('#title').val(data.SEMESTER.TITLE);
-                    $('#subject_id').val(data.SUBJECT.ID);
-                    $('#name').val(data.SUBJECT.NAME);
-                    $('#IDfacl').val(data.TEACH.C_USER.FACULTY.ID);
-                    $('#facultyname').val(data.TEACH.C_USER.FACULTY.NAME);
-                    $('#IDteacher').val(data.TEACH.C_USER.ID);
-                    $('#teachername').val(data.TEACH.C_USER.LAST_NAME + ' ' + data.TEACH.C_USER.MIDDLE_NAME + ' ' + data.TEACH.C_USER.FIRST_NAME);
-                }
-                else {
-                    bootbox.alert(response.message);
-                }
-            },
-            error: function (err) {
-                console.log(err)
+            dataType: 'json'
+        }).done(function (response) {
+            if (response.status == true) {
+                var data = response.data[0];
+                $('#IDcourse').attr('disabled', 'disabled');
+                $('#IDcourse').val(data.IDCOURSE);
+                $('#namecourse').val(data.NAMECOURSE);
+                $('#description').val(data.DESCRIPTION);
+                $('#semester_id').val(data.SEMESTER.ID);
+                $('#title').val(data.SEMESTER.TITLE);
+                $('#subject_id').val(data.SUBJECT.ID);
+                $('#name').val(data.SUBJECT.NAME);
+                $('#IDfacl').val(data.TEACH.C_USER.FACULTY.ID);
+                $('#facultyname').val(data.TEACH.C_USER.FACULTY.NAME);
+                $('#IDteacher').val(data.TEACH.C_USER.ID);
+                $('#teachername').val(data.TEACH.C_USER.LAST_NAME + ' ' + data.TEACH.C_USER.MIDDLE_NAME + ' ' + data.TEACH.C_USER.FIRST_NAME);
             }
         });
     },
@@ -180,24 +211,33 @@ var courseController = {
         var idfacl =$('#IDfacl').val();
         var namefacl =$('#facultyname').val();
         var idteacher =$('#IDteacher').val();
-        var nameteacher =$('#teachername').val();
+        var nameteacher = $('#teachername').val();
+        var file = new FormData($('form').get(0));
         var Course = {
             ID: idcourse,
             NAME: namecourse,
             DESCRIPTION: description,
             SEMESTER_ID: semester_id,
-            SUBJECT_ID: subject_id,
+            SUBJECT_ID: subject_id
         };
         var Teach = {
             USER_ID:idteacher,
-            COURSE_ID:idcourse,
+            COURSE_ID: idcourse
         };
+        file.append("ID", idcourse);
+        file.append("NAME", namecourse);
+        file.append("DESCRIPTION", description);
+        file.append("SEMESTER_ID", semester_id);
+        file.append("SUBJECT_ID", subject_id);
+
+        file.append("USER_ID", idteacher);
+        file.append("COURSE_ID", idcourse);
+
         $.ajax({
             url: '/Course/Save',
-            data: {
-                Course:Course,
-                Teach:Teach
-            },
+            data: file,
+            contentType: false,
+            processData: false,
             type: 'POST',
             dataType: 'json',
             success: function (response) {
@@ -248,26 +288,45 @@ var courseController = {
             }
         })
     },
-    GetTeacherInFaculty: function (id) {
+    GetFacultyID_NAME: function () {
         $.ajax({
-            url: '/Admin/Course/GetTeacherInFaculy',
-            type: 'POST',
-            data: { id: id },
+            url: '/Admin/Teacher/GetFacultyID_NAME',
+            type: 'GET',
             dataType: 'json',
             success: function (response) {
-                var data = response.data[0];
-                $('#teachername').html('')
-                for (var j = 0; j < data.C_USER.length; j++) {
-                    var optteacher = new Option(data.C_USER[j].LAST_NAME + ' ' + data.C_USER[j].MIDDLE_NAME + ' ' + data.C_USER[j].FIRST_NAME);
-                    $(optteacher).data('idOptionteacher', data.C_USER[j].IDTEA);
-                    $('#teachername').append(optteacher);
+                var data = response.data;
+                for (var i = 0; i < data.length; i++) {
+                    var opt = new Option(data[i].NAME);
+                    $(opt).data('idOption', data[i].ID);
+                    $('#facultyname').append(opt);
                 }
 
             }
         })
     },
+    GetTeacherInFaculty:  function (id) {
+        return new Promise((res, rej) => {
+            $.ajax({
+                url: '/Admin/Course/GetTeacherInFaculy',
+                type: 'POST',
+                data: { id: id },
+                dataType: 'json',
+                success: function (response) {
+                    var data = response.data[0];
+                    $('#teachername').html('')
+                    for (var j = 0; j < data.C_USER.length; j++) {
+                        var optteacher = new Option(data.C_USER[j].LAST_NAME + ' ' + data.C_USER[j].MIDDLE_NAME + ' ' + data.C_USER[j].FIRST_NAME);
+                        $(optteacher).data('idOptionteacher', data.C_USER[j].IDTEA);
+                        $('#teachername').append(optteacher);
+                    }
+                    res(true)
+                }
+            })
+        })
+    },
     reset: function () {
-        $('#IDcourse').val('0');
+        $('#IDcourse').removeAttr('disabled');
+        $('#IDcourse').val('');
         $('#namecourse').val('');
         $('#description').val('');
         $('#semester_id').val('');
@@ -315,22 +374,6 @@ var courseController = {
                 }
             }
         });
-    },
-    GetFacultyID_NAME: function () {
-        $.ajax({
-            url: '/Admin/Teacher/GetFacultyID_NAME',
-            type: 'GET',
-            dataType: 'json',
-            success: function (response) {
-                var data = response.data;
-                for (var i = 0; i < data.length; i++) {
-                    var opt = new Option(data[i].NAME);
-                    $(opt).data('idOption', data[i].ID);
-                    $('#facultyname').append(opt);
-                }
-
-            }
-        })
     },
 }
 courseController.init();
