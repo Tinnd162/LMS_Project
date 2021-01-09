@@ -77,14 +77,14 @@ function addDoc(position) {
             let flag = false;
             let linkFile = '';
             let filename = '';
-            alert(JSON.stringify($('#formDoc' + topicid).get(0)))
+           // alert(JSON.stringify($('#formDoc' + topicid).get(0)))
             
             var formdata = new FormData($('form#formDoc' + topicid).get(0));
             
             let docid = generateID('doc');
             formdata.append('DocID', docid);
 
-            alert(JSON.stringify(formdata))
+           // alert(JSON.stringify(formdata))
             if (position == '#listTopic') {
                 formdata.append('TopicID', topicid);
                 $.ajax({
@@ -275,7 +275,7 @@ function editDocChildContent(position) {
         $(position + ' .itemDoc[data-id="'+docID+'"] .formEdit_itemDoc div.text-danger').remove()
 
         var item = $(this).closest('.itemDoc[data-id= "'+docID+'"] .formEdit_itemDoc')
-        alert(item.html())
+        //alert(item.html())
         if (item.children('.editDocLink').val() == '') {
             $('<div class="text-danger">* Không để trống</div>').insertAfter(item.children('.editDocLink'))
             return false;

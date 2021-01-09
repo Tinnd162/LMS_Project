@@ -14,20 +14,23 @@ namespace LMS.Areas.Student.Controllers
     public class SubjectController : Controller
     {
         // GET: Student/Subject
-        public ActionResult Index()
+        //public ActionResult Index()
+        //{
+        //    return View();
+        //}
+        public ActionResult GetTopicStudent(string course_id)
         {
-            return View();
-        }
-        public ActionResult GetTopicStudent(string course_id ,string semester_id = "20211", string user_id = "U00008")
-        {
+            CommonFunc cFunc = new CommonFunc();
+
             TopicDAO TopicDAO = new TopicDAO();
-            var ListTopic = TopicDAO.GetCourseDetailByStuAndCourseAndSubject(user_id, course_id, semester_id);
+            var ListTopic = TopicDAO.GetCourseDetailByStuAndCourseAndSubject(cFunc.GetIdUserBySession(), course_id, cFunc.GetIdSemesterBySession());
             return View(ListTopic);
         }
-        public ActionResult GetSubjectAssessments(string course_id, string semester_id = "20211", string user_id = "U00008")
+        public ActionResult GetSubjectAssessments(string course_id)
         {
+            CommonFunc cFunc = new CommonFunc();
             SubmitDAO DAO = new SubmitDAO();
-            List<COURSE> courses = DAO.GetSubmitAssessmentByStuAndCourseAndSem(user_id, course_id, semester_id);
+            List<COURSE> courses = DAO.GetSubmitAssessmentByStuAndCourseAndSem(cFunc.GetIdUserBySession());
             List<SubmitAssessmentView> dView = new List<SubmitAssessmentView>();
 
             foreach (COURSE course in courses)
@@ -80,10 +83,11 @@ namespace LMS.Areas.Student.Controllers
             return View(ListEvent.ToList());
 
         }
-        public ActionResult GetSubmitDetailsByStudentAndEvent(string event_id,string user_id = "U00008", string course_id = "MATH143001_20211_1", string semester_id = "20211")
+        public ActionResult GetSubmitDetailsByStudentAndEvent(string event_id)
         {
+            CommonFunc cFunc = new CommonFunc();
             SubmitDAO DAO = new SubmitDAO();
-            List<COURSE> courses = DAO.GetSubmitAssessmentByStuAndCourseAndSem(user_id, course_id, semester_id);
+            List<COURSE> courses = DAO.GetSubmitAssessmentByStuAndCourseAndSem(cFunc.GetIdUserBySession());
             List<SubmitAssessmentView> dView = new List<SubmitAssessmentView>();
 
             foreach (COURSE course in courses)

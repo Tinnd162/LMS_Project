@@ -126,7 +126,7 @@ namespace DAL.DAO
         public COURSE GetCourseByID(string id)
         {
             {
-                COURSE s = db.COURSEs.First(x => x.ID == id);
+                COURSE s = db.COURSEs.FirstOrDefault(x => x.ID == id);
                 return new COURSE()
                 {
                     ID = s.ID,

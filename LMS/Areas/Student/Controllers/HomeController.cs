@@ -18,10 +18,11 @@ namespace LMS.Areas.Student.Controllers
         //{
         //    return View();
         //}
-        public ViewResult Index(string user_id = "U00008", string semester_id = "20211")
+        public ViewResult Index()
         {
+            CommonFunc cFunc = new CommonFunc();
             SubmitDAO dao = new SubmitDAO();
-            List<COURSE> courses = dao.GetDeadlinebyStuAndCourseAndSem(user_id, semester_id);
+            List<COURSE> courses = dao.GetDeadlinebyStuAndCourseAndSem(cFunc.GetIdUserBySession(), cFunc.GetIdSemesterBySession());
             List<DeadlineView> dView = new List<DeadlineView>();
 
             foreach(COURSE course in courses)

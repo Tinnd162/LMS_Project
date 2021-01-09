@@ -38,7 +38,7 @@ namespace LMS.Areas.Student.Controllers
         }
 
         [ChildActionOnly]
-        public ActionResult Subjects(string semester_id = "20211") //= "JZDN2020112521542821")
+        public ActionResult Subjects() //= "JZDN2020112521542821")
         {
             //**************************Test*******************************************
             //User user = new User();
@@ -53,15 +53,15 @@ namespace LMS.Areas.Student.Controllers
             //{
             //    semester_id = comf.GetIdSemesterBySession();
             //}
-            string user_id = "U00008";
+            CommonFunc cFunc = new CommonFunc();
             CourseDAO courseDAO = new CourseDAO();
-            var listCourse = courseDAO.GetCourseByStudentAndSemester(user_id, semester_id);
+            var listCourse = courseDAO.GetCourseByStudentAndSemester(cFunc.GetIdUserBySession(), cFunc.GetIdSemesterBySession());
             return View(listCourse);
         }
 
 
         [ChildActionOnly]
-        public ActionResult SubjectAssessments(string semester_id = "20211")//string user_id = "JZDN2020112521542805", string course_id = "JZDN2020112521542821")
+        public ActionResult SubjectAssessments()//string user_id = "JZDN2020112521542805", string course_id = "JZDN2020112521542821")
         {
             //CommonFunc comf = new CommonFunc();
             //string user_id = comf.GetIdUserBySession();
@@ -69,9 +69,9 @@ namespace LMS.Areas.Student.Controllers
             //{
             //    semester_id = comf.GetIdSemesterBySession();
             //}
-            string user_id = "U00008";
+            CommonFunc cFunc = new CommonFunc();
             CourseDAO courseDao = new CourseDAO();
-            var listCourse = courseDao.GetCourseByStudentAndSemester(user_id, semester_id);
+            var listCourse = courseDao.GetCourseByStudentAndSemester(cFunc.GetIdUserBySession(), cFunc.GetIdSemesterBySession());
             return View(listCourse);
         }
     }
