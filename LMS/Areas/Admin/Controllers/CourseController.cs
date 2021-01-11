@@ -119,33 +119,6 @@ namespace LMS.Areas.Admin.Controllers
                 status = true
             });
         }
-        //public JsonResult Detail(string id)
-        //{
-        //    var model = new CourseDAO().getdetail(id).Select(x => new
-        //    {
-        //        IDCOURSE = x.ID,
-        //        NAMECOURSE = x.NAME,
-        //        DESCRIPTION = x.DESCRIPTION,
-        //        SEMESTER = new SEMESTER { ID = x.SEMESTER.ID, TITLE = x.SEMESTER.TITLE },
-        //        SUBJECT = new SUBJECT { ID = x.SUBJECT.ID, NAME = x.SUBJECT.NAME },
-        //        TEACH = new TEACH
-        //        {
-        //            C_USER = new C_USER
-        //            {
-        //                ID = x.TEACH.C_USER.ID,
-        //                FIRST_NAME = x.TEACH.C_USER.FIRST_NAME,
-        //                LAST_NAME = x.TEACH.C_USER.LAST_NAME,
-        //                MIDDLE_NAME = x.TEACH.C_USER.MIDDLE_NAME,
-        //                FACULTY = new FACULTY { ID = x.TEACH.C_USER.FACULTY.ID, NAME = x.TEACH.C_USER.FACULTY.NAME }
-        //            }
-        //        },
-        //    });
-        //    return Json(new
-        //    {
-        //        data = model,
-        //        status = true
-        //    }, JsonRequestBehavior.AllowGet);
-        //}
         public JsonResult InfoCourse(string idcourse)
         {
             var course = new CourseDAO().InfoTeacherStudentInCourse(idcourse);
@@ -304,6 +277,14 @@ namespace LMS.Areas.Admin.Controllers
                 C_USER = x.C_USER.Select(a => new { IDTEA=a.ID, FIRST_NAME=a.FIRST_NAME, LAST_NAME=a.LAST_NAME, MIDDLE_NAME=a.MIDDLE_NAME})
             });
             return Json(new { data = model },JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult GetSubjectsInFaculty(string id)
+        {
+            var model = new FacultyDAO().getsubjectsinfaculty(id).Select(x => new
+            {
+                SUBJECTs = x.SUBJECTs.Select(a => new { IDSUBS = a.ID, NAMESUBS=a.NAME})
+            });
+            return Json(new { data = model }, JsonRequestBehavior.AllowGet);
         }
     }
 }
