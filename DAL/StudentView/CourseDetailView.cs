@@ -20,5 +20,6 @@ namespace DAL.StudentView
         public string documentLink { get; set; }
         public string eventID { get; set; }
         public string eventTitle { get; set; }
+        public DateTime? eventDeadline { get; set; }
     }
 }

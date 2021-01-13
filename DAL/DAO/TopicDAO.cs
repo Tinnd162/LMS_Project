@@ -108,7 +108,8 @@ namespace DAL.DAO
                              documentDescription = f.DESCRIPTION,
                              documentLink = f.LINK,
                              eventID = c.ID,
-                             eventTitle = c.TITLE
+                             eventTitle = c.TITLE,
+                             eventDeadline =c.DEADLINE
                          }).AsEnumerable().Select(x => new CourseDetailsView()
                          {
                              courseID = x.courseID,
@@ -122,7 +123,8 @@ namespace DAL.DAO
                              documentDescription = x.documentDescription,
                              documentLink = x.documentLink,
                              eventID = x.eventID,
-                             eventTitle = x.eventTitle
+                             eventTitle = x.eventTitle,
+                             eventDeadline = x.eventDeadline
                          });
             return model.ToList();
         }

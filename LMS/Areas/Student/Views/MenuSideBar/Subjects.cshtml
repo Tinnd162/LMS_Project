@@ -3,6 +3,6 @@
 @foreach (var sub in Model)
 {
     <li>
-        <a href="~/Student/Subject/@sub.ID">@sub.NAME</a>
+        <a href="~/Student/Subject/GetTopicStudent?course_id=@sub.ID">@sub.NAME</a>
     </li>
 }
