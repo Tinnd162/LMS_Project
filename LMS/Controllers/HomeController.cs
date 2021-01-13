@@ -72,11 +72,7 @@ namespace LMS.Controllers
             return sbHash.ToString();
         }
 
-        [ChildActionOnly]
-        public ActionResult Footer()
-        {
-            return View();
-        }
+
     }
 
 }
