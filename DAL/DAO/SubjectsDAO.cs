@@ -83,5 +83,10 @@ namespace DAL.DAO
             var cntsubjects = db.SUBJECTs.ToList();
             return cntsubjects.Count();
         }
+        public int CheckSubjects(string subject)
+        {
+            int sub = db.SUBJECTs.Count(x => x.NAME == subject);
+            return sub;
+        }
     }
 }

@@ -78,6 +78,7 @@ namespace LMS.Areas.Admin.Controllers
         {
             bool status = false;
             string message = string.Empty;
+            int sub = new SubjectsDAO().CheckSubjects(subjects.NAME);
             if (subjects.ID != "0")
             {
                 try
@@ -95,10 +96,17 @@ namespace LMS.Areas.Admin.Controllers
             {
                 try
                 {
-                    subjects.ID = createID("SUBJ");
-                    db.SUBJECTs.Add(subjects);
-                    db.SaveChanges();
-                    status = true;
+                    if (sub==0)
+                    {
+                        subjects.ID = createID("SUBJ");
+                        db.SUBJECTs.Add(subjects);
+                        db.SaveChanges();
+                        status = true;
+                    }
+                    else
+                    {
+                        status = false;
+                    }
                 }
                 catch (System.Data.Entity.Validation.DbEntityValidationException dbEx)
                 {

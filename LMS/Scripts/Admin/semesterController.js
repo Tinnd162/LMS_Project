@@ -1,5 +1,5 @@
 ﻿var semesterconfig = {
-    pageSize: 2,
+    pageSize: 5,
     pageIndex: 1,
 }
 var semesterController = {

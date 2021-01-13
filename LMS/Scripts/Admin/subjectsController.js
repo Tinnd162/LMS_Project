@@ -173,7 +173,7 @@ var subjectsController = {
                     })
                 }
                 else {
-                    bootbox.alert(response.message);
+                    bootbox.alert("Môn học đã tồn tại.");
                 }
             },
             error: function (err) {
