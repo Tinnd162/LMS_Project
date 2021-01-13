@@ -86,6 +86,7 @@ namespace DAL.DAO
                     {
                         ID=b.COURSE.ID,
                         NAME=b.COURSE.NAME,
+                        DESCRIPTION=b.COURSE.DESCRIPTION,
                         SEMESTER = new SEMESTER
                         {
                               ID = b.COURSE.SEMESTER.ID,
@@ -94,6 +95,12 @@ namespace DAL.DAO
                     }
                 }).ToList()             
             }).ToList();
+        }
+        public int CountTeacher()
+        {
+            ROLE role = db.ROLEs.Where(a => a.ROLE1 == "TEACHER").FirstOrDefault();
+            List<C_USER> listteacher = role.C_USER.ToList();
+            return listteacher.Count();
         }
         public int GetMaleTeacher ()
         {

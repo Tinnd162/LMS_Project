@@ -12,7 +12,7 @@ namespace DAL.EF
         [StringLength(20)]
         public string ID { get; set; }
 
-        [StringLength(200)]
+        [StringLength(1000)]
         public string LINK { get; set; }
 
         public DateTime? TIME { get; set; }

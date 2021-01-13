@@ -38,9 +38,8 @@ function renderDataObjectIntoTopicTemplate(data) {
         $.each(topic.DOCUMENTs, function (index, doc) {
             htmlDoc += Mustache.render(templateDoc, {
                 IdDoc: doc.ID,
-                TitleDoc: doc.TITLE,
-                LinkDoc: doc.LINK,
-                DesDoc: doc.DESCRIPTION
+                fileName: doc.TITLE,
+                LinkDoc: doc.LINK
             });
         });
 
@@ -90,6 +89,11 @@ function getParamOfUrlSubject() {
 function PostAndRenderTopic() {
 
     $('#btn-AddTopic').on('click', function () {
+        $('#cardAddTopic div.text-danger').remove()
+        if ($('#AddTopic_title').val() == '') {
+            $('<div class="text-danger">* Phải nhập tiêu đề</div>').insertAfter($('#AddTopic_title'))
+            return false;
+        }
         let data = {}
         data.data = []
         let topic = {};
@@ -105,9 +109,9 @@ function PostAndRenderTopic() {
             //alert($(item).html())
             var doc = {}
             doc.ID = generateID('doc')
-            doc.TITLE = $(item).children('h5').text()
+            doc.TITLE = $(item).children('a').children('p').text()
             doc.LINK = $(item).children('a').attr('href')
-            doc.DESCRIPTION = $(item).children('p').text()
+            //doc.DESCRIPTION = $(item).children('p').text()
             topic.DOCUMENTs.push(doc)
         });
 
@@ -123,7 +127,10 @@ function PostAndRenderTopic() {
         });
 
         data.data.push(topic)
-      
+
+
+       
+
 
         $.ajax({
             url: '/Teacher/Subject/PostTopic',
@@ -134,12 +141,17 @@ function PostAndRenderTopic() {
             success: function (msg) {
                 if (msg.success) {
                     renderDataObjectIntoTopicTemplate(data.data)
-                  
+                    //----right bar----------------------
+                    $('#listTopicRightbar').append('<a href="#' + topic.ID + '" style="color:blue; display:block; font-weight:400;">' + topic.TITLE + '</a>')
+                        
+
                     $('#cardAddTopic').toggleClass('d-none')
                     $('#divBtnAddTopic').toggleClass('d-inline-flex d-none ')
                     $('#loadingAddTopic').html('');
                     $('#AddTopic_title').val('')
                     CKEDITOR.instances.fullDesTopic.setData('')
+                    $('#cardAddTopic div[name="listDoc"]').html('')
+                    $('#cardAddTopic div[name="listEvent"]').html('')
                     alert('Thêm thành công !')
                     return;
                 }
@@ -172,8 +184,39 @@ function LoadListTopic(courseID) {
                 return;
             }
         }
-
     })
+    
+    $.ajax({
+        url: '/Teacher/Subject/GetDocInFormAddTopicFromCookie',
+        type: 'GET',
+        dataType: 'json',
+        data: '',
+        async: true,
+        success: function (response) {
+            if (response.status) {
+                renderDocInCardAddTopic(response.data)
+                return;
+            }
+            else {
+                return;
+            }
+        }
+    })
+}
+
+function renderDocInCardAddTopic(data) {
+    var files = JSON.parse(data)
+    var templateDoc = $('#data-template-doc-item').html()
+    var htmlDoc = ''
+
+    for (var i = 0; i < files.File.length; i++) {
+        htmlDoc += Mustache.render(templateDoc, {
+            //IdDoc: doc.ID,
+            fileName: files.File[i].fileName,
+            LinkDoc: files.File[i].linkFile
+        });
+    }
+    $('#frm-add-topic div[name="listDoc"]').html(htmlDoc)
 }
 
 function ConvertTimestampJSONToDateTime(timestampJson) {
@@ -189,12 +232,13 @@ function ConvertTimestampJSONToDateTime(timestampJson) {
 
 function removeTopic() {
     $('#listTopic').on('click', '.card-body button[name="removeTopic"]', function () {
-        
+        var id = $(this).closest('.card-body').data('id') 
+        $('#listTopicRightbar a[href="#'+id+'"]').remove()
         $.ajax({
             url: '/Teacher/Subject/DeleteTopic',
             dataType: 'json',
             type: 'POST',
-            data: { id: $(this).closest('.card-body').data('id') },
+            data: { id: id},
             async: true,
             success: function (msg) {
                 if (msg.success) {
@@ -208,3 +252,4 @@ function removeTopic() {
         $(this).closest('.card').remove();
     });
 }
+

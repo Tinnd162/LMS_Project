@@ -6,7 +6,7 @@ using System.Web;
 using LMS.Models;
 using DAL.EF;
 using DAL.DAO;
-
+using Newtonsoft.Json;
 
 namespace LMS.Common
 {
@@ -27,7 +27,7 @@ namespace LMS.Common
         {
             Session s = new Session();
             s =  HttpContext.Current.Session[CommonConstants.SESSION] as Session;
-            return s.id_user;
+            return (s == null) ? null : s.id_user;
         }
         
         public string GetIdSemesterBySession()
@@ -95,14 +95,41 @@ namespace LMS.Common
             return false;
         }
 
-        public bool checkRole(string role)
+        
+        public void SetCookieFileOfTopic(RootObject root)
         {
-            RoleDAO roleDao = new RoleDAO();
-            if (roleDao.GetRoles(GetIdUserBySession()).Where(r => r.ROLE1 == role).FirstOrDefault() != null)
-                return true;
-            return false;
+            string jsonFiles = JsonConvert.SerializeObject(root);
+            HttpCookie httpCookie = new HttpCookie(CommonConstants.File);
+            httpCookie.Value = jsonFiles;
+            httpCookie.Expires = DateTime.Now.AddDays(1);
+            HttpContext.Current.Response.Cookies.Add(httpCookie);
         }
 
+
+        public bool DelCookieFile()
+        {
+            if (HttpContext.Current.Request.Cookies[CommonConstants.File] != null)
+            {
+                HttpContext.Current.Response.Cookies[CommonConstants.File].Expires = DateTime.Now.AddDays(-1);
+                return true;
+            }
+            return false;
+        }
+        public List<File> GetFileFromCookie()
+        {
+          // List<File> files = new List<File>();
+            string jsonFiles = HttpContext.Current.Request.Cookies[CommonConstants.File].Value;
+            var  result = JsonConvert.DeserializeObject<RootObject>(jsonFiles);
+            //List<string> fileName = result.File.Select(x => x.fileName).ToList();
+            //List<string> linkFile = result.File.Select(x => x.linkFile).ToList();
+
+            //for (var i = 0; i < fileName.Count(); i++)
+            //{
+            //    File file = new File(fileName[i], linkFile[i]);
+            //    files.Add(file);
+            //}
+            return result.File;
+        }
 
       
     }

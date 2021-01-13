@@ -62,12 +62,17 @@ namespace LMS.Areas.Admin.Controllers
                 ID = x.ID,
                 NAME = x.NAME,
                 DESCRIPTION = x.DESCRIPTION,
+                FACULTY = new FACULTY
+                {
+                    ID = x.FACULTY.ID,
+                    NAME = x.FACULTY.NAME,
+                }
             });
             return Json(new
             {
                 data = model,
                 status = true
-            });
+            },JsonRequestBehavior.AllowGet);
         }
         public JsonResult Save(SUBJECT subjects)
         {
@@ -150,8 +155,6 @@ namespace LMS.Areas.Admin.Controllers
                 data = model,
                 status = true
             }, JsonRequestBehavior.AllowGet);
-        }
-
-       
+        }  
     }
 }

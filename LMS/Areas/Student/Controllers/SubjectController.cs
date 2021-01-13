@@ -14,7 +14,11 @@ namespace LMS.Areas.Student.Controllers
     public class SubjectController : Controller
     {
         // GET: Student/Subject
-        public ActionResult Index()
+        //public ActionResult Index()
+        //{
+        //    return View();
+        //}
+        public ActionResult GetTopicStudent(string course_id)
         {
             return View();
         }

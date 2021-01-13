@@ -53,6 +53,31 @@ var teacherController = {
 				teacherController.GetTeacher(true);
 			}
 		})
+		$(document).stop().on('click', '#btnAddUser', function () {
+			teacherController.UpLoad();
+			teacherController.GetTeacher(true);
+		})
+	},
+	UpLoad: function () {
+		var file = new FormData($('form').get(0));
+		$.ajax({
+			url: '/Admin/Student/UploadExcel',
+			data: file,
+			type: 'POST',
+			contentType: false,
+			processData: false,
+			success: function (response) {
+				if (response.status == true) {
+					alert("thanh cong");
+				}
+				else {
+					alert("bai");
+				}
+			},
+			error: function (err) {
+				alert(err);
+			}
+		})
 	},
 	Save: function () {
 		var id = $('#ID').val();
@@ -245,8 +270,9 @@ var teacherController = {
 						html += Mustache.render(template, {
 							IDCOURSE: item.COURSE.ID,
 							NAMECOURSE: item.COURSE.NAME,
+							DESCRIPTION: item.COURSE.DESCRIPTION,
 							IDSEMESTER: item.COURSE.SEMESTER.ID,
-							SEMESTER: item.COURSE.SEMESTER.TILTE,
+							SEMESTER: item.COURSE.SEMESTER.TITLE,
 						});
 					});
 					$('#tblData-Course').html(html);

@@ -8,6 +8,11 @@ using DAL.DAO;
 using System.Text;
 using System.Web.Script.Serialization;
 using LMS.Common;
+using System.Data.SqlClient;
+using System.Data.OleDb;
+using System.Configuration;
+using System.Data;
+using System.IO;
 
 namespace LMS.Areas.Admin.Controllers
 {
@@ -15,6 +20,8 @@ namespace LMS.Areas.Admin.Controllers
     public class CourseController : Controller
     {
         LMSProjectDBContext db = new LMSProjectDBContext();
+        SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["LMSProjectDBContext"].ConnectionString);
+        OleDbConnection Econ;
 
         public ActionResult Index()
         {
@@ -75,23 +82,36 @@ namespace LMS.Areas.Admin.Controllers
         }
         public JsonResult Detail(string id)
         {
-            var model = new CourseDAO().getdetail(id).Select(x => new {
+            var model = new CourseDAO().getdetail(id).Select(x => new
+            {
                 IDCOURSE = x.ID,
                 NAMECOURSE = x.NAME,
                 DESCRIPTION = x.DESCRIPTION,
-                SEMESTER = new SEMESTER { ID = x.SEMESTER.ID, TITLE = x.SEMESTER.TITLE },
-                SUBJECT = new SUBJECT { ID = x.SUBJECT.ID, NAME = x.SUBJECT.NAME },
-                TEACH = new TEACH
+                SEMESTER = (x.SEMESTER == null) ? null : (new SEMESTER
                 {
-                    C_USER = new C_USER
+                    ID = (x.SEMESTER.ID == null) ? null : (x.SEMESTER.ID),
+                    TITLE = (x.SEMESTER.TITLE == null) ? null : (x.SEMESTER.TITLE)
+                }),
+                SUBJECT = (x.SUBJECT == null) ? null : (new SUBJECT
+                {
+                    ID = x.SUBJECT.ID,
+                    NAME = x.SUBJECT.NAME
+                }),
+                TEACH = (x.TEACH == null) ? null : (new TEACH
+                {
+                    C_USER = (x.TEACH.C_USER == null) ? null : (new C_USER
                     {
-                        ID = x.TEACH.C_USER.ID,
-                        FIRST_NAME = x.TEACH.C_USER.FIRST_NAME,
-                        LAST_NAME = x.TEACH.C_USER.LAST_NAME,
-                        MIDDLE_NAME = x.TEACH.C_USER.MIDDLE_NAME,
-                        FACULTY = new FACULTY { ID = x.TEACH.C_USER.FACULTY.ID, NAME = x.TEACH.C_USER.FACULTY.NAME }
-                    }
-                },
+                        ID = (x.TEACH.C_USER.ID == null) ? null : (x.TEACH.C_USER.ID),
+                        FIRST_NAME = (x.TEACH.C_USER.FIRST_NAME == null) ? null : (x.TEACH.C_USER.FIRST_NAME),
+                        LAST_NAME = (x.TEACH.C_USER.LAST_NAME == null) ? null : (x.TEACH.C_USER.LAST_NAME),
+                        MIDDLE_NAME = (x.TEACH.C_USER.MIDDLE_NAME == null) ? null : (x.TEACH.C_USER.MIDDLE_NAME),
+                        FACULTY = (x.TEACH.C_USER.FACULTY == null) ? null : (new FACULTY
+                        {
+                            ID = (x.TEACH.C_USER.FACULTY.ID == null) ? null : (x.TEACH.C_USER.FACULTY.ID),
+                            NAME = (x.TEACH.C_USER.FACULTY.NAME == null) ? null : (x.TEACH.C_USER.FACULTY.NAME)
+                        })
+                    })
+                })
             });
             return Json(new
             {
@@ -108,16 +128,102 @@ namespace LMS.Areas.Admin.Controllers
                 status = true
             });
         }
-        public JsonResult Save(COURSE Course, TEACH Teach)
+        private void ExcelConn(string filepath)
         {
+            string constr = string.Format(@"Provider=Microsoft.ACE.OLEDB.12.0;Data Source={0};Extended Properties=""Excel 12.0 Xml;HDR=YES;""", filepath);
+            Econ = new OleDbConnection(constr);
+        }
+        private void InsertExceldata(string fileepath, string filename)
+        {
+            string fullpath = Server.MapPath("/Doc/") + filename;
+            ExcelConn(fullpath);
+            string query = string.Format("Select * from [{0}]", "Sheet1$");
+            OleDbCommand Ecom = new OleDbCommand(query, Econ);
+            Econ.Open();
+            DataSet ds = new DataSet();
+            OleDbDataAdapter oda = new OleDbDataAdapter(query, Econ);
+            Econ.Close();
+            oda.Fill(ds);
+            DataTable dt = ds.Tables[0];
+
+            using (SqlBulkCopy objbulk = new SqlBulkCopy(con))
+            {
+                objbulk.DestinationTableName = "_USER";
+                objbulk.ColumnMappings.Add("ID", "ID");
+                objbulk.ColumnMappings.Add("FIRST_NAME", "FIRST_NAME");
+                objbulk.ColumnMappings.Add("LAST_NAME", "LAST_NAME");
+                objbulk.ColumnMappings.Add("MIDDLE_NAME", "MIDDLE_NAME");
+                objbulk.ColumnMappings.Add("PHONE_NO", "PHONE_NO");
+                objbulk.ColumnMappings.Add("SEX", "SEX");
+                objbulk.ColumnMappings.Add("DoB", "DoB");
+                objbulk.ColumnMappings.Add("MAIL", "MAIL");
+                objbulk.ColumnMappings.Add("PASSWORD", "PASSWORD");
+                objbulk.ColumnMappings.Add("CLASS_ID", "CLASS_ID");
+                objbulk.ColumnMappings.Add("FACULTY_ID", "FACULTY_ID");
+                con.Open();
+                objbulk.WriteToServer(dt);
+                con.Close();
+            }
+
+            using (SqlBulkCopy sqlBulkCopy = new SqlBulkCopy(con))
+            {
+                sqlBulkCopy.DestinationTableName = "USER_ROLE";
+                sqlBulkCopy.ColumnMappings.Add("ID", "USER_ID");
+                sqlBulkCopy.ColumnMappings.Add("ROLE", "ROLE_ID");
+                con.Open();
+                sqlBulkCopy.WriteToServer(dt);
+                con.Close();
+            }
+
+            using (SqlBulkCopy sqlBulkCopy = new SqlBulkCopy(con))
+            {
+                sqlBulkCopy.DestinationTableName = "LEARNS";
+                sqlBulkCopy.ColumnMappings.Add("ID", "USER_ID");
+                sqlBulkCopy.ColumnMappings.Add("COURSE_ID", "COURSE_ID");
+                con.Open();
+                sqlBulkCopy.WriteToServer(dt);
+                con.Close();
+            }
+        }
+        public void UploadExcel(HttpPostedFileBase file)
+        {
+            if (file != null)
+            {
+                string filename = Guid.NewGuid() + Path.GetExtension(file.FileName);
+                if (filename.EndsWith(".xlsx"))
+                {
+                    string filepath = "/Doc/" + filename;
+                    file.SaveAs(Path.Combine(Server.MapPath("/Doc"), filename));
+                    InsertExceldata(filepath, filename);
+                }
+            }
+        }
+        public JsonResult Save( HttpPostedFileBase file, string ID, string NAME, string DESCRIPTION, string SEMESTER_ID, string SUBJECT_ID, string USER_ID, string COURSE_ID)
+        {
+            COURSE Course = new COURSE();
+            Course.ID = ID;
+            Course.NAME = NAME;
+            Course.DESCRIPTION = DESCRIPTION;
+            Course.SEMESTER_ID = SEMESTER_ID;
+            Course.SUBJECT_ID = SUBJECT_ID;
+
+            TEACH Teach = new TEACH();
+            Teach.USER_ID = USER_ID;
+            Teach.COURSE_ID = COURSE_ID;
+
             bool status = false;
             string message = string.Empty;
-            if (Course.ID != "0")
+            var course = new CourseDAO().CheckCouseIDExists(Course.ID);
+            if (course == 1)
             {
                 try
                 {
                     var model = new TeachDAO().updateteach(Teach);
-                    var course = new CourseDAO().updatecourse(Course);
+                    var cour = new CourseDAO().updatecourse(Course);
+                    if (file != null)
+                    {
+                        UploadExcel(file);
+                    }
                     status = true;
                 }
                 catch (Exception ex)
@@ -130,9 +236,10 @@ namespace LMS.Areas.Admin.Controllers
             {
                 try
                 {
-                    Course.ID = createID("COUR");
-                    var course = new CourseDAO().addcourse(Course);
+                    //Course.ID = createID("COUR");
+                    var cour = new CourseDAO().addcourse(Course);
                     var teach = new TeachDAO().addteach(Teach, Course);
+                    UploadExcel(file);
                     status = true;
                 }
                 catch (System.Data.Entity.Validation.DbEntityValidationException dbEx)
@@ -169,7 +276,15 @@ namespace LMS.Areas.Admin.Controllers
             {
                 C_USER = x.C_USER.Select(a => new { IDTEA=a.ID, FIRST_NAME=a.FIRST_NAME, LAST_NAME=a.LAST_NAME, MIDDLE_NAME=a.MIDDLE_NAME})
             });
-            return Json(new { data = model });
+            return Json(new { data = model },JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult GetSubjectsInFaculty(string id)
+        {
+            var model = new FacultyDAO().getsubjectsinfaculty(id).Select(x => new
+            {
+                SUBJECTs = x.SUBJECTs.Select(a => new { IDSUBS = a.ID, NAMESUBS=a.NAME})
+            });
+            return Json(new { data = model }, JsonRequestBehavior.AllowGet);
         }
     }
 }

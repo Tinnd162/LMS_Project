@@ -16,8 +16,6 @@ namespace DAL.DAO
         {
             db = new LMSProjectDBContext();
         }
-       
-
         public bool deletecourse(string id)
         {
             var course = db.COURSEs.First(x => x.ID == id);
@@ -33,16 +31,16 @@ namespace DAL.DAO
                 ID = b.ID,
                 NAME = b.NAME,
                 DESCRIPTION = b.DESCRIPTION,
-                TEACH = new TEACH
+                TEACH = (b.TEACH == null) ? null : (new TEACH
                 {
-                    C_USER = new C_USER
+                    C_USER = (b.TEACH.C_USER == null) ? null : (new C_USER
                     {
-                        ID = b.TEACH.C_USER.ID,
-                        FIRST_NAME = b.TEACH.C_USER.FIRST_NAME,
-                        LAST_NAME = b.TEACH.C_USER.LAST_NAME,
-                        MIDDLE_NAME = b.TEACH.C_USER.MIDDLE_NAME
-                    }
-                },
+                        ID = (b.TEACH.C_USER.ID == null) ? null : (b.TEACH.C_USER.ID),
+                        FIRST_NAME = (b.TEACH.C_USER.FIRST_NAME == null) ? null : (b.TEACH.C_USER.FIRST_NAME),
+                        LAST_NAME = (b.TEACH.C_USER.LAST_NAME == null) ? null : (b.TEACH.C_USER.LAST_NAME),
+                        MIDDLE_NAME = (b.TEACH.C_USER.MIDDLE_NAME == null) ? null : (b.TEACH.C_USER.MIDDLE_NAME),
+                    })
+                }),
             }).ToList();
             return course;
         }
@@ -53,22 +51,22 @@ namespace DAL.DAO
             {
                 ID = a.ID,
                 NAME = a.NAME,
-                TEACH = new TEACH
+                TEACH = (a.TEACH == null) ? null : (new TEACH
                 {
-                    C_USER = new C_USER
+                    C_USER = (a.TEACH.C_USER == null) ? null : (new C_USER
                     {
-                        ID = a.TEACH.C_USER.ID,
-                        FIRST_NAME = a.TEACH.C_USER.FIRST_NAME,
-                        LAST_NAME = a.TEACH.C_USER.LAST_NAME,
-                        MIDDLE_NAME = a.TEACH.C_USER.MIDDLE_NAME
-                    }
-                },
+                        ID = (a.TEACH.C_USER.ID == null) ? null : (a.TEACH.C_USER.ID),
+                        FIRST_NAME = (a.TEACH.C_USER.FIRST_NAME == null) ? null : (a.TEACH.C_USER.FIRST_NAME),
+                        LAST_NAME = (a.TEACH.C_USER.LAST_NAME == null) ? null : (a.TEACH.C_USER.LAST_NAME),
+                        MIDDLE_NAME = (a.TEACH.C_USER.MIDDLE_NAME == null) ? null : (a.TEACH.C_USER.MIDDLE_NAME),
+                    })
+                }),
                 C_USER = ((a.C_USER == null) ? null : (a.C_USER.Select(c => new C_USER
                 {
-                    ID = c.ID,
-                    FIRST_NAME = c.FIRST_NAME,
-                    LAST_NAME = c.LAST_NAME,
-                    MIDDLE_NAME = c.MIDDLE_NAME
+                    ID = (c.ID == null) ? null : (c.ID),
+                    FIRST_NAME = (c.FIRST_NAME == null) ? null : (c.FIRST_NAME),
+                    LAST_NAME = (c.LAST_NAME == null) ? null : (c.LAST_NAME),
+                    MIDDLE_NAME = (c.MIDDLE_NAME == null) ? null : (c.MIDDLE_NAME)
                 }).ToList()))
             }).ToList();
         }
@@ -80,19 +78,23 @@ namespace DAL.DAO
                 ID = a.ID,
                 NAME = a.NAME,
                 DESCRIPTION = a.DESCRIPTION,
-                SEMESTER = new SEMESTER { ID = a.SEMESTER.ID, TITLE = a.SEMESTER.TITLE },
-                SUBJECT = new SUBJECT { ID = a.SUBJECT.ID, NAME = a.SUBJECT.NAME },
-                TEACH = new TEACH
+                SEMESTER = new SEMESTER { ID = (a.SEMESTER.ID == null) ? null : (a.SEMESTER.ID), TITLE = (a.SEMESTER.TITLE == null) ? null : (a.SEMESTER.TITLE) },
+                SUBJECT = new SUBJECT { ID = (a.SUBJECT.ID == null) ? null : (a.SUBJECT.ID), NAME = (a.SUBJECT.NAME == null) ? null : (a.SUBJECT.NAME) },
+                TEACH = (a.TEACH == null) ? null : (new TEACH
                 {
-                    C_USER = new C_USER
+                    C_USER = (a.TEACH.C_USER == null) ? null : (new C_USER
                     {
-                        ID = a.TEACH.C_USER.ID,
-                        FIRST_NAME = a.TEACH.C_USER.FIRST_NAME,
-                        LAST_NAME = a.TEACH.C_USER.LAST_NAME,
-                        MIDDLE_NAME = a.TEACH.C_USER.MIDDLE_NAME,
-                        FACULTY= new FACULTY { ID=a.TEACH.C_USER.FACULTY.ID, NAME=a.TEACH.C_USER.FACULTY.NAME}
-                    }
-                },
+                        ID = (a.TEACH.C_USER.ID == null) ? null : (a.TEACH.C_USER.ID),
+                        FIRST_NAME = (a.TEACH.C_USER.FIRST_NAME == null) ? null : (a.TEACH.C_USER.FIRST_NAME),
+                        LAST_NAME = (a.TEACH.C_USER.LAST_NAME == null) ? null : (a.TEACH.C_USER.LAST_NAME),
+                        MIDDLE_NAME = (a.TEACH.C_USER.MIDDLE_NAME == null) ? null : (a.TEACH.C_USER.MIDDLE_NAME),
+                        FACULTY = (a.TEACH.C_USER.FACULTY == null) ? null : (new FACULTY
+                        {
+                            ID = (a.TEACH.C_USER.FACULTY.ID == null) ? null : (a.TEACH.C_USER.FACULTY.ID),
+                            NAME = (a.TEACH.C_USER.FACULTY.NAME == null) ? null : (a.TEACH.C_USER.FACULTY.NAME)
+                        })
+                    })
+                })
             }).ToList();
         }
         public bool addcourse(COURSE course)
@@ -124,13 +126,14 @@ namespace DAL.DAO
         public COURSE GetCourseByID(string id)
         {
             {
-                COURSE s = db.COURSEs.First(x => x.ID == id);
+                COURSE s = db.COURSEs.FirstOrDefault(x => x.ID == id);
                 return new COURSE()
                 {
                     ID = s.ID,
                     NAME = s.NAME,
                     DESCRIPTION = s.DESCRIPTION,
                     SEMESTER_ID = s.SEMESTER_ID,
+                    SEMESTER = new SEMESTER { TITLE = s.SEMESTER.TITLE},
                     C_USER = s.C_USER.Select(u => new C_USER
                     {
                         ID = u.ID,
@@ -190,6 +193,16 @@ namespace DAL.DAO
                 }
             }).ToList();
             return course;
+        }
+        public int CountCourse()
+        {
+            var cntCourse = db.COURSEs.ToList();
+            return cntCourse.Count();
+        }
+        public int CheckCouseIDExists(string id)
+        {
+            int cnt = db.COURSEs.Count(x => x.ID == id);
+            return cnt;
         }
     }
 }

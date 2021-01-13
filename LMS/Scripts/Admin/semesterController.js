@@ -221,7 +221,9 @@ var semesterController = {
                             ID: item.ID,
                             NAME: item.NAME,
                             DESCRIPTION: item.DESCRIPTION,
-                            NAMETEACHER: item.TEACH.C_USER.LAST_NAME + ' ' + item.TEACH.C_USER.MIDDLE_NAME + ' ' + item.TEACH.C_USER.FIRST_NAME,
+
+                            NAMETEACHER: (item.TEACH == null) ? '' : item.TEACH.C_USER.LAST_NAME + ' ' + item.TEACH.C_USER.MIDDLE_NAME + ' ' + item.TEACH.C_USER.FIRST_NAME,
+                           
                         });
                     });
                     $('#tblData-CourseInSemester').html(html);

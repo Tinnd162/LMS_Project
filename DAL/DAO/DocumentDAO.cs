@@ -35,9 +35,10 @@ namespace DAL.DAO
                 db.SaveChanges();
                 return true;
             }
-            catch
+            catch(Exception ex)
             {
-                return false;
+                throw (ex);
+                //return false;
             }
         }
 
@@ -54,6 +55,30 @@ namespace DAL.DAO
             {
                 return false;
             }
+        }
+
+        public List<string> GetTitleDocByTopicID(string topicid)
+        {
+            TOPIC topic = db.TOPICs.First(x => x.ID == topicid);
+            List<string> titles = new List<string>();
+            foreach(var doc in topic.DOCUMENTs)
+            {
+                titles.Add(doc.TITLE);
+            }
+            return titles;
+        }
+
+        public string GetTitle(string id)
+        {
+            DOCUMENT doc = db.DOCUMENTs.First(x =>x.ID == id);
+            return doc.TITLE;
+        }
+        
+
+        public string GetTopicIDByDoc(string id)
+        {
+            TOPIC topic = db.DOCUMENTs.Where(x => x.ID == id).Select(x => x.TOPIC).First();
+            return topic.ID;
         }
 
     }

@@ -66,6 +66,15 @@ namespace DAL.DAO
             }).ToList();
             return listFac; 
         }
+        public List<FACULTY> getsubjectsinfaculty (string id)
+        {
+            List<FACULTY> listF = db.FACULTies.Where(x => x.ID == id).ToList();
+            List<FACULTY> listFac = listF.Select(f => new FACULTY
+            {
+                SUBJECTs = f.SUBJECTs.Select(a=> new SUBJECT {ID=a.ID, NAME=a.NAME}).ToList()
+            }).ToList();
+            return listFac;
+        }
     }
 }
        

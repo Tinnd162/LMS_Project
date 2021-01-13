@@ -18,7 +18,7 @@ namespace DAL.EF
         [StringLength(200)]
         public string DESCRIPTION { get; set; }
 
-        [StringLength(200)]
+        [StringLength(1000)]
         public string LINK { get; set; }
 
         [StringLength(20)]

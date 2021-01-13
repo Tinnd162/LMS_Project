@@ -23,7 +23,12 @@ namespace DAL.DAO
             {
                 ID = a.ID,
                 NAME=a.NAME,
-                DESCRIPTION=a.DESCRIPTION
+                DESCRIPTION=a.DESCRIPTION,
+                FACULTY= new FACULTY
+                {
+                    ID=a.FACULTY.ID,
+                    NAME=a.FACULTY.NAME,
+                }
             }).ToList();
         }
         public bool delete (string id)
@@ -38,6 +43,7 @@ namespace DAL.DAO
             var model = db.SUBJECTs.Find(subject.ID);
             model.NAME = subject.NAME;
             model.DESCRIPTION = subject.DESCRIPTION;
+            model.FACULTY_ID = subject.FACULTY_ID;
             db.SaveChanges();
             return true;
         }
@@ -71,6 +77,11 @@ namespace DAL.DAO
                     },
                 }).ToList()
             }).ToList();
+        }
+        public int countsubjects()
+        {
+            var cntsubjects = db.SUBJECTs.ToList();
+            return cntsubjects.Count();
         }
     }
 }
