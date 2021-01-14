@@ -22,8 +22,15 @@ namespace LMS.Areas.Teacher.Controllers
         // GET: Teacher/Subject
         public ActionResult Index(string id)
         {
-            CourseDAO courseDao = new CourseDAO();   
-            return View(courseDao.GetCourseByID(id));
+            try
+            {
+                CourseDAO courseDao = new CourseDAO();
+                return View(courseDao.GetCourseByID(id));
+            }
+            catch{
+                return RedirectToAction("Error2", "Home", new { area = "" });
+            }
+            
         }
 
        [HttpPost]
