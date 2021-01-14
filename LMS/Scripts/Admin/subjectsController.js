@@ -6,6 +6,7 @@ var subjectsController = {
     init: function () {
         subjectsController.GetSubjects();
         subjectsController.registerEvent();
+        subjectsController.GetFacultyID_NAME();
     },
     registerEvent: function () {
         $('#frmSaveData-Subjects').validate({
@@ -19,7 +20,6 @@ var subjectsController = {
             }
         })
         $(document).stop().on('click', '.btn-delete-Subjects', function (e) {
-            console.log(e)
             var id = $(this).data('id');
             bootbox.confirm("Bạn có chắc chắn muốn xóa?", function (result) {
                 if (result) {
@@ -62,6 +62,11 @@ var subjectsController = {
             if (e.which == 13) {
                 subjectsController.GetSubjects(true);
             }
+        })
+        $(document).stop().on('change', '#facultyname', function (e) {
+            var optionSelected = $(this).find("option:selected");
+            var id = optionSelected.data("idOption");
+            $('#IDfacl').val(id);
         })
     },
     GetSubjects: function (changePageSize)
@@ -132,6 +137,8 @@ var subjectsController = {
                     $('#IDsub').val(data.ID);
                     $('#name').val(data.NAME);
                     $('#description').val(data.DESCRIPTION);
+                    $('#IDfacl').val(data.FACULTY.ID);
+                    $('#facultyname').val(data.FACULTY.NAME);
                 }
                 else {
                     bootbox.alert(response.message);
@@ -146,10 +153,12 @@ var subjectsController = {
         var id = $('#IDsub').val();
         var name = $('#name').val();
         var desciption = $('#description').val();
+        var IDfacul = $('#IDfacl').val();
         var subjects = {
             ID: id,
             NAME: name,
             DESCRIPTION: desciption,
+            FACULTY_ID: IDfacul
         }
         $.ajax({
             url: '/Subjects/Save',
@@ -164,7 +173,7 @@ var subjectsController = {
                     })
                 }
                 else {
-                    bootbox.alert(response.message);
+                    bootbox.alert("Môn học đã tồn tại.");
                 }
             },
             error: function (err) {
@@ -176,6 +185,8 @@ var subjectsController = {
         $('#IDsub').val('0');
         $('#name').val('');
         $('#description').val('');
+        $('#facultyname').val('');
+
     },
     GetCourseInSubject: function (id) {
         $.ajax({
@@ -235,6 +246,22 @@ var subjectsController = {
                 setTimeout(callback, 200);
             }
         });
+    },
+    GetFacultyID_NAME: function () {
+        $.ajax({
+            url: '/Admin/Teacher/GetFacultyID_NAME',
+            type: 'GET',
+            dataType: 'json',
+            success: function (response) {
+                var data = response.data;
+                for (var i = 0; i < data.length; i++) {
+                    var opt = new Option(data[i].NAME);
+                    $(opt).data('idOption', data[i].ID);
+                    $('#facultyname').append(opt);
+                }
+
+            }
+        })
     },
 }
 subjectsController.init();

@@ -55,7 +55,7 @@ var teacherController = {
 		})
 		$(document).stop().on('click', '#btnAddUser', function () {
 			teacherController.UpLoad();
-			teacherController.GetTeacher();
+			teacherController.GetTeacher(true);
 		})
 	},
 	UpLoad: function () {

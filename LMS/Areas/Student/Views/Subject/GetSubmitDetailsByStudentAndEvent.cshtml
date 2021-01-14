@@ -3,7 +3,7 @@
     ViewBag.Title = "GetSubmitDetailsByStudentAndEvent";
     Layout = "~/Areas/Student/Views/Shared/_BlankStudentLayout.cshtml";
 }
-@if (Model == null)
+@if (Model.Count == 0)
 {
     <h3>Không có deadline</h3>
 }
@@ -64,67 +64,35 @@ else
 </table>
 <div class="container">
     <div class="row">
-        @if (Model[0].submitID == null)
+        @if (Model[0].eventDeadline > DateTime.Now || Model[0].assScore == null || Model[0].assComment == null)
         {
-            <div class="col-12 col-sm-6 col-md-6">
-                <form id="formSubmit">
-                    <label for="file" class="pt-2 m-0" style="font-size:1rem">Bài nộp</label>
-                    <input type="file" class="form-control" name="file" accept="application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint,
-                    text/plain, application/pdf, image/*" required />
-                    <button class="btn btn-primary btn-lg" type="submit" id="submitFile">Nộp bài</button>
-                </form>
-            </div>
+
         }
         else
         {
-            <div class="col-12 col-sm-6 col-md-6">
-                <form>
-                    <button class="btn btn-primary btn-lg" type="submit" >Sửa bài</button>
-                </form>
-            </div>
-            <div class="col-12 col-sm-6 col-md-6">
-                <form>
-                    <button class="btn btn-primary btn-lg" type="submit" >Hủy bài nộp</button>
-                </form>
-            </div>
+            if (Model[0].submitID == null)
+            {
+                <div class="col-12 col-sm-6 col-md-6">
+                    <form>
+                        <button class="btn btn-primary btn-lg" type="submit" formaction="1klasse.html">Nộp bài</button>
+                    </form>
+                </div>
+            }
+            else
+            {
+                <div class="col-12 col-sm-6 col-md-6">
+                    <form>
+                        <button class="btn btn-primary btn-lg" type="submit" formaction="1klasse.html">Sửa bài</button>
+                    </form>
+                </div>
+                <div class="col-12 col-sm-6 col-md-6">
+                    <form>
+                        <button class="btn btn-primary btn-lg" type="submit" formaction="1klasse.html">Hủy bài nộp</button>
+                    </form>
+                </div>
+            }
         }
-
     </div>
 </div>
 }
 
-@section getSubmitStudent{
-
-    <script type="text/javascript">
-        $(document).ready(
-        )
-
-        function func() {
-            $('#submitFile').on('click', function () {
-                let formdata = new FormData($('#formSubmit').get(0))
-
-                formdata.append('DocID', docID);
-                $.ajax({
-                    type: 'POST',
-                    url: '/Student/Subject/UpdateDoc',
-                    data: formdata,
-                    dataType: 'json',
-                    contentType: false,
-                    processData: false,
-                    async: false,
-                    success: function (msg) {
-                        if (msg.status == true) {
-                            flag = true;
-                            linkFile = msg.file.link;
-                            filename = msg.file.filename;
-                            // alert('Sửa thành công !')
-                        } else {
-                            alert('Đã xảy ra lỗi !')
-                        }
-                    }
-                });
-            })
-        }
-    </script>
-   
-}

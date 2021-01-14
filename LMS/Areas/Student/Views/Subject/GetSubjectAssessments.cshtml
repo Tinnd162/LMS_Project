@@ -4,11 +4,13 @@
     Layout = "~/Areas/Student/Views/Shared/_BlankStudentLayout.cshtml";
 }
 
-@if (Model == null)
+@{ if (Model.Count == 0)
     {
         <h3>Không có deadline</h3>
     }
-    <h2>@Model[0].courseName</h2>
+    else
+    {
+     <h2>@Model[0].courseName</h2>
     <table class="table">
         <thead>
             <tr>
@@ -31,11 +33,11 @@
                     <td>@item.eventDeadline</td>
                     @if (@item.submitID == null)
                     {
-                        <td><a href="~/Student/Submit/@item.eventID">Chưa nộp</a></td>
+                        <td><a href="~/Student/Subject/GetSubmitDetailsByStudentAndEvent?event_id=@item.eventID">Chưa nộp</a></td>
                     }
                     else
                     {
-                        <td><a href="~/Student/Submit/@item.eventID">Đã nộp</a></td>
+                        <td><a href="~/Student/Subject/GetSubmitDetailsByStudentAndEvent?event_id=@item.eventID">Đã nộp</a></td>
                     }
                     @if (@item.assComment == null)
                     {
@@ -59,5 +61,6 @@
 
         </tbody>
     </table>
+        }
 
-
+    }

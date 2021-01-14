@@ -13,7 +13,7 @@ namespace DAL.DAO
         LMSProjectDBContext db = null;
         public SubmitDAO() { db = new LMSProjectDBContext(); }
         
-        public List<COURSE> GetSubmitAssessmentByStuAndCourseAndSem(string user_id, string semester_id, string course_id)
+        public List<COURSE> GetSubmitAssessmentByStuAndCourseAndSem(string user_id)
         {
             C_USER stu = db.C_USER.Where(u => u.ID == user_id).First();
             //var model = stu.COURSEs.Where(x => x.ID == course_id).ToList();
@@ -48,10 +48,9 @@ namespace DAL.DAO
            
             return course;
         }
-        public List<COURSE> GetDeadlinebyStuAndCourseAndSem(string user_id, string semester_id)
+        public List<COURSE> GetDeadlinebyStuAndCourseAndSem(string user_id)
         {
             C_USER stu = db.C_USER.Where(u => u.ID == user_id).First();
-
             List<COURSE> courses = stu.COURSEs.Select(x => new COURSE {
                 ID = x.ID,
                 NAME = x.NAME,

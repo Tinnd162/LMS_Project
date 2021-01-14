@@ -130,16 +130,16 @@ namespace LMS.Areas.Admin.Controllers
                 ID = x.ID,
                 NAME = x.NAME,
                 DESCRIPTION = x.DESCRIPTION,
-                TEACH =new TEACH
+                TEACH = (x.TEACH == null) ? null : (new TEACH
                 {
-                    C_USER = new C_USER
+                    C_USER = (x.TEACH.C_USER == null) ? null : (new C_USER
                     {
-                        ID =x.TEACH.C_USER.ID,
-                        FIRST_NAME =x.TEACH.C_USER.FIRST_NAME,
-                        LAST_NAME =x.TEACH.C_USER.LAST_NAME,
-                        MIDDLE_NAME =x.TEACH.C_USER.MIDDLE_NAME,
-                    }
-                },
+                        ID = (x.TEACH.C_USER.ID == null) ? null : (x.TEACH.C_USER.ID),
+                        FIRST_NAME = (x.TEACH.C_USER.FIRST_NAME == null) ? null : (x.TEACH.C_USER.FIRST_NAME),
+                        LAST_NAME = (x.TEACH.C_USER.LAST_NAME == null) ? null : (x.TEACH.C_USER.LAST_NAME),
+                        MIDDLE_NAME = (x.TEACH.C_USER.MIDDLE_NAME == null) ? null : (x.TEACH.C_USER.MIDDLE_NAME),
+                    })
+                }),
             });
             return Json(new
             {

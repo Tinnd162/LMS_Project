@@ -10,27 +10,23 @@ using LMS.Common;
 
 namespace LMS.Areas.Student.Controllers
 {
-    [CustomAuthorize("STUDENT")]
+    //[CustomAuthorize("STUDENT")]
     public class HomeController : Controller
     {
-        // GET: Student/Home
-        //public ActionResult Index()
-        //{
-        //    return View();
-        //}
-        public ViewResult Index(string user_id = "U00008", string semester_id = "20211")
+        public ActionResult Index()
         {
+            CommonFunc cFunc = new CommonFunc();
             SubmitDAO dao = new SubmitDAO();
-            List<COURSE> courses = dao.GetDeadlinebyStuAndCourseAndSem(user_id, semester_id);
+            List<COURSE> courses = dao.GetDeadlinebyStuAndCourseAndSem(cFunc.GetIdUserBySession());
             List<DeadlineView> dView = new List<DeadlineView>();
 
-            foreach(COURSE course in courses)
+            foreach (COURSE course in courses)
             {
                 if (course.TOPICs == null) continue;
-                foreach(TOPIC topic in course.TOPICs)
+                foreach (TOPIC topic in course.TOPICs)
                 {
                     if (topic.EVENTs == null) continue;
-                    foreach(EVENT ev in topic.EVENTs)
+                    foreach (EVENT ev in topic.EVENTs)
                     {
                         DeadlineView dV = new DeadlineView()
                         {
@@ -40,11 +36,12 @@ namespace LMS.Areas.Student.Controllers
                             eventTitle = ev.TITLE,
                             eventDeadline = ev.DEADLINE
                         };
-                        if (ev.SUBMITs == null) {
+                        if (ev.SUBMITs == null)
+                        {
                             dView.Add(dV);
                             continue;
-                        }                      
-                        foreach(SUBMIT submit in ev.SUBMITs)
+                        }
+                        foreach (SUBMIT submit in ev.SUBMITs)
                         {
                             dV.submitID = submit.ID;
                             dView.Add(dV);
@@ -56,7 +53,6 @@ namespace LMS.Areas.Student.Controllers
             ListEvent = ListEvent.Where(s => s.eventDeadline > DateTime.Now);
             ListEvent = ListEvent.OrderBy(s => s.eventDeadline);
             return View(ListEvent.ToList());
-
-        }  
+        }
     }
 }

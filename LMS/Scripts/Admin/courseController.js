@@ -7,7 +7,6 @@ var courseController = {
         courseController.GetCourse();
         courseController.registerEvent();
         courseController.GetNameSemester();
-        courseController.GetNameSubject();
         courseController.GetFacultyID_NAME();
         
     },
@@ -35,21 +34,22 @@ var courseController = {
             var id1 = optionSelected1.data("idOptionsemester");
             $('#semester_id').val(id1);
         })
-        $(document).stop().on('change', '#name', function (e) {
-            var optionSelected2 = $(this).find("option:selected");
-            var id2 = optionSelected2.data("idOptionsubject");
-            $('#subject_id').val(id2);
-        })
         $(document).stop().on('change', '#facultyname', function (e) {
             var optionSelected = $(this).find("option:selected");
             var id = optionSelected.data("idOption");
             $('#IDfacl').val(id);
             courseController.GetTeacherInFaculty(id);
+            courseController.GetSubjectsInFaculty(id);
         })
         $(document).stop().on('change', '#teachername', function (e) {
             var optionSelected = $(this).find("option:selected");
             var id = optionSelected.data("idOptionteacher");
             $('#IDteacher').val(id);
+        })
+        $(document).stop().on('change', '#namesubject', function (e) {
+            var optionSelected2 = $(this).find("option:selected");
+            var id2 = optionSelected2.data("idOptionsubject");
+            $('#subject_id').val(id2);
         })
         $(document).stop().on('click', '#btnSave-Course', function () {
             if ($('#frmSaveData-Course').valid()) {
@@ -87,6 +87,7 @@ var courseController = {
             var id = $(this).data('id');
             var idfacl = $(this).data('facl')
             await courseController.GetTeacherInFaculty(idfacl);
+            await courseController.GetSubjectsInFaculty(idfacl);
             courseController.Detail(id)
             $('#CourseUpdateDetail').modal('show');
         })
@@ -99,7 +100,8 @@ var courseController = {
             }
         })
     },
-    GetCourse: function (changePageSize) {
+    GetCourse: function (changePageSize)
+    {
         var name = $('#txtSearch').val();
         $.ajax({
             url: '/Course/GetCourse',
@@ -192,7 +194,7 @@ var courseController = {
                 $('#semester_id').val(data.SEMESTER.ID);
                 $('#title').val(data.SEMESTER.TITLE);
                 $('#subject_id').val(data.SUBJECT.ID);
-                $('#name').val(data.SUBJECT.NAME);
+                $('#namesubject').val(data.SUBJECT.NAME);
                 $('#IDfacl').val(data.TEACH.C_USER.FACULTY.ID);
                 $('#facultyname').val(data.TEACH.C_USER.FACULTY.NAME);
                 $('#IDteacher').val(data.TEACH.C_USER.ID);
@@ -205,25 +207,9 @@ var courseController = {
         var namecourse=$('#namecourse').val();
         var description=$('#description').val();
         var semester_id=$('#semester_id').val();
-        var title=$('#title').val();
         var subject_id=$('#subject_id').val();
-        var name = $('#name').val();
-        var idfacl =$('#IDfacl').val();
-        var namefacl =$('#facultyname').val();
         var idteacher =$('#IDteacher').val();
-        var nameteacher = $('#teachername').val();
         var file = new FormData($('form').get(0));
-        var Course = {
-            ID: idcourse,
-            NAME: namecourse,
-            DESCRIPTION: description,
-            SEMESTER_ID: semester_id,
-            SUBJECT_ID: subject_id
-        };
-        var Teach = {
-            USER_ID:idteacher,
-            COURSE_ID: idcourse
-        };
         file.append("ID", idcourse);
         file.append("NAME", namecourse);
         file.append("DESCRIPTION", description);
@@ -272,22 +258,6 @@ var courseController = {
             }
         })
     },
-    GetNameSubject: function () {
-        $.ajax({
-            url: '/Admin/Course/GetNameSubject',
-            type: 'GET',
-            dataType: 'json',
-            success: function (response) {
-                var data = response.data;
-                for (var i = 0; i < data.length; i++) {
-                    var optsubject = new Option(data[i].NAME);
-                    $(optsubject).data('idOptionsubject', data[i].ID);
-                    $('#name').append(optsubject);
-                }
-
-            }
-        })
-    },
     GetFacultyID_NAME: function () {
         $.ajax({
             url: '/Admin/Teacher/GetFacultyID_NAME',
@@ -302,6 +272,26 @@ var courseController = {
                 }
 
             }
+        })
+    },
+    GetSubjectsInFaculty: function (id) {
+        return new Promise((res, rej) => {
+            $.ajax({
+                url: '/Admin/Course/GetSubjectsInFaculty',
+                type: 'POST',
+                data: { id: id },
+                dataType: 'json',
+                success: function (response) {
+                    var data = response.data[0];
+                    $('#namesubject').html('')
+                    for (var j = 0; j < data.SUBJECTs.length; j++) {
+                        var optsubject = new Option(data.SUBJECTs[j].NAMESUBS);
+                        $(optsubject).data('idOptionsubject', data.SUBJECTs[j].IDSUBS);
+                        $('#namesubject').append(optsubject);
+                    }
+                    res(true)
+                }
+            })
         })
     },
     GetTeacherInFaculty:  function (id) {
@@ -332,7 +322,7 @@ var courseController = {
         $('#semester_id').val('');
         $('#title').val('');
         $('#subject_id').val('');
-        $('#name').val('');
+        $('#namesubject').val('');
         $('#IDfacl').val('');
         $('#facultyname').val('');
         $('#IDteacher').val('');
