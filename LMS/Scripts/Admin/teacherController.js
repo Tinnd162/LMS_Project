@@ -7,6 +7,7 @@ var teacherController = {
 		teacherController.GetTeacher();
 		teacherController.registerEvent();
 		teacherController.GetFacultyID_NAME();
+		teacherController.validate();
 	},
 	registerEvent: function () {
 		$(document).stop().on('click', '.btn-delete-Teacher', function () {
@@ -58,6 +59,30 @@ var teacherController = {
 			teacherController.GetTeacher(true);
 		})
 	},
+	validate: function () {
+		$('#frmSaveDataTeacher').validate({
+			rules: {
+				first_name: "required",
+				last_name: "required",
+				middle_name: "required",
+				phone_no: "required",
+				sex: "required",
+				dob: "required",
+				mail: "required",
+				facultyname: "required",
+			},
+			messages: {
+				first_name: "Tên không được để trống",
+				last_name: "Tên không được để trống",
+				middle_name: "Tên không được để trống",
+				phone_no: "Số điện thoại không được để trống",
+				sex: "Giới tính không được để trống",
+				dob: "Ngày sinh không được để trống",
+				mail: "Email không được để trống",
+				facultyname: "Thông tin khoa không được để trống",
+			},
+		})
+	},
 	UpLoad: function () {
 		var file = new FormData($('form').get(0));
 		$.ajax({
@@ -68,15 +93,15 @@ var teacherController = {
 			processData: false,
 			success: function (response) {
 				if (response.status == true) {
-					alert("thanh cong");
+					bootbox.alert("Thành công");
+				}
+				else if (response.status == false) {
+					bootbox.alert("Không có file đính kèm");
 				}
 				else {
-					alert("bai");
+					bootbox.alert("Định dạng file không đúng")
 				}
 			},
-			error: function (err) {
-				alert(err);
-			}
 		})
 	},
 	Save: function () {

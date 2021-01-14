@@ -7,18 +7,9 @@ var subjectsController = {
         subjectsController.GetSubjects();
         subjectsController.registerEvent();
         subjectsController.GetFacultyID_NAME();
+        subjectsController.validate();
     },
     registerEvent: function () {
-        $('#frmSaveData-Subjects').validate({
-            rules: {
-                subjectsname: "required",
-                description: "required",
-            },
-            messages: {
-                subjectsname: "Tên môn học không được để trống",
-                description: "Mô tả không được để trống",
-            }
-        })
         $(document).stop().on('click', '.btn-delete-Subjects', function (e) {
             var id = $(this).data('id');
             bootbox.confirm("Bạn có chắc chắn muốn xóa?", function (result) {
@@ -38,6 +29,7 @@ var subjectsController = {
             }
         })
         $(document).stop().on('click', '#btnAdd-Subjects', function () {
+            $('#frmSaveData-Subjects').validate().resetForm();
             $('#SubjectsUpdateDetail').modal('show');
             subjectsController.Reset();
         })
@@ -67,6 +59,21 @@ var subjectsController = {
             var optionSelected = $(this).find("option:selected");
             var id = optionSelected.data("idOption");
             $('#IDfacl').val(id);
+        })
+    },
+    validate: function () {
+        $('#frmSaveData-Subjects').validate({
+            rules: {
+                subjectsname: "required",
+                description: "required",
+                facultyname: "required",
+                IDfacl: "required",
+            },
+            messages: {
+                subjectsname: "Tên môn học không được để trống",
+                description: "Mô tả không được để trống",
+                facultyname: "Khoa không được để trống",
+            }
         })
     },
     GetSubjects: function (changePageSize)
@@ -115,7 +122,7 @@ var subjectsController = {
             dataType: 'json',
             success: function (response) {
                 if (response.status == true) {
-                    bootbox.alert("Xóa thành công!", function () {
+                    bootbox.alert("Thành công", function () {
                         console.log(response.total)
                         subjectsController.GetSubjects(true);
                     })
@@ -167,7 +174,7 @@ var subjectsController = {
             dataType: 'json',
             success: function (response) {
                 if (response.status == true) {
-                    bootbox.alert("Lưu thành công", function () {
+                    bootbox.alert("Thành công", function () {
                         $('#SubjectsUpdateDetail').modal('hide');
                         subjectsController.GetSubjects(true);
                     })
@@ -185,6 +192,7 @@ var subjectsController = {
         $('#IDsub').val('0');
         $('#name').val('');
         $('#description').val('');
+        $('#description').clear
         $('#facultyname').val('');
 
     },
@@ -221,7 +229,7 @@ var subjectsController = {
             dataType: 'json',
             success: function (response) {
                 if (response.status == true) {
-                    bootbox.alert("Xóa thành công")
+                    bootbox.alert("Thành công")
                 }
             }
         });

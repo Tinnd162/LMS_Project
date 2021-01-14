@@ -8,27 +8,9 @@ var courseController = {
         courseController.registerEvent();
         courseController.GetNameSemester();
         courseController.GetFacultyID_NAME();
-        
+        courseController.validate();
     },
     registerEvent: function () {
-        $('#frmSaveData-Course').validate({
-            rules: {
-                coursename: "required",
-                description: "required",
-                semestername: "required",
-                subjectname: "required",
-                facultyname: "required",
-                teachername: "required",
-            },
-            messages: {
-                coursename: "Tên học phần không được để trống",
-                description: "Mô tả không được để trống",
-                semestername: "Vui lòng chọn khóa học",
-                subjectname: "Vui lòng chọn môn học",
-                facultyname: "Vui lòng chọn khoa",
-                teachername: "Vui lòng chọn giảng viên",
-            }
-        })
         $(document).stop().on('change', '#title', function (e) {
             var optionSelected1 = $(this).find("option:selected");
             var id1 = optionSelected1.data("idOptionsemester");
@@ -65,9 +47,13 @@ var courseController = {
             });
         })
         $(document).stop().on('click', '#btnAdd-Course', function () {
+            $('#frmSaveData-Course').validate().resetForm();
             $('#CourseUpdateDetail').modal('show');
             courseController.reset();
            
+        })
+        $(document).stop().on('click', 'btnCancel-InfoTeacher', function (){
+            $('#frmSaveData-Course').validate().resetForm();
         })
         $(document).stop().on('click', '.btn-delete-Student', function () {
             var id = $(this).data('id');
@@ -98,6 +84,28 @@ var courseController = {
             if (e.which == 13) {
                 courseController.GetCourse(true);
             }
+        })
+    },
+    validate: function () {
+        $('#frmSaveData-Course').validate({
+            rules: {
+                idcourse: "required",
+                coursename: "required",
+                description: "required",
+                semestername: "required",
+                subjectname: "required",
+                facultyname: "required",
+                teachername: "required",
+            },
+            messages: {
+                idcourse: "Mã học phần không được để trống",
+                coursename: "Tên học phần không được để trống",
+                description: "Mô tả không được để trống",
+                semestername: "Vui lòng chọn khóa học",
+                subjectname: "Vui lòng chọn môn học",
+                facultyname: "Vui lòng chọn khoa",
+                teachername: "Vui lòng chọn giảng viên",
+            },
         })
     },
     GetCourse: function (changePageSize)
