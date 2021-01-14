@@ -125,30 +125,38 @@ namespace DAL.DAO
         }
         public COURSE GetCourseByID(string id)
         {
+            try
             {
-                COURSE s = db.COURSEs.FirstOrDefault(x => x.ID == id);
-                return new COURSE()
                 {
-                    ID = s.ID,
-                    NAME = s.NAME,
-                    DESCRIPTION = s.DESCRIPTION,
-                    SEMESTER_ID = s.SEMESTER_ID,
-                    SEMESTER = new SEMESTER { TITLE = s.SEMESTER.TITLE},
-                    C_USER = s.C_USER.Select(u => new C_USER
+                    COURSE s = db.COURSEs.First(x => x.ID == id);
+                    return new COURSE()
                     {
-                        ID = u.ID,
-                        FIRST_NAME = u.FIRST_NAME,
-                        LAST_NAME = u.LAST_NAME,
-                        MIDDLE_NAME = u.MIDDLE_NAME
-                    }).ToList(),
-                    TOPICs = s.TOPICs.Select(t => new TOPIC
-                    {
-                        ID = t.ID,
-                        TITLE = t.TITLE,
-                        DESCRIPTION = t.DESCRIPTION
-                    }).ToList()
-                };
+                        ID = s.ID,
+                        NAME = s.NAME,
+                        DESCRIPTION = s.DESCRIPTION,
+                        SEMESTER_ID = s.SEMESTER_ID,
+                        SEMESTER = new SEMESTER { TITLE = s.SEMESTER.TITLE },
+                        C_USER = s.C_USER.Select(u => new C_USER
+                        {
+                            ID = u.ID,
+                            FIRST_NAME = u.FIRST_NAME,
+                            LAST_NAME = u.LAST_NAME,
+                            MIDDLE_NAME = u.MIDDLE_NAME
+                        }).ToList(),
+                        TOPICs = s.TOPICs.Select(t => new TOPIC
+                        {
+                            ID = t.ID,
+                            TITLE = t.TITLE,
+                            DESCRIPTION = t.DESCRIPTION
+                        }).ToList()
+                    };
+                }
             }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+            
         }
         public List<COURSE> GetCOURSEs()
         {

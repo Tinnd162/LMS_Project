@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using DAL.DAO;
@@ -66,7 +67,7 @@ namespace LMS.Areas.Student.Controllers
                                 dV.assScore = (float)submit.ASSESSMENT.SCORE;
                                 dView.Add(dV);
                             }
-                            
+
                         }
 
                     }
@@ -132,6 +133,34 @@ namespace LMS.Areas.Student.Controllers
             ListEvent = ListEvent.Where(s => s.eventID == event_id);
             return View(ListEvent.ToList());
         }
+
+        //public async Task<JsonResult> Submit()
+        //{
+        //    DocumentDAO docDao = new DocumentDAO();
+        //    DOCUMENT doc = new DOCUMENT();
+        //    doc.TOPIC_ID = TopicID;
+        //    doc.ID = DocID;
+
+
+        //    FileStream stream;
+        //    if (file != null)
+        //    {
+        //        // string a = file.FileName;
+        //        //string b = file.ContentType;
+        //        string path = Path.Combine(Server.MapPath("~/Content/tempFile"), file.FileName);
+        //        file.SaveAs(path);
+        //        stream = new FileStream(Path.Combine(path), FileMode.Open);
+        //        await Task.Run(() => Upload(stream, file.FileName, path));
+        //        doc.TITLE = file.FileName;
+        //        doc.LINK = CommonConstants.linkFile;
+        //        if (docDao.InsertDocument(doc))
+        //        {
+
+        //            return Json(new { status = true, file = new { filename = file.FileName, link = CommonConstants.linkFile } });
+        //        }
+        //    }
+        //    return Json(new { status = false });
+
+        //}
     }
-    
 }
