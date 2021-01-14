@@ -20,10 +20,6 @@ namespace LMS.Areas.Student.Controllers
         //}
         public ActionResult GetTopicStudent(string course_id)
         {
-            return View();
-        }
-        public ActionResult GetTopicStudent(string course_id)
-        {
             CommonFunc cFunc = new CommonFunc();
             TopicDAO TopicDAO = new TopicDAO();
             var ListTopic = TopicDAO.GetCourseDetailByStuAndCourseAndSubject(cFunc.GetIdUserBySession(), course_id, cFunc.GetIdSemesterBySession());
