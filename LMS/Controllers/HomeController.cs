@@ -72,6 +72,10 @@ namespace LMS.Controllers
             return sbHash.ToString();
         }
 
+        public ActionResult Error2()
+        {
+            return View();
+        }
      
     }
 

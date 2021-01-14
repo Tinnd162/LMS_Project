@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using DAL.DAO;
@@ -18,7 +19,7 @@ namespace LMS.Areas.Student.Controllers
         {
             return View();
         }
-        public ActionResult GetTopicStudent(string course_id ,string semester_id = "20211", string user_id = "U00008")
+        public ActionResult GetTopicStudent(string course_id, string semester_id = "20211", string user_id = "U00008")
         {
             TopicDAO TopicDAO = new TopicDAO();
             var ListTopic = TopicDAO.GetCourseDetailByStuAndCourseAndSubject(user_id, course_id, semester_id);
@@ -68,7 +69,7 @@ namespace LMS.Areas.Student.Controllers
                                 dV.assScore = (float)submit.ASSESSMENT.SCORE;
                                 dView.Add(dV);
                             }
-                            
+
                         }
 
                     }
@@ -80,7 +81,7 @@ namespace LMS.Areas.Student.Controllers
             return View(ListEvent.ToList());
 
         }
-        public ActionResult GetSubmitDetailsByStudentAndEvent(string event_id,string user_id = "U00008", string course_id = "MATH143001_20211_1", string semester_id = "20211")
+        public ActionResult GetSubmitDetailsByStudentAndEvent(string event_id, string user_id = "U00008", string course_id = "MATH143001_20211_1", string semester_id = "20211")
         {
             SubmitDAO DAO = new SubmitDAO();
             List<COURSE> courses = DAO.GetSubmitAssessmentByStuAndCourseAndSem(user_id, course_id, semester_id);
@@ -134,6 +135,34 @@ namespace LMS.Areas.Student.Controllers
             ListEvent = ListEvent.Where(s => s.eventID == event_id);
             return View(ListEvent.ToList());
         }
+
+        //public async Task<JsonResult> Submit()
+        //{
+        //    DocumentDAO docDao = new DocumentDAO();
+        //    DOCUMENT doc = new DOCUMENT();
+        //    doc.TOPIC_ID = TopicID;
+        //    doc.ID = DocID;
+
+
+        //    FileStream stream;
+        //    if (file != null)
+        //    {
+        //        // string a = file.FileName;
+        //        //string b = file.ContentType;
+        //        string path = Path.Combine(Server.MapPath("~/Content/tempFile"), file.FileName);
+        //        file.SaveAs(path);
+        //        stream = new FileStream(Path.Combine(path), FileMode.Open);
+        //        await Task.Run(() => Upload(stream, file.FileName, path));
+        //        doc.TITLE = file.FileName;
+        //        doc.LINK = CommonConstants.linkFile;
+        //        if (docDao.InsertDocument(doc))
+        //        {
+
+        //            return Json(new { status = true, file = new { filename = file.FileName, link = CommonConstants.linkFile } });
+        //        }
+        //    }
+        //    return Json(new { status = false });
+
+        //}
     }
-    
 }
