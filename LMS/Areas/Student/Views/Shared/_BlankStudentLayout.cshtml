@@ -11,10 +11,9 @@
     <link href="~/Content/Teacher/style.css" rel="stylesheet" />
     <link href="~/Content/jquery.datetimepicker.css" rel="stylesheet" />
     <script src="https://kit.fontawesome.com/9dbbecbb49.js" crossorigin="anonymous"></script>
-
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="~/Scripts/jquery.datetimepicker.full.js"></script>
+
 </head>
 
 <body>
@@ -39,7 +38,7 @@
                                 <ul class="nav navbar-nav ml-auto">
                                     <li>
                                         <a class="nav-link" href="#" style="display:flex; flex-direction: row" id="zoomOut">
-                                            <span class="mr-2">Tên ở đây ...</span>
+                                            <span class="mr-2">@Session["UserName"]</span>
                                             <i class="fas fa-user-circle fa-2x"></i>
                                         </a>
                                     </li>
@@ -54,28 +53,27 @@
                         @RenderBody()
                     </div>
                     <!--right side bar-->
-                    <div id="rightbar">2134</div>
+                    <div id="rightbar">
+                        <div id="clock"></div>
+                    </div>
                 </div>
             </div>
         </div>
         <!--Footer-->
         <div id="footer">
-            Chỗ này để footer
+            @RenderPage("~/Views/Shared/_Footer.cshtml", new { area = "" })
         </div>
     </div>
 
 
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-    <script src="~/Scripts/mustache.min.js"></script>
 
     <!--////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
-    <script src="~/Scripts/Teacher/document.js"></script>
-    <script src="~/Scripts/Teacher/event.js"></script>
-    <script src="~/Scripts/Teacher/topic.js"></script>
     <script src="~/Scripts/common.js"></script>
     <!--////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
-
+    @RenderSection("script_editProfile", false)
+    @RenderSection("script_submit", false)
     <script type="text/javascript">
 
         $(document).ready(function () {
@@ -85,51 +83,8 @@
             });
 
             activeLinkControls()
+            clock()
 
-            showCardAddTopic()
-            hideCardAddTopic()
-            removeTopic()
-
-            //////////////////////////////
-
-            PostAndRenderTopic()
-
-            ///////////////document//////////////////////////////
-
-            showCardAddDocInCardAddTopic()
-            hideCardAddDocInCardAddTopic()
-            addDocInCardAddTopic()
-            removeDocChildInCardAddtopic()
-            editDocChildInCardAddtopic()
-            closeFormEditDocChildInCardAddtopic()
-            editDocChildContentInCardAddTopic()
-
-            ///////////////////////////////////////////////
-            hideCardAddDocInCardTopicAdded()
-            addDocInCardTopicAdded()
-            removeDocChildInTopicAdded()
-            editDocChildInTopicAdded()
-            closeFormEditDocChildInTopicAdded()
-            editDocChildContentInTopicAdded()
-
-
-            ///////////event//////////////////////////////////////
-            showCardAddEvent()
-            hideCardAddEventInCardAddTopic()
-            addEventInCardAddTopic()
-            removeEventChildInCardAddtopic()
-            editEventChild()
-            closeFormEditEventChildInCardAddtopic()
-            editEventChildContentInCardAddTopic()
-            editEventChildInCardAddtopic()
-            /////////////////////////////////////////////////
-
-            hideCardAddEventInCardTopicAdded()
-            addEventInTopicAdded()
-            removeEventChildInTopicAdded()
-            editEventChildInTopicAdded()
-            closeFormEditEventChildInTopicAdded()
-            editEventChildContentInTopicAdded()
         });
 
 
@@ -140,7 +95,25 @@
             })
         }
 
-
+        function clock() {
+            clockUpdate()
+            setInterval(clockUpdate, 1000)
+        }
+        function clockUpdate() {
+            let date = new Date()
+            let h = addZero(Hour24th(date.getHours()))
+            let m = addZero(date.getMinutes())
+            let s = addZero(date.getSeconds())
+            $("#clock").text('Clock: ' + h + ':' + m + ':' + s)
+        }
+        function addZero(x) {
+            if (x < 10) return x = '0' + x;
+            else return x
+        }
+        function Hour24th(x) {
+            if (x >= 24) return x = x - 24
+            else return x
+        }
 
     </script>
 </body>

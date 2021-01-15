@@ -8,6 +8,9 @@
 <ul class="list-unstyled components">
     <p>@Model.TITLE </p>
     <li>
+        <a href="/Student/Home/Index"aria-expanded="false">Deadline</a>
+    </li>
+    <li>
         <a href="#subjectSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Môn học</a>
         <ul class="collapse list-unstyled" id="subjectSubmenu">
             @{ Html.RenderAction("Subjects", "MenuSideBar", new { area = "Student" });}

@@ -1,7 +1,21 @@
 ﻿@model DAL.EF.C_USER
+@using LMS.Common;
+@using LMS.Models;
 @{
+    Session user = Session[CommonConstants.SESSION] as Session;
+    if (user.role == "ADMIN")
+    {
+        Layout = "~/Areas/Admin/Views/Shared/_BlankAdminLayout.cshtml";
+    }
+    else if (user.role == "TEACHER")
+    {
+        Layout = "~/Areas/Teacher/Views/Shared/_BlankTeacherLayout.cshtml";
+    }
+    else if (user.role == "STUDENT")
+    {
+        Layout = "~/Areas/Student/Views/Shared/_BlankStudentLayout.cshtml";
+    }
 
-    Layout = "~/Areas/Teacher/Views/Shared/_BlankTeacherLayout.cshtml";
 }
 
 
@@ -55,12 +69,12 @@
             <input type="email" class="form-control" id="email" placeholder="@Model.MAIL" value="@Model.MAIL">
         </div>
         <div class="d-flex justify-content-center"> <button type="submit" class="btn btn-primary m-3 pl-2 pr-2" id="editProfile">Sửa</button></div>
-       
+
     </form>
 </div>
 
 @section script_editProfile{
-    
+
     <script type="text/javascript">
         $(document).ready(
             updateInfo()
@@ -84,7 +98,7 @@
                     }
                 });
             });
-           
+
         }
 
     </script>

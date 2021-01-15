@@ -1,9 +1,21 @@
 ﻿@model DAL.EF.C_USER
-@using LMS.Common; 
+@using LMS.Common;
 @using LMS.Models;
 @{
-   // Layout = null;
-    Layout = "~/Areas/Teacher/Views/Shared/_BlankTeacherLayout.cshtml";
+    Session user = Session[CommonConstants.SESSION] as Session;
+    if (user.role == "ADMIN")
+    {
+        Layout = "~/Areas/Admin/Views/Shared/_BlankAdminLayout.cshtml";
+    }
+    else if (user.role == "TEACHER")
+    {
+        Layout = "~/Areas/Teacher/Views/Shared/_BlankTeacherLayout.cshtml";
+    }
+    else if (user.role == "STUDENT")
+    {
+        Layout = "~/Areas/Student/Views/Shared/_BlankStudentLayout.cshtml";
+    }
+
 }
 
 <div class="mr-4">
@@ -12,7 +24,7 @@
         <div class="pl-3">
             <h3 class="text-primary m-0">@Model.LAST_NAME @Model.MIDDLE_NAME @Model.FIRST_NAME</h3>
             <p style="color:#AAA" class="m-0">@Model.MAIL</p>
-        </div>     
+        </div>
     </div>
     <div class="mt-2 p-4 position-relative" style="background-color:#EEE">
 
@@ -64,5 +76,5 @@
             }
         </div>
     </div>
-   
+
 </div>

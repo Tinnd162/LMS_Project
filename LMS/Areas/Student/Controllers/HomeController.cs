@@ -10,7 +10,7 @@ using LMS.Common;
 
 namespace LMS.Areas.Student.Controllers
 {
-    //[CustomAuthorize("STUDENT")]
+    [CustomAuthorize("STUDENT")]
     public class HomeController : Controller
     {
         public ActionResult Index()

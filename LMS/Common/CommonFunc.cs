@@ -20,6 +20,8 @@ namespace LMS.Common
             s.id_user = userID;
             s.id_course = courseID;
             s.id_semester = semesterID;
+            RoleDAO rDao = new RoleDAO();
+            s.role = rDao.GetRoles(userID).Select(x => x.ROLE1).ToList()[0];
             HttpContext.Current.Session[CommonConstants.SESSION] = s;
         }
 

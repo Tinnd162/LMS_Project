@@ -1,63 +1,48 @@
-﻿@model List<DAL.StudentView.CourseDetailsView>
+﻿@model DAL.StudentView.CourseDetailsView
 @{
     ViewBag.Title = "GetTopicStudent";
     Layout = "~/Areas/Student/Views/Shared/_BlankStudentLayout.cshtml";
 }
-
-@if (Model.Count == 0)
-{
-    <h3 style="color:#aaa">Không có topic để hiển thị !</h3>
-}
-else
-{
-    <li>
-        <a href="~/Student/Home/Index">Trang chủ</a> / <a href="~/Student/Subject/GetTopicStudent?course_id=@Model[0].courseID">@Model[0].courseName</a>
-    </li>
-    <h2>@Model[0].courseName</h2>
-    <h3>@Model[0].courseDescription</h3>
-    <div class="card">
-        @foreach (var item in Model)
-        {
-            <div class="card-header">
-                <p>@item.topicTitle</p>
-            </div>
-            foreach (var i in Model.Where(s => s.topicID == item.topicID))
-            {
-                <div class="card-body">
-                    <blockquote class="blockquote mb-0">
-                        <div class="card">
-                            <div class="card-header">
-                                @i.documentTitle
-                            </div>
-                            <div class="card-body">
-                                <blockquote class="blockquote mb-0">
-                                    <p>@i.documentDescription</p>
-                                    <p>@i.documentLink</p>
-                                </blockquote>
-                            </div>
-                        </div>
-                    </blockquote>
-                </div>
-            }
-            foreach (var i in Model.Where(s => s.topicID == item.topicID))
-            {
-                <div class="card-body">
-                    <blockquote class="blockquote mb-0">
-                        <div class="card">
-                            <div class="card-header">
-                                @i.eventTitle
-                            </div>
-                            <div class="card-body">
-                                <blockquote class="blockquote mb-0">
-                                    <p>Hạn chót: @i.eventDeadline</p>
-                                </blockquote>
-                            </div>
-                        </div>
-                    </blockquote>
-                </div>
-            }
-        }
+<div class="position-relative pr-4">
+    <div style="height:12rem; background-size:cover; background:url('/Content/Common/course-banner.jpg') no-repeat center;" class="mb-5 pr-4">
     </div>
-}
+    <h2 class="position-absolute text-light pl-5 pr-2" style="top:2rem; background-color:#465c9e;">@Model.course.NAME</h2>
+    <div>@Model.course.DESCRIPTION</div>
+    @if (Model.topics.Count == 0)
+    {
+        <h4 style="color:#aaa">Không có topic để hiển thị !</h4>
+    }
+    else
+    {
+        <div class="card p-4">
+            @foreach (var item in Model.topics)
+            {
+                <div class="pb-5 border-bottom border-primary">
+                    <div class="pb-2 border-bottom mb-3 ml-2 mr-2">
+                        <h5>@item.TITLE</h5>
+                        <p>@item.DESCRIPTION</p>
+                    </div>
+                    <div class="pr-2 pl-2">
+                        @foreach (var doc in item.DOCUMENTs)
+                        {
+                            <div class="d-flex">
+                                <div><img src="~/Content/Common/file.svg" style="height:20px" /></div>
+                                <div class="pl-2"> <a href="@doc.LINK" target="_blank" aria-label="Add submission">@doc.TITLE</a></div>
+                            </div>
+                        }
+                        @foreach (var ev in item.EVENTs)
+                        {
+                            <div class="d-flex">
+                                <div><img src="~/Content/Common/iconTask.svg" style="height:20px" /></div>
+                                <div class="pl-2"><a href="~/Student/Subject/Submit?event_id=@ev.ID" aria-label="Đến trang nộp bài">@ev.TITLE</a></div>
+                            </div>
+                        }
+                    </div>
+                </div>       
+            }
+        </div>
+    }
+</div>
+
 
 
