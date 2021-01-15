@@ -191,7 +191,7 @@ var courseController = {
                 id: id
             },
             type: 'POST',
-            dataType: 'json'
+            dataType: 'json '
         }).done(function (response) {
             if (response.status == true) {
                 var data = response.data[0];

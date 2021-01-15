@@ -137,7 +137,7 @@ var teacherController = {
 			success: function (response) {
 				if (response.status == true) {
 					bootbox.alert("Thành công", function () {
-						$('#frmSaveDataTeacher').modal('hide');
+						$('#InfoUpdateTeacher').modal('hide');
 						teacherController.GetTeacher(true);
 					})
 				} else {
@@ -253,6 +253,7 @@ var teacherController = {
 					$('#facultyname').val(data.FACULTY.NAME);
 					$('#IDfacl').val(data.FACULTY.ID);
 				}
+				
 			}
 		})
 	},

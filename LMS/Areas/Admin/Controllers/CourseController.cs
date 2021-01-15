@@ -117,9 +117,9 @@ namespace LMS.Areas.Admin.Controllers
             {
                 data = model,
                 status = true
-            });
+            },JsonRequestBehavior.AllowGet);
         }
-        public JsonResult InfoCourse(string idcourse)
+        public JsonResult InfoCourse(string idcourse = "AEES330233")
         {
             var course = new CourseDAO().InfoTeacherStudentInCourse(idcourse);
             return Json(new
