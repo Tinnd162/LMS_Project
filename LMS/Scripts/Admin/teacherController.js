@@ -136,7 +136,7 @@ var teacherController = {
 			dataType: 'json',
 			success: function (response) {
 				if (response.status == true) {
-					bootbox.alert("Sửa thành công!", function () {
+					bootbox.alert("Thành công", function () {
 						$('#frmSaveDataTeacher').modal('hide');
 						teacherController.GetTeacher(true);
 					})
