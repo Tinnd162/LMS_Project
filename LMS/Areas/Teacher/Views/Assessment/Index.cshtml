@@ -15,12 +15,14 @@
         else return "Hết hạn !";
     }
  }
-<div id="all-event">
-    
-    <div class="mb-4"><h5>Các sự kiện của môn học :</h5></div>
+<div id="all-event" class=" mr-4">
+    <div style="background-color:#465c9e;" class="pl-3 pt-2 pb-2">
+        <h4 class="text-light mb-0">@Model[0].TOPIC.COURSE.NAME</h4>
+    </div>
+    <div class="mb-4  pl-2 mt-2"><h5>Các sự kiện của môn học :</h5></div>
     @foreach (var ev in Model)
     {       
-        <div class=" text-dark bg-light mr-4 mb-4 d-block">
+        <div class=" text-dark bg-light mb-4 d-block">
             <div id="@ev.ID" class="itemEvent mb-2" style="box-shadow: 5px 5px 5px #DDD;">
                 <div class="itemEventContent card-body pt-0 pb-1 pl-0 pr-0 ml-5 mr-4 position-relative d-flex flex-column">
                     <div class="ml-auto mt-2 position-absolute" style="right:0px; top:0px">
