@@ -4,10 +4,10 @@
 }
 var studentController = {
 	init: function () {
-		console.log($('form'));
 		studentController.GetStudent();
 		studentController.registerEvent();
 		studentController.GetFacultyID_NAME();
+		studentController.validate();
 	},
 	registerEvent: function () {
 		$(document).stop().on('click', '.btn-delete-Student', function () {
@@ -67,6 +67,32 @@ var studentController = {
 			studentController.GetStudent();
         })
 	},
+	validate: function () {
+		$('#frmSaveDataStudent').validate({
+			rules: {
+				first_name: "required",
+				last_name: "required",
+				middle_name: "required",
+				phone_no: "required",
+				sex: "required",
+				dob: "required",
+				mail: "required",
+				facultyname: "required",
+				classname: "required",
+			},
+			messages: {
+				first_name: "Tên không được để trống",
+				last_name: "Tên không được để trống",
+				middle_name: "Tên không được để trống",
+				phone_no: "Số điện thoại không được để trống",
+				sex: "Giới tính không được để trống",
+				dob: "Ngày sinh không được để trống",
+				mail: "Email không được để trống",
+				facultyname: "Thông tin khoa không được để trống",
+				classname: "Thông tin lớp không được để trống",
+			},
+		})
+	},
 	UpLoad: function () {
 		var file = new FormData($('form').get(0));
 		$.ajax({
@@ -77,7 +103,7 @@ var studentController = {
 			processData: false,
 			success: function (response) {
 				if (response.status == true) {
-					bootbox.alert("Thêm sinh viên thành công");
+					bootbox.alert("Thành công");
 				}
 				else if (response.status == false) {
 					bootbox.alert("Không có file đính kèm");
@@ -122,8 +148,8 @@ var studentController = {
 			dataType: 'json',
 			success: function (response) {
 				if (response.status == true) {
-					bootbox.alert("Xóa thành công!", function () {
-						$('#frmSaveDataStudent').modal('hide');
+					bootbox.alert("Thành công", function () {
+						$('#InfoUpdateStudent').modal('hide');
 						studentController.GetStudent(true);
 					})
 				} else {
@@ -210,7 +236,7 @@ var studentController = {
 			dataType: 'json',
 			success: function (response) {
 				if (response.status == true) {
-					bootbox.alert("Xóa thành công", function () {
+					bootbox.alert("Thành công", function () {
 						studentController.GetStudent(true);
 					})
 				}
@@ -326,7 +352,7 @@ var studentController = {
 			dataType: 'json',
 			success: function (response) {
 				if (response.status == true) {
-					bootbox.alert("Xóa thành công", function () {
+					bootbox.alert("Thành công", function () {
 						$('#InfoStudent').modal('hide');
 					})
 				}

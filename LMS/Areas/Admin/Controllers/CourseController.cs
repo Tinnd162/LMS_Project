@@ -158,8 +158,8 @@ namespace LMS.Areas.Admin.Controllers
                 objbulk.ColumnMappings.Add("DoB", "DoB");
                 objbulk.ColumnMappings.Add("MAIL", "MAIL");
                 objbulk.ColumnMappings.Add("PASSWORD", "PASSWORD");
-                objbulk.ColumnMappings.Add("CLASS_ID", "CLASS_ID");
-                objbulk.ColumnMappings.Add("FACULTY_ID", "FACULTY_ID");
+                objbulk.ColumnMappings.Add("CLASS", "CLASS_ID");
+                objbulk.ColumnMappings.Add("FACULTY", "FACULTY_ID");
                 con.Open();
                 objbulk.WriteToServer(dt);
                 con.Close();
@@ -179,7 +179,7 @@ namespace LMS.Areas.Admin.Controllers
             {
                 sqlBulkCopy.DestinationTableName = "LEARNS";
                 sqlBulkCopy.ColumnMappings.Add("ID", "USER_ID");
-                sqlBulkCopy.ColumnMappings.Add("COURSE_ID", "COURSE_ID");
+                sqlBulkCopy.ColumnMappings.Add("COURSE", "COURSE_ID");
                 con.Open();
                 sqlBulkCopy.WriteToServer(dt);
                 con.Close();

@@ -6,19 +6,9 @@ var semesterController = {
     init: function () {
         semesterController.GetSemester();
         semesterController.registerEvent();
+        semesterController.validate();
     },
     registerEvent: function () {
-        $('#frmSaveData-Semester').validate({
-            rules: {
-                semestername: "required",
-                description: "required",
-            },
-            messages: {
-                semestername: "Tên học kỳ không được để trống",
-                description: "Mô tả không được để trống",
-            }
-        })
-
         $(document).stop().on('click', '#btnSave-Semester', function () {
             if ($('#frmSaveData-Semester').valid()) {
                 semesterController.Save();
@@ -53,6 +43,7 @@ var semesterController = {
             })
         })
         $(document).stop().on('click', '#btnAdd-Semester', function () {
+            $('#frmSaveData-Semester').validate().resetForm();
             $('#InfoSemester').modal('show');
             semesterController.reset();
         })
@@ -65,7 +56,18 @@ var semesterController = {
             }
         })
     },
-
+    validate: function () {
+        $('#frmSaveData-Semester').validate({
+            rules: {
+                semestername: "required",
+                description: "required",
+            },
+            messages: {
+                semestername: "Tên học kỳ không được để trống",
+                description: "Mô tả không được để trống",
+            }
+        })
+    },
     GetSemester: function (changePageSize) {
         var name = $('#txtSearch').val();
         $.ajax({
@@ -155,7 +157,7 @@ var semesterController = {
             dataType: 'json',
             success: function (response) {
                 if (response.status == true) {
-                    bootbox.alert("Xóa thành công", function () {
+                    bootbox.alert("Thành công", function () {
                         semesterController.GetSemester(true);
                     })
                 }
@@ -178,7 +180,7 @@ var semesterController = {
             dataType: 'json',
             success: function (response) {
                 if (response.status == true) {
-                    bootbox.alert("Thêm thành công!", function () {
+                    bootbox.alert("Thành công", function () {
                         $('#InfoSemester').modal('hide');
                         semesterController.GetSemester(true);
                     })
@@ -200,7 +202,7 @@ var semesterController = {
             dataType: 'json',
             success: function (response) {
                 if (response.status == true) {
-                    bootbox.alert("Xóa thành công")
+                    bootbox.alert("Thành công")
                 }
             }
         });

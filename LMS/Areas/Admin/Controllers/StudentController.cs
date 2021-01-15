@@ -181,8 +181,8 @@ namespace LMS.Areas.Admin.Controllers
                 objbulk.ColumnMappings.Add("DoB", "DoB");
                 objbulk.ColumnMappings.Add("MAIL", "MAIL");
                 objbulk.ColumnMappings.Add("PASSWORD", "PASSWORD");
-                objbulk.ColumnMappings.Add("CLASS_ID", "CLASS_ID");
-                objbulk.ColumnMappings.Add("FACULTY_ID", "FACULTY_ID");
+                objbulk.ColumnMappings.Add("CLASS", "CLASS_ID");
+                objbulk.ColumnMappings.Add("FACULTY", "FACULTY_ID");
                 con.Open();
                 objbulk.WriteToServer(dt);
                 con.Close();
