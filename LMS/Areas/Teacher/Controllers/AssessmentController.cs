@@ -68,6 +68,12 @@ namespace LMS.Areas.Teacher.Controllers
             return Json(new { success = false });
         }
 
-
+        public ActionResult StudentProcess(string student_id, string course_id)
+        {
+            CommonFunc cFunc = new CommonFunc();
+            SubmitDAO subDAO = new SubmitDAO();
+            COURSE course = subDAO.GetCourseWithEventAndSubmmit(student_id, course_id);
+            return View(course);
+        }
     }
 }

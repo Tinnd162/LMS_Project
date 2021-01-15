@@ -74,6 +74,18 @@ namespace DAL.DAO
                         STARTDATE = ev.STARTDATE,
                         DEADLINE = ev.DEADLINE,
                         TOPIC_ID = ev.TOPIC_ID,
+                        TOPIC = new TOPIC
+                        {
+                            ID = ev.TOPIC.ID,
+                            TITLE = ev.TOPIC.TITLE,
+                            DESCRIPTION = ev.TOPIC.DESCRIPTION,
+                            COURSE_ID = ev.TOPIC.COURSE_ID,
+                            COURSE = new COURSE
+                            {
+                                NAME = ev.TOPIC.COURSE.NAME,
+                                DESCRIPTION = ev.TOPIC.COURSE.DESCRIPTION
+                            }
+                        },
                         SUBMITs = ev.SUBMITs.Select(s => new SUBMIT
                         {
                             ID = s.ID,

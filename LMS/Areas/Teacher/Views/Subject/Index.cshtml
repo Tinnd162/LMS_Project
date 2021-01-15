@@ -234,7 +234,7 @@
             <p>Danh sách sinh viên  :</p>
             @foreach (var u in Model.C_USER)
             {
-                <a href="#" style="color:darkblue; display:block; font-weight:400;">@u.LAST_NAME @u.MIDDLE_NAME @u.FIRST_NAME</a>
+                <a href="/Teacher/Assessment/StudentProcess?student_id=@u.ID&course_id=@Model.ID" style="color:darkblue; display:block; font-weight:400;" aria-label="Quá trình học tập">@u.LAST_NAME @u.MIDDLE_NAME @u.FIRST_NAME</a>
             }
         </div>
     </div>

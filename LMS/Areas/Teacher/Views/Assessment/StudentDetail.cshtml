@@ -21,33 +21,62 @@
             </tr>
             <tr>
                 <th scope="row">Bài nộp</th>
-            
-                @if (submit != null) {<td><a href="@submit.LINK" class="btn text-primary">link bài nộp</a></td>}
-                else {<td style="color:#CCC">Chưa nộp</td>}
+
+                @if (submit != null)
+                {
+                    <td><a href="@submit.LINK" class="btn text-primary">link bài nộp</a></td>
+}
+                else
+                {
+                    <td style="color:#CCC">Chưa nộp</td>
+}
             </tr>
             <tr>
                 <th scope="row">Thời gian nộp</th>
-                @if (submit != null) {<td>@submit.TIME</td>}
-                else {<td style="color:#CCC">Chưa nộp</td>}              
+                @if (submit != null)
+                {
+                    <td>@submit.TIME</td>
+}
+                else
+                {
+                    <td style="color:#CCC">Chưa nộp</td>
+}
             </tr>
-             
+
             <tr id="score" class="msg">
                 <th scope="row">Điểm</th>
-                @if (submit != null && submit.ASSESSMENT.SCORE >= 50) {<td class="sc text-success">@submit.ASSESSMENT.SCORE</td> }
-                else if (submit != null && submit.ASSESSMENT.SCORE < 50) { <td class="sc text-danger">@submit.ASSESSMENT.SCORE</td>}
-                else {<td style="color:#CCC" class="sc">Chưa chấm</td> }
-                <td><input rows="5" cols="50" id="inp-score" type="text" class="form-control d-none"/></td>
+                @if (submit != null && submit.ASSESSMENT.SCORE >= 50)
+                {
+                    <td class="sc text-success">@submit.ASSESSMENT.SCORE</td>
+ }
+                else if (submit != null && submit.ASSESSMENT.SCORE < 50)
+                {
+                    <td class="sc text-danger">@submit.ASSESSMENT.SCORE</td>
+}
+                else
+                {
+                    <td style="color:#CCC" class="sc">Chưa chấm</td>
+}
+                <td><input rows="5" cols="50" id="inp-score" type="text" class="form-control d-none" /></td>
             </tr>
             <tr id="cmt" class="msg">
                 <th scope="row">Lời phê</th>
-                @if (submit != null && submit.ASSESSMENT.COMMENT != null) {<td class="value">@submit.ASSESSMENT.COMMENT</td> }
-                else{<td class="value" style="color:#CCC">Chưa cho lời phê</td> }
-                <td><input id="inp-cmt" type="text" class="form-control d-none"/></td>
+                @if (submit != null && submit.ASSESSMENT.COMMENT != null)
+                {
+                    <td class="value">@submit.ASSESSMENT.COMMENT</td>
+ }
+                else
+                {
+                    <td class="value" style="color:#CCC">Chưa cho lời phê</td>
+}
+                <td><input id="inp-cmt" type="text" class="form-control d-none" /></td>
             </tr>
         </tbody>
     </table>
-    @if(submit != null) {<div id="showMsg" class="position-absolute text-light text-center p-0 pl-1 pr-1 bg-warning d-none">Click vào để thêm hoặc sửa</div>}
-    else { <div id="showMsg" class="position-absolute text-light text-center p-0 pl-1 pr-1 bg-warning d-none">Không thể cho điểm hoặc đánh giá khi chưa có bài nộp !</div>}
+    @if (submit != null)
+    {<div id="showMsg" class="position-absolute text-light text-center p-0 pl-1 pr-1 bg-warning d-none">Click vào để thêm hoặc sửa</div>}
+    else
+    { <div id="showMsg" class="position-absolute text-light text-center p-0 pl-1 pr-1 bg-warning d-none">Không thể cho điểm hoặc đánh giá khi chưa có bài nộp !</div>}
 </div>
 <div></div>
 

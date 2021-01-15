@@ -56,6 +56,8 @@ namespace DAL.DAO
             {
                 ID = x.ID,
                 NAME = x.NAME,
+                C_USER = x.C_USER.Where(u => u.ID == user_id).Select(u => new C_USER { FIRST_NAME = u.FIRST_NAME, LAST_NAME = u.LAST_NAME, MIDDLE_NAME = u.MIDDLE_NAME}).ToList(),
+
                 TOPICs = ((x.TOPICs.Count == 0) ? null : (x.TOPICs.Select(t => new TOPIC
                 {
                     EVENTs = ((t.EVENTs.Count() == 0) ? null : (t.EVENTs.Select(e => new EVENT

@@ -1,12 +1,13 @@
 ﻿@model DAL.EF.COURSE
 @{
-    ViewBag.Title = "GetSubjectAssessments";
-    Layout = "~/Areas/Student/Views/Shared/_BlankStudentLayout.cshtml";
+    ViewBag.Title = "StudentProcess";
+    Layout = "~/Areas/Teacher/Views/Shared/_BlankTeacherLayout.cshtml";
 }
 
 <div class="pr-4">
-    <div style="background-color:#465c9e;" class="pl-5 pt-2 pb-2">
-        <h4 class="text-light mb-0" >@Model.NAME</h4>
+    <div style="background-color:#465c9e;" class="pl-3 pt-2 pb-2">
+        <h4 class="text-light mb-0">Quá trình học tập</h4>
+        <h6 class="text-light mb-0 pl-2">@Model.NAME - @Model.C_USER.ToList()[0].LAST_NAME @Model.C_USER.ToList()[0].MIDDLE_NAME @Model.C_USER.ToList()[0].FIRST_NAME</h6>
     </div>
     <div>
         @if (Model.TOPICs != null)
@@ -27,7 +28,7 @@
                         foreach (var ev in topic.EVENTs)
                         {
                             <tr>
-                                <td><a href="/Student/Subject/Submit?event_id=@ev.ID" class="text-primary" aria-label="Đến trang nộp bài">@ev.TITLE</a></td>
+                                <td><a href="/Teacher/Assessment/Detail?eventID=@ev.ID&courseID=@Model.ID" class="text-primary" aria-label="Đến trang nộp bài">@ev.TITLE</a></td>
                                 @if (ev.SUBMITs == null)
                                 {
                                     <td>Chưa nộp</td>
@@ -40,7 +41,7 @@
                                     if (ev.SUBMITs.ToList()[0].ASSESSMENT == null)
                                     {
                                         <td>Chưa chấm</td>
-                                        <td>Chưa nhận xét</td>
+                                        <td>Chưa phê</td>
 
                                     }
                                     else
@@ -55,7 +56,7 @@
                                         }
                                         if (ev.SUBMITs.ToList()[0].ASSESSMENT.COMMENT == null)
                                         {
-                                            <td>Chưa nhận xét</td>
+                                            <td>Chưa phê</td>
                                         }
                                         else
                                         {
@@ -77,3 +78,4 @@
 
     </div>
 </div>
+

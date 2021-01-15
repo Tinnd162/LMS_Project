@@ -24,7 +24,11 @@ CKEDITOR.editorConfig = function( config ) {
 		{ name: 'others' },
 		{ name: 'about' }
 	];
-
+	config.language = 'vi';
+	config.htmlEncodeOutput = false;
+	config.entities = false;
+	config.entities_latin = false;
+	config.ForceSimpleAmpersand = true;
 	// The default plugins included in the basic setup define some buttons that
 	// are not needed in a basic editor. They are removed here.
 	config.removeButtons = 'Cut,Copy,Paste,Undo,Redo,Anchor,Underline,Strike,Subscript,Superscript';
