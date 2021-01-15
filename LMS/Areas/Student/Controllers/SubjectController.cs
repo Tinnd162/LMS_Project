@@ -1,174 +1,105 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using DAL.DAO;
 using DAL.EF;
 using DAL.StudentView;
+using Firebase.Auth;
+using Firebase.Storage;
 using LMS.Common;
+using LMS.Models;
 
 namespace LMS.Areas.Student.Controllers
 {
     [CustomAuthorize("STUDENT")]
     public class SubjectController : Controller
     {
-        // GET: Student/Subject
-        //public ActionResult Index()
-        //{
-        //    return View();
-        //}
-        public ActionResult GetTopicStudent(string course_id)
-        {
-            return View();
-        }
+
         public ActionResult GetTopicStudent(string course_id)
         {
             CommonFunc cFunc = new CommonFunc();
-            TopicDAO TopicDAO = new TopicDAO();
-            var ListTopic = TopicDAO.GetCourseDetailByStuAndCourseAndSubject(cFunc.GetIdUserBySession(), course_id, cFunc.GetIdSemesterBySession());
-            return View(ListTopic);
+            TopicDAO tDAO = new TopicDAO();
+            CourseDAO cDAO = new CourseDAO();
+            COURSE course = cDAO.GetCourseByID(course_id);
+            List<TOPIC> topics = tDAO.GetAllTopicOfStudentCourse(cFunc.GetIdUserBySession(), course_id);
+            CourseDetailsView model = new CourseDetailsView();
+            model.course = course;
+            model.topics = topics;
+            return View(model);
+
         }
         public ActionResult GetSubjectAssessments(string course_id) 
         { 
             CommonFunc cFunc = new CommonFunc();
-            SubmitDAO DAO = new SubmitDAO();
-            List<COURSE> courses = DAO.GetSubmitAssessmentByStuAndCourseAndSem(cFunc.GetIdUserBySession());
-            List<SubmitAssessmentView> dView = new List<SubmitAssessmentView>();
-
-            foreach (COURSE course in courses)
-            {
-                if (course.TOPICs == null) continue;
-                foreach (TOPIC topic in course.TOPICs)
-                {
-                    if (topic.EVENTs == null) continue;
-                    foreach (EVENT ev in topic.EVENTs)
-                    {
-                        SubmitAssessmentView dV = new SubmitAssessmentView()
-                        {
-                            courseID = course.ID,
-                            courseName = course.NAME,
-                            eventID = ev.ID,
-                            eventTitle = ev.TITLE,
-                            eventDescription = ev.DESCRIPTION,
-                            eventDeadline = ev.DEADLINE
-                        };
-                        if (ev.SUBMITs == null)
-                        {
-                            dView.Add(dV);
-                            continue;
-                        }
-                        foreach (SUBMIT submit in ev.SUBMITs)
-                        {
-                            dV.submitID = submit.ID;
-                            dV.submitLink = submit.LINK;
-                            dV.submitTime = submit.TIME;
-                            dView.Add(dV);
-                            if (submit.ASSESSMENT == null)
-                            {
-                                dView.Add(dV);
-                            }
-                            else
-                            {
-                                dV.assComment = submit.ASSESSMENT.COMMENT;
-                                dV.assScore = (float)submit.ASSESSMENT.SCORE;
-                                dView.Add(dV);
-                            }
-
-                        }
-
-                    }
-                }
-            }
-            var ListEvent = from s in dView select s;
-            ListEvent = ListEvent.Where(s => s.courseID == course_id);
-            ListEvent = ListEvent.OrderBy(s => s.eventDeadline);
-            return View(ListEvent.ToList());
+            SubmitDAO subDAO = new SubmitDAO();
+            COURSE course = subDAO.GetCourseWithEventAndSubmmit(cFunc.GetIdUserBySession(), course_id);
+            return View(course);
 
         }
-        public ActionResult GetSubmitDetailsByStudentAndEvent(string event_id) {
-            CommonFunc cFunc = new CommonFunc();
-            SubmitDAO DAO = new SubmitDAO();
-            List<COURSE> courses = DAO.GetSubmitAssessmentByStuAndCourseAndSem(cFunc.GetIdUserBySession());
-            List<SubmitAssessmentView> dView = new List<SubmitAssessmentView>();
-
-            foreach (COURSE course in courses)
+        public ActionResult Submit(string event_id)
+        {
+            EventDAO eDao = new EventDAO();
+            EVENT ev = eDao.GetEventByID(event_id);
+            return View(ev);
+        }
+        
+        [HttpPost]
+        public async Task<JsonResult> SubmitFile(HttpPostedFileBase file, string Event_ID, string Submit_ID)
+        {
+            FileStream stream;
+            if (file != null)
             {
-                if (course.TOPICs == null) continue;
-                foreach (TOPIC topic in course.TOPICs)
+                string path = Path.Combine(Server.MapPath("~/Content/tempFile"), file.FileName);
+                file.SaveAs(path);
+                stream = new FileStream(Path.Combine(path), FileMode.Open);
+                await Task.Run(() => Upload(stream, file.FileName, path));
+                SUBMIT sub = new SUBMIT();
+                sub.ID = Submit_ID;
+                sub.EVENT_ID = Event_ID;
+                sub.USER_ID = (Session[CommonConstants.SESSION] as Session).id_user;
+                sub.LINK = CommonConstants.linkFile;
+                sub.TIME = DateTime.Now;
+                SubmitDAO submitDAO = new SubmitDAO();
+                if (submitDAO.InsertSubmit(sub))
                 {
-                    if (topic.EVENTs == null) continue;
-                    foreach (EVENT ev in topic.EVENTs)
-                    {
-                        SubmitAssessmentView dV = new SubmitAssessmentView()
-                        {
-                            courseID = course.ID,
-                            courseName = course.NAME,
-                            eventID = ev.ID,
-                            eventTitle = ev.TITLE,
-                            eventDescription = ev.DESCRIPTION,
-                            eventDeadline = ev.DEADLINE
-                        };
-                        if (ev.SUBMITs == null)
-                        {
-                            dView.Add(dV);
-                            continue;
-                        }
-                        foreach (SUBMIT submit in ev.SUBMITs)
-                        {
-                            dV.submitID = submit.ID;
-                            dV.submitLink = submit.LINK;
-                            dV.submitTime = submit.TIME;
-                            dView.Add(dV);
-                            if (submit.ASSESSMENT == null)
-                            {
-                                dView.Add(dV);
-                            }
-                            else
-                            {
-                                dV.assComment = submit.ASSESSMENT.COMMENT;
-                                dV.assScore = (float)submit.ASSESSMENT.SCORE;
-                                dView.Add(dV);
-                            }
-
-                        }
-
-                    }
+                    return Json(new { status = true, file = new { filename = file.FileName, link = CommonConstants.linkFile } });
                 }
             }
-            var ListEvent = from s in dView select s;
-            ListEvent = ListEvent.Where(s => s.eventID == event_id);
-            return View(ListEvent.ToList());
+            return Json(new { status = false });
         }
+        public async Task Upload(FileStream stream, string fileName, string path)
+        {
+            var auth = new FirebaseAuthProvider(new FirebaseConfig(CommonConstants.ApiKey));
+            var a = await auth.SignInWithEmailAndPasswordAsync(CommonConstants.AuthEmail, CommonConstants.AuthPassword);
+            var cancellation = new CancellationTokenSource();
 
-        //public async Task<JsonResult> Submit()
-        //{
-        //    DocumentDAO docDao = new DocumentDAO();
-        //    DOCUMENT doc = new DOCUMENT();
-        //    doc.TOPIC_ID = TopicID;
-        //    doc.ID = DocID;
+            var task = new FirebaseStorage(
+                    CommonConstants.Bucket,
+                    new FirebaseStorageOptions
+                    {
+                        AuthTokenAsyncFactory = () => Task.FromResult(a.FirebaseToken),
+                        ThrowOnCancel = true
+                    }
+                )
+                .Child("file")
+                .Child(fileName)
+                .PutAsync(stream, cancellation.Token);
 
-
-        //    FileStream stream;
-        //    if (file != null)
-        //    {
-        //        // string a = file.FileName;
-        //        //string b = file.ContentType;
-        //        string path = Path.Combine(Server.MapPath("~/Content/tempFile"), file.FileName);
-        //        file.SaveAs(path);
-        //        stream = new FileStream(Path.Combine(path), FileMode.Open);
-        //        await Task.Run(() => Upload(stream, file.FileName, path));
-        //        doc.TITLE = file.FileName;
-        //        doc.LINK = CommonConstants.linkFile;
-        //        if (docDao.InsertDocument(doc))
-        //        {
-
-        //            return Json(new { status = true, file = new { filename = file.FileName, link = CommonConstants.linkFile } });
-        //        }
-        //    }
-        //    return Json(new { status = false });
-
-        //}
+            try
+            {
+                string link = await task;
+                CommonConstants.linkFile = link;
+                System.IO.File.Delete(path);
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+        }
     }
 }

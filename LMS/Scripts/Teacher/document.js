@@ -332,7 +332,7 @@ function editDocChildContent(position) {
             }
 
             if (flag) {
-                itemContent.children('a').attr('href', link)
+                itemContent.children('a').attr('href', linkFile)
                 itemContent.children('a').children('p').text(filename)
                // itemContent.children('h5').text(item.children('.editDocTitle').val())
                 //itemContent.children('p').text(item.children('.editDocDes').val())

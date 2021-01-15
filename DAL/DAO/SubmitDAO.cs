@@ -48,6 +48,40 @@ namespace DAL.DAO
            
             return course;
         }
+
+        public COURSE GetCourseWithEventAndSubmmit(string user_id, string course_id)
+        {
+            C_USER stu = db.C_USER.Where(u => u.ID == user_id).First();
+            COURSE course = stu.COURSEs.Where(x => x.ID == course_id).Select(x => new COURSE
+            {
+                ID = x.ID,
+                NAME = x.NAME,
+                TOPICs = ((x.TOPICs.Count == 0) ? null : (x.TOPICs.Select(t => new TOPIC
+                {
+                    EVENTs = ((t.EVENTs.Count() == 0) ? null : (t.EVENTs.Select(e => new EVENT
+                    {
+                        ID = e.ID,
+                        TITLE = e.TITLE,
+                        DEADLINE = e.DEADLINE,
+                        SUBMITs = ((e.SUBMITs.FirstOrDefault(s => s.USER_ID == user_id) == null) ? null : (e.SUBMITs.Where(s => s.USER_ID == user_id)
+                                                                                                                    .Select(s => new SUBMIT
+                                                                                                                    {
+                                                                                                                        ID = s.ID,
+                                                                                                                        LINK = s.LINK,
+                                                                                                                        TIME = s.TIME,
+                                                                                                                        ASSESSMENT = ((s.ASSESSMENT == null) ? null : new ASSESSMENT
+                                                                                                                        {
+                                                                                                                            SCORE = ((s.ASSESSMENT == null) ? null : s.ASSESSMENT.SCORE),
+                                                                                                                            COMMENT = ((s.ASSESSMENT == null) ? null : s.ASSESSMENT.COMMENT)
+                                                                                                                        })
+                                                                                                                    }).ToList()))
+
+                    }).ToList()))
+                }).ToList()))
+            }).FirstOrDefault();
+            return course;
+        }
+
         public List<COURSE> GetDeadlinebyStuAndCourseAndSem(string user_id)
         {
             C_USER stu = db.C_USER.Where(u => u.ID == user_id).First();
@@ -74,9 +108,16 @@ namespace DAL.DAO
         }
         public bool InsertSubmit(SUBMIT submit)
         {
-            db.SUBMITs.Add(submit);
-            db.SaveChanges();
-            return true;
+            try
+            {
+                db.SUBMITs.Add(submit);
+                db.SaveChanges();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }  
         }
         public bool UpdateSubmit(SUBMIT submit)
         {

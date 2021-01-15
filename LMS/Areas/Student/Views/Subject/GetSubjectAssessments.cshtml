@@ -1,66 +1,79 @@
-﻿@model List<DAL.StudentView.SubmitAssessmentView>
+﻿@model DAL.EF.COURSE
 @{
     ViewBag.Title = "GetSubjectAssessments";
     Layout = "~/Areas/Student/Views/Shared/_BlankStudentLayout.cshtml";
 }
 
-@{ if (Model.Count == 0)
-    {
-        <h3>Không có deadline</h3>
-    }
-    else
-    {
-     <h2>@Model[0].courseName</h2>
-    <table class="table">
-        <thead>
-            <tr>
+<div class="pr-4">
+    <div style="background-color:#465c9e;" class="pl-5 pt-2 pb-2">
+        <h4 class="text-light mb-0" >@Model.NAME</h4>
+    </div>
+    <div>
+        @if (Model.TOPICs != null)
+        {
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">Sự kiện</th>
+                        <th scope="col">Bài nộp</th>
+                        <th scope="col">Điểm</th>
+                        <th scope="col">Nhận xét</th>
+                    </tr>
+                </thead>
+                <tbody>
 
-                <th scope="col">Chủ đề</th>
-                <th scope="col">Bài tập</th>
-                <th scope="col">Hạn chót</th>
-                <th scope="col">Trạng thái</th>
-                <th scope="col">Lời phê</th>
-                <th scope="col">Điểm số</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
+                    @foreach (var topic in Model.TOPICs)
+                    {
+                        foreach (var ev in topic.EVENTs)
+                        {
+                            <tr>
+                                <td><a href="/Student/Subject/Submit?event_id=@ev.ID" class="text-primary" aria-label="Đến trang nộp bài">@ev.TITLE</a></td>
+                                @if (ev.SUBMITs == null)
+                                {
+                                    <td>Chưa nộp</td>
+                                    <td>--</td>
+                                    <td>--</td>
+                                }
+                                else
+                                {
+                                    <td><a href="@ev.SUBMITs.ToList()[0].LINK " class="text-primary" aria-label="Click để tải về" target="_blank">file bài nộp</a></td>
+                                    if (ev.SUBMITs.ToList()[0].ASSESSMENT == null)
+                                    {
+                                        <td>Chưa chấm</td>
+                                        <td>Chưa phê</td>
 
-                    <td>@item.topicTitle</td>
-                    <td>@item.eventTitle</td>
-                    <td>@item.eventDeadline</td>
-                    @if (@item.submitID == null)
-                    {
-                        <td><a href="~/Student/Subject/GetSubmitDetailsByStudentAndEvent?event_id=@item.eventID">Chưa nộp</a></td>
-                    }
-                    else
-                    {
-                        <td><a href="~/Student/Subject/GetSubmitDetailsByStudentAndEvent?event_id=@item.eventID">Đã nộp</a></td>
-                    }
-                    @if (@item.assComment == null)
-                    {
-                        <td></td>
-                    }
-                    else
-                    {
-                        <td>@item.assComment</td>
-                    }
-                    @if (@item.assScore == 0)
-                    {
-                        <td></td>
-                    }
-                    else
-                    {
-                        <td>@item.assScore</td>
+                                    }
+                                    else
+                                    {
+                                        if (ev.SUBMITs.ToList()[0].ASSESSMENT.SCORE == null)
+                                        {
+                                            <td>Chưa chấm</td>
+                                        }
+                                        else
+                                        {
+                                            <td>@ev.SUBMITs.ToList()[0].ASSESSMENT.SCORE</td>
+                                        }
+                                        if (ev.SUBMITs.ToList()[0].ASSESSMENT.COMMENT == null)
+                                        {
+                                            <td>Chưa phê</td>
+                                        }
+                                        else
+                                        {
+                                            <td>@ev.SUBMITs.ToList()[0].ASSESSMENT.COMMENT</td>
+                                        }
+                                    }
+                                }
+                            </tr>
+                        }
                     }
 
-                </tr>
-            }
-
-        </tbody>
-    </table>
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <h5 style="color:#808080" class="mt-3 ml-3">Không có sự kiện để hiển thị !</h5>
         }
 
-    }
+    </div>
+</div>
