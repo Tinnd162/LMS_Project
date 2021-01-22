@@ -84,3 +84,7 @@ E:\SE\Project\LMS_Project\LMS\obj\Debug\LMS.dll
 E:\SE\Project\LMS_Project\LMS\obj\Debug\LMS.pdb
 E:\SE\Project\LMS_Project\LMS\bin\EntityFramework.SqlServer.dll
 E:\SE\Project\LMS_Project\LMS\bin\EntityFramework.SqlServer.xml
+E:\SE\Project\LMS_Project\LMS\bin\Firebase.Auth.dll
+E:\SE\Project\LMS_Project\LMS\bin\Firebase.Storage.dll
+E:\SE\Project\LMS_Project\LMS\bin\System.Diagnostics.DiagnosticSource.dll
+E:\SE\Project\LMS_Project\LMS\bin\System.Diagnostics.DiagnosticSource.xml

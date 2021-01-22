@@ -50,9 +50,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DAO\CourseDAO.cs" />
+    <Compile Include="DAO\AssessmentDAO.cs" />
+    <Compile Include="DAO\ClassDAO.cs" />
+    <Compile Include="DAO\SemesterDAO.cs" />
+    <Compile Include="DAO\DocumentDAO.cs" />
+    <Compile Include="DAO\EventDAO.cs" />
+    <Compile Include="DAO\FacultyDAO.cs" />
+    <Compile Include="DAO\InfoStudentDAO.cs" />
+    <Compile Include="DAO\InfoTeacherDAO.cs" />
     <Compile Include="DAO\RoleDAO.cs" />
-    <Compile Include="DAO\SubjectDAO.cs" />
+    <Compile Include="DAO\CourseDAO.cs" />
+    <Compile Include="DAO\SubjectsDAO.cs" />
+    <Compile Include="DAO\SubmitDAO.cs" />
+    <Compile Include="DAO\TeachDAO.cs" />
+    <Compile Include="DAO\TopicDAO.cs" />
     <Compile Include="DAO\UserDAO.cs" />
     <Compile Include="EF\ASSESSMENT.cs" />
     <Compile Include="EF\CLASS.cs" />
@@ -63,10 +74,15 @@
     <Compile Include="EF\FACULTY.cs" />
     <Compile Include="EF\LMSProjectDBContext.cs" />
     <Compile Include="EF\ROLE.cs" />
+    <Compile Include="EF\SEMESTER.cs" />
     <Compile Include="EF\SUBJECT.cs" />
     <Compile Include="EF\SUBMIT.cs" />
+    <Compile Include="EF\TEACH.cs" />
     <Compile Include="EF\TOPIC.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StudentView\CourseDetailView.cs" />
+    <Compile Include="StudentView\DeadlineView.cs" />
+    <Compile Include="StudentView\SubmitAssessmentView.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
