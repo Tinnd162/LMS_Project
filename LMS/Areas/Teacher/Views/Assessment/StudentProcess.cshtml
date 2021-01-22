@@ -25,12 +25,13 @@
 
                     @foreach (var topic in Model.TOPICs)
                     {
+                        if (topic.EVENTs == null) { continue; }
                         foreach (var ev in topic.EVENTs)
                         {
                             <tr>
                                 <td><a href="/Teacher/Assessment/Detail?eventID=@ev.ID&courseID=@Model.ID" class="text-primary" aria-label="Đến trang nộp bài">@ev.TITLE</a></td>
                                 @if (ev.SUBMITs == null)
-                                {
+                            {
                                     <td>Chưa nộp</td>
                                     <td>--</td>
                                     <td>--</td>
@@ -51,15 +52,15 @@
                                             <td>Chưa chấm</td>
                                         }
                                         else
-                                        {
+                    {
                                             <td>@ev.SUBMITs.ToList()[0].ASSESSMENT.SCORE</td>
                                         }
-                                        if (ev.SUBMITs.ToList()[0].ASSESSMENT.COMMENT == null)
-                                        {
+                    if (ev.SUBMITs.ToList()[0].ASSESSMENT.COMMENT == null)
+                    {
                                             <td>Chưa phê</td>
                                         }
-                                        else
-                                        {
+                    else
+                    {
                                             <td>@ev.SUBMITs.ToList()[0].ASSESSMENT.COMMENT</td>
                                         }
                                     }
